@@ -1,3 +1,5 @@
+// This is the sample dataset we're using to build an example of the pseudospatial charts
+
 var syrianrefugees = 	[[61.3620632437,-98.3077702819,54000,"Canada"],
 			   			[45.6795472026,-112.4616737,33000,"United States"],
 						[51.1069818075,10.385780508,530000,"Germany"],
