@@ -18,3 +18,32 @@
 // 11. Set position for legend/title (could be outside of “canvas” space to avoid issues with placement over data) and draw them
 // 12. Display final image on screen
 // 13. On click, export image as PNG for download
+
+// COLUMNS IN INPUT CSV
+// placename* / string
+// shortname / string (five characters, no spaces/special characters) // DERIVE THIS FROM PLACENAME AUTOMATICALLY?
+// iscenter* / bin
+// lat* / float (six decimals)
+// long* / float (six decimals)
+// numvalue1* / float (six decimals)
+// numvalue2 / float (six decimals)
+// cat / factor (for color coding)
+
+// Technically this is all a subset of a bigger datavisualization tool that needn't be spatial at all, but we care about MOSTLY spatial in two dimensions (lat/long), but could do in one (distance along a line) or none 
+// What about three dimensions for particular use cases? Particles, skyscrapers, montane communities
+
+// ALPHA WORKFLOW IN R
+// Input CSV into R
+// Read and give headers and datatypes for each (eventually do more sophisticated validation/type detection)
+// Select origin point from rows (column "iscenter" value = 1, validate that there is only one center)
+// Declare a data frame; make it an object we want to use
+// Go through lat and long, find min and max, set bounding box for plot and save for later
+// Find longest distance between origin and any other point (RADIANS? GREAT CIRCLES? GEOGRAPHY?)
+// Convert this measurement in degrees into kilometers, and show user "The great circle distance between your origin, POINTNAME1, and farthest point, POINTNAME2, is X km"
+// Save this measurement = var longestdistance (float)
+// GGplot of the lat and long with low-res world background
+// REPROJECT on logarithmic scale
+// GGplot again
+
+// EDGE CASE PARKING LOT
+// Milanese connection in the Bay Area (one far and many near things)
