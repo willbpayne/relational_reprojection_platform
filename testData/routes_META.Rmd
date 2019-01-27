@@ -1,0 +1,92 @@
+---
+title: "routes_META"
+author: "VanMcG"
+date: "1/27/2019"
+output: html_document
+---
+
+## Source Data
+source: https://openflights.org/data.html
+
+#### airports
+dat file: https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat
+
+* __Airport ID__	Unique OpenFlights identifier for this airport.
+*  __Name__	Name of airport. May or may not contain the City name.
+* __City__	Main city served by airport. May be spelled differently from Name.
+* __Country__	Country or territory where airport is located. See countries.dat to cross-reference to ISO 3166-1 codes.
+* __IATA__	3-letter IATA code. Null if not assigned/unknown.
+* __ICAO__	4-letter ICAO code. Null if not assigned.
+* __Latitude__	Decimal degrees, usually to six significant digits. Negative is South, positive is North.
+* __Longitude__	Decimal degrees, usually to six significant digits. Negative is West, positive is East.
+* __Altitude__	In feet.
+* __Timezone__	Hours offset from UTC. Fractional hours are expressed as decimals, eg. India is 5.5.
+* __DST__	Daylight savings time. One of E (Europe), A (US/Canada), S (South America), O (Australia), Z (New Zealand), N (None) or U (Unknown). See also: Help: Time
+* __Tz__ database time zone	Timezone in "tz" (Olson) format, eg. "America/Los_Angeles".
+* __Type__	Type of the airport. Value "airport" for air terminals, "station" for train stations, "port" for ferry terminals and "unknown" if not known. In airports.csv, only type=airport is included.
+* __Source__	Source of this data. "OurAirports" for data sourced from OurAirports, "Legacy" for old data not matched to OurAirports (mostly DAFIF), "User" for unverified user contributions. In airports.csv, only source=OurAirports is included.
+
+#### routes
+dat file: https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat
+
+* __Airline__	2-letter (IATA) or 3-letter (ICAO) code of the airline.
+* __Airline ID__	Unique OpenFlights identifier for airline (see Airline).
+* __Source airport__	3-letter (IATA) or 4-letter (ICAO) code of the source airport.
+* __Source airport ID__	Unique OpenFlights identifier for source airport (see Airport)
+* __Destination airport__	3-letter (IATA) or 4-letter (ICAO) code of the destination airport.
+* __Destination airport ID__	Unique OpenFlights identifier for destination airport (see Airport)
+* __Codeshare__	"Y" if this flight is a codeshare (that is, not operated by Airline, but another carrier), empty otherwise.
+* __Stops__	Number of stops on this flight ("0" for direct)
+* __Equipment__	3-letter codes for plane type(s) generally used on this flight, separated by spaces
+
+## Base Scenario
+A researcher is interested in connectivity between airports as a marker of regional influence. They start with Detroit airport as the center point.
+
+
+## Test Data
+
+#### routes_bare
+_base requirements for PsCP_
+
+*  __airport__ 3 digit airport code
+* __isDTW__ equivalent of __isCenter__ . Binary, 1 = DTW
+* __lat__ latitude
+* __long__ longitude
+* __flightsDTW__ number of flights from each airport with the destination DTW
+
+#### routes_bare_sm
+_the above, but with all non-US airports subtracted_
+
+#### routes_fullOpt
+_all PsCP options filled_
+
+*  __placeName__ full airport name
+* __shortName__ 3 digit airport code
+* __isCenter__ Binary, 1 = DTW
+* __lat__ latitude
+* __long__ longitude
+* __flightsDTW__ number of flights from each airport with the destination DTW
+* __flightsORD__ number of flights from each airport with the destination ORD
+* __cat_CA__ equivalent of __cat__ . Binary, 1 = airport resides in Canada
+
+#### routes_complex
+_example data for scenario in which researcher wants to do small multiples with multiple centers. The researcher is comparing midwest connectivity between US and Canadian cities. Each numeric column has its own center. There are two possible categories, one to circle Canada, one to circle the US. _
+
+*  __placeName__ full airport name
+* __shortName__ 3 digit airport code
+* __isCenter_DTW__ Binary, 1 = DTW
+* __lat__ latitude
+* __long__ longitude
+* __flightsDTW__ number of flights from each airport with the destination DTW
+* __isCenter_ORD__ Binary, 1 = ORD
+* __flightsORD__ number of flights from each airport with the destination ORD
+* __isCenter_YYZ__ Binary, 1 = YYZ
+* __flightsYYZ__ number of flights from each airport with the destination YYZ
+* __isCenter_MSP__ Binary, 1 = MSP
+* __flightsMSP__ number of flights from each airport with the destination MSP
+* __isCenter_YWG__ Binary, 1 = YWG
+* __flightsYWG__ number of flights from each airport with the destination YWG
+* __flightsTOT__ total number of flights from each airport. Possible use as complex baseline
+* __cat_CA__ equivalent of __cat__ . Binary, 1 = airport resides in Canada
+* __cat_US__ equivalent of __cat__ . Binary, 1 = airport resides in United States
+* __cat_ALL__ equivalent of __cat__ . Home country of each airport. Possible capacity test for cat fucntions
