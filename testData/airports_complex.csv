@@ -1,0 +1,839 @@
+placeName,isCenter_DTW,lat,long,flights_DTW,isCenter_ORD,flights_ORD,isCenter_YYZ,flights_YYZ,isCenter_MSP,flights_MSP,isCenter_YWG,flights_YWG,flights_TOT,cat_CA,cat_US,cat_ALL,filter
+Abilene Regional Airport,0,32.4113006592,-99.6819000244,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Ambler Airport,0,67.1063,-157.856989,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Aberdeen Regional Airport,0,45.4491004944,-98.4217987061,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Southwest Georgia Regional Airport,0,31.5354995728,-84.1945037842,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Nantucket Memorial Airport,0,41.25310135,-70.06020355,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Waco Regional Airport,0,31.6112995148,-97.2304992676,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+California Redwood Coast-Humboldt County Airport,0,40.978101,-124.109,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Adak Airport,0,51.8779983521,-176.6459960938,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Kodiak Airport,0,57.75,-152.4940033,0,0,0,0,0,0,0,0,0,11,0,1,United States,0
+Allakaket Airport,0,66.5518035889,-152.621994019,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Alexandria International Airport,0,31.3274002075,-92.5497970581,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Angoon Seaplane Base,0,57.503601,-134.585007,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Augusta Regional At Bush Field,0,33.3698997498,-81.9645004272,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Athens Ben Epps Airport,0,33.948600769,-83.3263015747,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Alliance Municipal Airport,0,42.0531997681,-102.804000854,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Wainwright Airport,0,70.6380004883,-159.994995117,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Atka Airport,0,52.22029877,-174.2059937,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Akiak Airport,0,60.9029006958,-161.231002808,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Akhiok Airport,0,56.9387016296,-154.182998657,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+King Salmon Airport,0,58.67679977,-156.6490021,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Anaktuvuk Pass Airport,0,68.13359833,-151.7429962,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Akulivik Airport,0,60.8185997009,-78.1485977173,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+San Luis Valley Regional Bergman Field,0,37.434898,-105.866997,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Walla Walla Regional Airport,0,46.09489822,-118.288002,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Rick Husband Amarillo International Airport,0,35.219398,-101.706001,0,0,0,0,0,0,0,0,0,10,0,1,United States,0
+Aniak Airport,0,61.5816001892,-159.5429992676,0,0,0,0,0,0,0,0,0,12,0,1,United States,0
+Anvik Airport,0,62.646702,-160.190994,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Altoona Blair County Airport,0,40.29639816,-78.31999969,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Naples Municipal Airport,0,26.1525993347,-81.7752990723,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Arctic Village Airport,0,68.1147,-145.578995,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Aspen-Pitkin Co/Sardy Field,0,39.22320175,-106.8690033,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Atqasuk Edward Burnell Sr Memorial Airport,0,70.467300415,-157.4360046387,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Watertown Regional Airport,0,44.91400146,-97.15470123,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Augusta State Airport,0,44.3205986023,-69.7973022461,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Alakanuk Airport,0,62.6800422668,-164.659927368,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Phoenix-Mesa-Gateway Airport,0,33.30780029,-111.6549988,0,0,0,0,0,0,0,0,0,32,0,1,United States,0
+Bethel Airport,0,60.77980042,-161.8379974,0,0,0,0,0,0,0,0,0,29,0,1,United States,0
+Bradford Regional Airport,0,41.8031005859,-78.6400985718,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Western Neb. Rgnl/William B. Heilig Airport,0,41.87400055,-103.5960007,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Boeing Field King County International Airport,0,47.5299987793,-122.3020019531,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Meadows Field,0,35.43360138,-119.0569992,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Hancock County-Bar Harbor Airport,0,44.45000076,-68.3615036,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Billings Logan International Airport,0,45.8077011108,-108.5429992676,0,0,0,0,0,0,0,0,0,12,0,1,United States,0
+Bismarck Municipal Airport,0,46.7727012634,-100.7460021973,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Bemidji Regional Airport,0,47.50939941,-94.93370056,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Buckland Airport,0,65.9815979004,-161.149002075,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Raleigh County Memorial Airport,0,37.7873001099,-81.1241989136,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Bellingham International Airport,0,48.7928009033,-122.5380020142,0,0,0,0,0,0,0,0,0,10,0,1,United States,0
+Scott AFB/Midamerica Airport,0,38.5452,-89.835197,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Southeast Texas Regional Airport,0,29.950799942,-94.0206985474,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Brunswick Golden Isles Airport,0,31.2588005066,-81.4664993286,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Brainerd Lakes Regional Airport,0,46.39830017,-94.13809967,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Brownsville South Padre Island International Airport,0,25.9067993164,-97.4259033203,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Wiley Post Will Rogers Memorial Airport,0,71.285402,-156.766008,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Barter Island LRRS Airport,0,70.1340026855,-143.582000732,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Bert Mooney Airport,0,45.9547996521,-112.497001648,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Baton Rouge Metropolitan Airport,0,30.533199,-91.149597,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Bettles Airport,0,66.91390228,-151.529007,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Bob Hope Airport,0,34.2006988525,-118.3590011597,0,0,0,0,0,0,0,0,0,18,0,1,United States,0
+Cold Bay Airport,0,55.2061004639,-162.7250061035,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Cedar City Regional Airport,0,37.7010002136,-113.0989990234,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Chadron Municipal Airport,0,42.837600708,-103.095001221,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Merle K (Mudhole) Smith Airport,0,60.4917984,-145.4779968,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Jack Mc Namara Field Airport,0,41.78020096,-124.2369995,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Central Airport,0,65.57379913,-144.7830048,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Cortez Municipal Airport,0,37.3030014038,-108.627998352,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Cape Girardeau Regional Airport,0,37.2252998352,-89.5708007813,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Chico Municipal Airport,0,39.79539871,-121.8580017,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Chalkyitsik Airport,0,66.6449966431,-143.740005493,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+North Central West Virginia Airport,0,39.2966003418,-80.2281036377,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Mc Clellan-Palomar Airport,0,33.12829971,-117.2799988,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Easterwood Field,0,30.58860016,-96.36380005,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+William R Fairchild International Airport,0,48.1202011108,-123.5,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Cavern City Air Terminal,0,32.3375015259,-104.2630004883,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Canyonlands Field,0,38.75500107,-109.7549973,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Yellowstone Regional Airport,0,44.520198822,-109.024002075,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Casper-Natrona County International Airport,0,42.90800095,-106.4639969,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Corpus Christi International Airport,0,27.7703990936,-97.5011978149,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Columbus Metropolitan Airport,0,32.5163002014,-84.9389038086,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Vancouver Harbour Water Aerodrome,0,49.2943992615,-123.111000061,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Chefornak Airport,0,60.1492004395,-164.285995483,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Cheyenne Regional Jerry Olson Field,0,41.15570068,-104.8119965,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Daytona Beach International Airport,0,29.179899,-81.058098,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Dallas Love Field,0,32.847099,-96.851799,0,0,0,0,0,0,0,0,0,39,0,1,United States,0
+Dodge City Regional Airport,0,37.7634010315,-99.9655990601,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Dothan Regional Airport,0,31.3213005066,-85.4496002197,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Dickinson Theodore Roosevelt Regional Airport,0,46.7974014282,-102.802001953,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Dillingham Airport,0,59.04470062,-158.5050049,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Deering Airport,0,66.0696029663,-162.76600647,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Durango La Plata County Airport,0,37.1515007019,-107.753997803,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+DuBois Regional Airport,0,41.17829895,-78.8986969,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Unalaska Airport,0,53.900100708,-166.544006348,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Pangborn Memorial Airport,0,47.3988990784,-120.207000732,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Northwest Florida Beaches International Airport,0,30.357106,-85.795414,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Eek Airport,0,60.21367264,-162.0438843,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Eagle County Regional Airport,0,39.64260101,-106.9179993,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Egegik Airport,0,58.1855010986,-157.375,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Elko Regional Airport,0,40.8249015808,-115.7919998169,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+South Arkansas Regional At Goodwin Field,0,33.2210006714,-92.8133010864,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Elim Airport,0,64.61470032,-162.2720032,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Elfin Cove Seaplane Base,0,58.1952018738,-136.347000122,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Emmonak Airport,0,62.78609848,-164.4909973,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Kenai Municipal Airport,0,60.5731010437,-151.2449951172,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Orcas Island Airport,0,48.7081985474,-122.910003662,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Mahlon Sweet Field,0,44.1245994568,-123.2119979858,0,0,0,0,0,0,0,0,0,14,0,1,United States,0
+New Bedford Regional Airport,0,41.6761016846,-70.9569015503,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Coastal Carolina Regional Airport,0,35.0730018616,-77.0429000854,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Key West International Airport,0,24.5561008453,-81.7595977783,0,0,0,0,0,0,0,0,0,16,0,1,United States,0
+Fairbanks International Airport,0,64.81510162,-147.8560028,0,0,0,0,0,0,0,0,0,27,0,1,United States,0
+Fresno Yosemite International Airport,0,36.7761993408,-119.7180023193,0,0,0,0,0,0,0,0,0,20,0,1,United States,0
+Fayetteville Regional Grannis Field,0,34.9911994934,-78.8803024292,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Glacier Park International Airport,0,48.3105010986,-114.2559967041,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Venango Regional Airport,0,41.3778991699,-79.8603973389,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Flagstaff Pulliam Airport,0,35.13850021,-111.6709976,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Florence Regional Airport,0,34.1853981018,-79.7238998413,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Four Corners Regional Airport,0,36.7411994934,-108.230003357,0,0,0,0,0,0,0,0,0,9,0,1,United States,0
+Friday Harbor Airport,0,48.5219993591,-123.024002075,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Fort Smith Regional Airport,0,35.3366012573,-94.367401123,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Fort Yukon Airport,0,66.5715026855,-145.25,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Edward G. Pitka Sr Airport,0,64.73619843,-156.9369965,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Gambell Airport,0,63.7667999268,-171.733001709,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Gillette Campbell County Airport,0,44.3488998413,-105.539001465,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Garden City Regional Airport,0,37.9275016785,-100.723999023,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Grand Canyon National Park Airport,0,35.9524002075,-112.1470031738,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Dawson Community Airport,0,47.13869858,-104.8069992,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Spokane International Airport,0,47.6198997498,-117.533996582,0,0,0,0,0,0,0,0,0,15,0,1,United States,0
+Grand Forks International Airport,0,47.949299,-97.176102,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+East Texas Regional Airport,0,32.3839988708,-94.7115020752,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Wokal Field Glasgow International Airport,0,48.212502,-106.614998,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Grand Junction Regional Airport,0,39.1223983765,-108.527000427,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Mid Delta Regional Airport,0,33.4828987122,-90.9856033325,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Golovin Airport,0,64.5504989624,-163.007003784,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Gainesville Regional Airport,0,29.6900997162,-82.2717971802,0,0,0,0,0,0,0,0,0,12,0,1,United States,0
+Gulfport Biloxi International Airport,0,30.4073009491,-89.070098877,0,0,0,0,0,0,0,0,0,9,0,1,United States,0
+Central Nebraska Regional Airport,0,40.9674987793,-98.3096008301,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Robert Gray  Army Air Field Airport,0,31.067199707,-97.8289031982,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Gustavus Airport,0,58.4253006,-135.7070007,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Great Falls International Airport,0,47.48199844,-111.3710022,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Golden Triangle Regional Airport,0,33.4502983093,-88.5914001465,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Gunnison Crested Butte Regional Airport,0,38.53390121,-106.9329987,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Holy Cross Airport,0,62.1883010864,-159.7749938965,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Yampa Valley Airport,0,40.48120117,-107.2180023,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Hagerstown Regional Richard A Henson Field,0,39.707901,-77.72949982,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Hilton Head Airport,0,32.2243995667,-80.6975021362,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Range Regional Airport,0,47.38660049,-92.83899689,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Helena Regional Airport,0,46.6068000793,-111.983001709,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Hoonah Airport,0,58.0961,-135.410111,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Hana Airport,0,20.7956008911,-156.0140075684,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Haines Airport,0,59.2438011169,-135.5240020752,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Lea County Regional Airport,0,32.6875,-103.2170029,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Homer Airport,0,59.6455993652,-151.4770050049,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Huron Regional Airport,0,44.3852005005,-98.2285003662,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Memorial Field,0,34.4780006409,-93.0961990356,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+William P Hobby Airport,0,29.64539909,-95.27890015,0,0,0,0,0,0,0,0,0,79,0,1,United States,0
+Hooper Bay Airport,0,61.52389908,-166.1470032,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Valley International Airport,0,26.2285003662,-97.6544036865,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Boone County Airport,0,36.2615013123,-93.1547012329,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Huslia Airport,0,65.69789886,-156.3509979,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Tri-State/Milton J. Ferguson Field,0,38.36669922,-82.55799866,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Hughes Airport,0,66.04109955,-154.2630005,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Tweed New Haven Airport,0,41.26369858,-72.88680267,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Havre City County Airport,0,48.54299927,-109.762001,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Barnstable Municipal Boardman Polando Field,0,41.66930008,-70.28040314,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Hydaburg Seaplane Base,0,55.2062988281,-132.8280029297,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Niagara Falls International Airport,0,43.1072998047,-78.9461975098,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Bob Baker Memorial Airport,0,66.9759979248,-160.43699646,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Idaho Falls Regional Airport,0,43.514599,-112.070999,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Igiugig Airport,0,59.3240013123,-155.9019927979,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Nikolski Air Station,0,52.9416007996,-168.8489990234,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Iliamna Airport,0,59.75439835,-154.9109955,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Wilmington International Airport,0,34.2705993652,-77.9026031494,0,0,0,0,0,0,0,0,0,13,0,1,United States,0
+Ford Airport,0,45.8184013367,-88.1145019531,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Falls International Airport,0,48.5662002563,-93.4030990601,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Imperial County Airport,0,32.8342018127,-115.57900238,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Williamsport Regional Airport,0,41.2417984009,-76.9210968018,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Circle City /New/ Airport,0,65.830498,-144.076008,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Kirksville Regional Airport,0,40.09349823,-92.5448989868,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Sloulin Field International Airport,0,48.177898407,-103.641998291,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Long Island Mac Arthur Airport,0,40.79520035,-73.10019684,0,0,0,0,0,0,0,0,0,17,0,1,United States,0
+Hilo International Airport,0,19.7213993073,-155.0480041504,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Jackson Hole Airport,0,43.6072998047,-110.7379989624,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Jonesboro Municipal Airport,0,35.8316993713,-90.6464004517,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Kapalua Airport,0,20.9629001617,-156.6730041504,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Chautauqua County-Jamestown Airport,0,42.15340042,-79.25800323,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Joplin Regional Airport,0,37.1517982483,-94.498298645,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Juneau International Airport,0,58.3549995422,-134.5760040283,0,0,0,0,0,0,0,0,0,20,0,1,United States,0
+John Murtha Johnstown Cambria County Airport,0,40.3161010742,-78.8339004517,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Kaltag Airport,0,64.31909943,-158.7409973,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Keewaywin Airport,0,52.9911003113,-92.8364028931,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+False Pass Airport,0,54.8474006653,-163.4100036621,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Kingfisher Lake Airport,0,53.0125007629,-89.8553009033,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Koyuk Alfred Adams Airport,0,64.9394989014,-161.154006958,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Kongiganak Airport,0,59.9608001709,-162.880996704,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Kalskag Airport,0,61.5363006592,-160.341003418,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Larsen Bay Airport,0,57.5350990295,-153.977996826,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Klawock Airport,0,55.5792007446,-133.076004028,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Ellison Onizuka Kona International At Keahole Airport,0,19.738783,-156.045603,0,0,0,0,0,0,0,0,0,20,0,1,United States,0
+Kotlik Airport,0,63.0306015015,-163.533004761,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Kipnuk Airport,0,59.9329986572,-164.031005859,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Perryville Airport,0,55.905998,-159.162993,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Akutan Seaplane Base,0,54.1337704415,-165.778895617,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+St Mary's Airport,0,62.0605011,-163.302002,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Ketchikan International Airport,0,55.35559845,-131.7140045,0,0,0,0,0,0,0,0,0,22,0,1,United States,0
+Brevig Mission Airport,0,65.3312988281,-166.466003418,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Kasigluk Airport,0,60.87440109,-162.5240021,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+King Cove Airport,0,55.1162986755,-162.2660064697,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Kivalina Airport,0,67.7361984253,-164.56300354,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Kwigillingok Airport,0,59.876499,-163.169005,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Quinhagak Airport,0,59.7551,-161.845,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Kwethluk Airport,0,60.7902984619,-161.444000244,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Koyukuk Airport,0,64.8760986328,-157.727005005,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Los Alamos Airport,0,35.8797988892,-106.268997192,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Laramie Regional Airport,0,41.3120994568,-105.6750030518,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Lawton Fort Sill Regional Airport,0,34.5676994324,-98.4166030884,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Lubbock Preston Smith International Airport,0,33.663601,-101.822998,0,0,0,0,0,0,0,0,0,10,0,1,United States,0
+Arnold Palmer Regional Airport,0,40.27590179,-79.40480042,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+North Platte Regional Airport Lee Bird Field,0,41.12620163,-100.6839981,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Liberal Mid-America Regional Airport,0,37.0442009,-100.9599991,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Lake Charles Regional Airport,0,30.1261005402,-93.2232971191,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Rickenbacker International Airport,0,39.813801,-82.927803,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Lebanon Municipal Airport,0,43.6260986328,-72.3041992188,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Lafayette Regional Airport,0,30.20529938,-91.98760223,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Long Beach /Daugherty Field/ Airport,0,33.81769943,-118.1520004,0,0,0,0,0,0,0,0,0,18,0,1,United States,0
+Lihue Airport,0,21.9759998322,-159.3390045166,0,0,0,0,0,0,0,0,0,21,0,1,United States,0
+Minchumina Airport,0,63.886002,-152.302002,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Crater Lake-Klamath Regional Airport,0,42.156101,-121.733002,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Lancaster Airport,0,40.1217002869,-76.2960968018,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Lanai Airport,0,20.7856006622,-156.9510040283,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Lopez Island Airport,0,48.4838981628,-122.93800354,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Laredo International Airport,0,27.543800354,-99.4616012573,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Cincinnati Municipal Airport Lunken Field,0,39.10329819,-84.41860199,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Cape Lisburne LRRS Airport,0,68.87509918,-166.1100006,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Greenbrier Valley Airport,0,37.8582992554,-80.3994979858,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Lewiston Nez Perce County Airport,0,46.3745002747,-117.0149993896,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Lynchburg Regional Preston Glenn Field,0,37.3266983032,-79.2004013062,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Midland International Airport,0,31.9424991608,-102.202003479,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Manistee Co Blacker Airport,0,44.2723999,-86.24690247,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Merced Regional Macready Field,0,37.28469849,-120.5139999,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+McGrath Airport,0,62.95289993,-155.6060028,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Mc Cook Ben Nelson Regional Airport,0,40.20629883,-100.5920029,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Middle Georgia Regional Airport,0,32.6927986145,-83.6492004395,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Key Field,0,32.3325996399,-88.7518997192,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Mc Allen Miller International Airport,0,26.17580032,-98.23860168,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Rogue Valley International Medford Airport,0,42.3741989136,-122.8730010986,0,0,0,0,0,0,0,0,0,9,0,1,United States,0
+Montgomery Regional (Dannelly Field) Airport,0,32.30059814,-86.39399719,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Morgantown Municipal Walter L. Bill Hart Field,0,39.64289856,-79.91629791,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Molokai Airport,0,21.1529006958,-157.095993042,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Mc Kellar Sipes Regional Airport,0,35.59989929,-88.91560364,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Melbourne International Airport,0,28.1028003693,-80.6453018188,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Marshall Don Hunter Sr Airport,0,61.8642997742,-162.026000977,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Monroe Regional Airport,0,32.5108985901,-92.0376968384,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Manley Hot Springs Airport,0,64.9975967407,-150.643997192,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Mammoth Yosemite Airport,0,37.62409973,-118.8379974,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Morristown Municipal Airport,0,40.7994003296,-74.4149017334,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Modesto City Co-Harry Sham Field,0,37.62580109,-120.9540024,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Minot International Airport,0,48.2593994141,-101.2799987793,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Mountain Village Airport,0,62.0954017639,-163.6820068359,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Monterey Peninsula Airport,0,36.5870018005,-121.8430023193,0,0,0,0,0,0,0,0,0,10,0,1,United States,0
+Muskrat Dam Airport,0,53.4413986206,-91.762802124,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Northwest Alabama Regional Airport,0,34.74530029,-87.61019897,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Missoula International Airport,0,46.91630173,-114.0910034,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Massena International Richards Field,0,44.935798645,-74.8455963135,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Montrose Regional Airport,0,38.5097999573,-107.893997192,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Waimea Kohala Airport,0,20.0013008118,-155.6679992676,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Martha's Vineyard Airport,0,41.3931007385,-70.6143035889,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Williamson County Regional Airport,0,37.75500107,-89.01110077,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Mekoryuk Airport,0,60.3713989258,-166.2709960938,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Nikolai Airport,0,63.0186,-154.358002,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Nelson Lagoon Airport,0,56.0074996948,-161.1600036621,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Nightmute Airport,0,60.4710006714,-164.7010040283,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Nuiqsut Airport,0,70.2099990845,-151.005996704,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Nulato Airport,0,64.729301,-158.074005,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Albert J Ellis Airport,0,34.8292007446,-77.6120986938,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Kobuk Airport,0,66.9123001099,-156.897003174,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Ogden Hinckley Airport,0,41.1958999634,-112.0120010376,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Ogdensburg International Airport,0,44.6819000244,-75.4654998779,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+L M Clayton Airport,0,48.0945014954,-105.574996948,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Nome Airport,0,64.5121994019,-165.4450073242,0,0,0,0,0,0,0,0,0,25,0,1,United States,0
+Ontario International Airport,0,34.0559997559,-117.6009979248,0,0,0,0,0,0,0,0,0,24,0,1,United States,0
+Toksook Bay Airport,0,60.54140091,-165.0870056,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Worcester Regional Airport,0,42.2672996521,-71.8757019043,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Robert (Bob) Curtis Memorial Airport,0,66.81790161,-161.0189972,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Southwest Oregon Regional Airport,0,43.417098999,-124.2460021973,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Ralph Wien Memorial Airport,0,66.88469696,-162.598999,0,0,0,0,0,0,0,0,0,22,0,1,United States,0
+Owensboro Daviess County Airport,0,37.74010086,-87.16680145,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Plattsburgh International Airport,0,44.6509017944,-73.4681015015,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Eastern Oregon Regional At Pendleton Airport,0,45.695098877,-118.841003418,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Page Municipal Airport,0,36.92610168,-111.447998,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Charlotte County Airport,0,26.92020035,-81.9905014,0,0,0,0,0,0,0,0,0,18,0,1,United States,0
+Pitt Greenville Airport,0,35.6352005,-77.38529968,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Newport News Williamsburg International Airport,0,37.13190079,-76.49299622,0,0,0,0,0,0,0,0,0,9,0,1,United States,0
+Hattiesburg Laurel Regional Airport,0,31.4671001434,-89.337097168,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+St Petersburg Clearwater International Airport,0,27.91020012,-82.68740082,0,0,0,0,0,0,0,0,0,31,0,1,United States,0
+Pocatello Regional Airport,0,42.9098014832,-112.5960006714,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Pilot Point Airport,0,57.5803985596,-157.572006226,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Pierre Regional Airport,0,44.38270187,-100.2860031,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Point Lay LRRS Airport,0,69.73290253,-163.0050049,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Napaskiak Airport,0,60.70289993,-161.7779999,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Mid Ohio Valley Regional Airport,0,39.3451004028,-81.439201355,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Northern Maine Regional Airport at Presque Isle,0,46.68899918,-68.0447998,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Ernest A. Love Field,0,34.65449905,-112.4199982,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Tri Cities Airport,0,46.2647018433,-119.1190032959,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Petersburg James A Johnson Airport,0,56.80170059,-132.9450073,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Portsmouth International at Pease Airport,0,43.0778999329,-70.8233032227,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Port Heiden Airport,0,56.9590988159,-158.6329956055,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Platinum Airport,0,59.0113983154,-161.8200073242,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Pueblo Memorial Airport,0,38.289100647,-104.497001648,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Pullman Moscow Regional Airport,0,46.7439,-117.110001,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Provincetown Municipal Airport,0,42.0718994141,-70.2213973999,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Provo Municipal Airport,0,40.2192001343,-111.7229995728,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Portland International Jetport Airport,0,43.64619827,-70.30930328,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Bella Coola Airport,0,52.387501,-126.596001,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Ruby Airport,0,64.72720337,-155.4700012,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Redding Municipal Airport,0,40.50899887,-122.2929993,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Roberts Field,0,44.2541008,-121.1500015,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Chicago Rockford International Airport,0,42.195400238,-89.0971984863,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Rhinelander Oneida County Airport,0,45.6311988831,-89.4674987793,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Riverton Regional Airport,0,43.064201355,-108.459999084,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Knox County Regional Airport,0,44.06010056,-69.09919739,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Southwest Wyoming Regional Airport,0,41.5942,-109.065001,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Roswell International Air Center Airport,0,33.3016014099,-104.53099823,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Russian Mission Airport,0,61.7788848877,-161.319458008,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Rutland - Southern Vermont Regional Airport,0,43.52939987,-72.94960022,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Santa Fe Municipal Airport,0,35.617099762,-106.088996887,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Santa Barbara Municipal Airport,0,34.42620087,-119.8399963,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+San Luis County Regional Airport,0,35.2368011475,-120.641998291,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Salisbury Ocean City Wicomico Regional Airport,0,38.3404998779,-75.5102996826,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Deadhorse Airport,0,70.19470215,-148.4649963,0,0,0,0,0,0,0,0,0,5,0,1,United States,0
+Stockton Metropolitan Airport,0,37.8941993713,-121.2379989624,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Scammon Bay Airport,0,61.8452987671,-165.570999146,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Sand Point Airport,0,55.3149986267,-160.5229949951,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Sidney - Richland Regional Airport,0,47.706902,-104.193001,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Orlando Sanford International Airport,0,28.7775993347,-81.2375030518,0,0,0,0,0,0,0,0,0,49,0,1,United States,0
+St George Municipal Airport,0,37.036389,-113.510306,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Skagway Airport,0,59.4600982666,-135.3159942627,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Shenandoah Valley Regional Airport,0,38.2638015747,-78.8964004517,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Shungnak Airport,0,66.8880996704,-157.1620025635,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Shishmaref Airport,0,66.249604,-166.089112,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Sheridan County Airport,0,44.7691993713,-106.9800033569,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Shreveport Regional Airport,0,32.446602,-93.8256,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Shageluk Airport,0,62.6922988892,-159.569000244,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Sitka Rocky Gutierrez Airport,0,57.0471000671,-135.3619995117,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+San Angelo Regional Mathis Field,0,31.3577003479,-100.4960021973,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Shaktoolik Airport,0,64.37110138,-161.223999,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Adirondack Regional Airport,0,44.3852996826,-74.206199646,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Salina Municipal Airport,0,38.7910003662,-97.6521987915,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Sleetmute Airport,0,61.7005004883,-157.166000366,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+St Michael Airport,0,63.49010086,-162.1100006,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Santa Maria Pub/Capt G Allan Hancock Field,0,34.89889908,-120.4570007,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+St Paul Island Airport,0,57.167301178,-170.2200012207,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Show Low Regional Airport,0,34.265499115,-110.005996704,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Sheppard Air Force Base-Wichita Falls Municipal Airport,0,33.9888,-98.491898,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+St George Airport,0,56.5783004761,-169.662002563,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Charles M. Schulz Sonoma County Airport,0,38.50899887,-122.8130035,0,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Summer Beaver Airport,0,52.7085990906,-88.5419006348,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Savoonga Airport,0,63.6864013672,-170.4929962158,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Waynesville-St. Robert Regional Forney field,0,37.74160004,-92.14070129,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Teterboro Airport,0,40.8501014709,-74.060798645,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Tok Junction Airport,0,63.32949829,-142.9539948,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Teller Airport,0,65.2404022217,-166.339004517,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Tallahassee Regional Airport,0,30.3964996338,-84.3503036499,0,0,0,0,0,0,0,0,0,15,0,1,United States,0
+Tatalina LRRS Airport,0,62.8944015503,-155.977005005,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Tin City Long Range Radar Station Airport,0,65.56310272,-167.9219971,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Togiak Airport,0,59.0527992249,-160.3970031738,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Tri-Cities Regional TN/VA Airport,0,36.475201,-82.407401,0,0,0,0,0,0,0,0,0,7,0,1,United States,0
+Tupelo Regional Airport,0,34.2681007385,-88.7698974609,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Thief River Falls Regional Airport,0,48.06570053,-96.18499756,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Joslin Field Magic Valley Regional Airport,0,42.4818,-114.487999,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Texarkana Regional Webb Field,0,33.4537010193,-93.9909973145,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Tyler Pounds Regional Airport,0,32.3540992737,-95.4023971558,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Quincy Regional Baldwin Field,0,39.94269943,-91.19460297,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Unalakleet Airport,0,63.88840103,-160.798996,0,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Northeast Florida Regional Airport,0,29.9592,-81.339798,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Chevak Airport,0,61.5409,-165.6005,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Victoria Regional Airport,0,28.8526000977,-96.9185028076,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Valdez Pioneer Field,0,61.13389969,-146.2480011,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Venetie Airport,0,67.0086975098,-146.365997314,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Vernal Regional Airport,0,40.4408989,-109.5100021,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Visalia Municipal Airport,0,36.3186988831,-119.392997742,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Valdosta Regional Airport,0,30.7824993134,-83.2767028809,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Destin-Ft Walton Beach Airport,0,30.4832,-86.525398,0,0,0,0,0,0,0,0,0,10,0,1,United States,0
+Wales Airport,0,65.622593,-168.095,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Beaver Airport,0,66.362197876,-147.406997681,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Selawik Airport,0,66.60009766,-159.9859924,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+White Mountain Airport,0,64.689201355,-163.412994385,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Napakiak Airport,0,60.6902999878,-161.9790039063,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Wunnumin Lake Airport,0,52.893901825,-89.2891998291,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Wrangell Airport,0,56.48429871,-132.3699951,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Worland Municipal Airport,0,43.9656982422,-107.9509963989,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+South Naknek Nr 2 Airport,0,58.7033996582,-157.007995605,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Noatak Airport,0,67.5661010742,-162.9750061035,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Bearskin Lake Airport,0,53.9655990601,-91.0271987915,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Kangiqsualujjuaq (Georges River) Airport,0,58.7113990784,-65.9927978516,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Kasabonika Airport,0,53.5247001648,-88.6427993774,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Anahim Lake Airport,0,52.4524993896,-125.3030014038,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Old Arctic Bay Airport,0,73.0058922479,-85.0325489044,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Cat Lake Airport,0,51.7271995544,-91.8244018555,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Fort Frances Municipal Airport,0,48.6542015076,-93.4396972656,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Yakutat Airport,0,59.5032997131,-139.660003662,0,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Attawapiskat Airport,0,52.9275016785,-82.4319000244,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Wapekeka Airport,0,53.8492012024,-89.5793991089,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+St. Anthony Airport,0,51.3918991089,-56.0830993652,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Baie Comeau Airport,0,49.1324996948,-68.2043991089,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+CFB Bagotville,0,48.3306007385,-70.9963989258,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Baker Lake Airport,0,64.2988967896,-96.077796936,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Campbell River Airport,0,49.9508018494,-125.2710037231,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Brandon Municipal Airport,0,49.91,-99.951897,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Lourdes de Blanc Sablon Airport,0,51.4435997009,-57.1852989197,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Cambridge Bay Airport,0,69.1081008911,-105.138000488,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Nanaimo Airport,0,49.0549702249,-123.869862556,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Castlegar/West Kootenay Regional Airport,0,49.2963981628,-117.632003784,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Charlo Airport,0,47.990799,-66.330299,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Kugluktuk Airport,0,67.816704,-115.143997,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Chesterfield Inlet Airport,0,63.3469009399,-90.7311019897,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Clyde River Airport,0,70.4860992432,-68.5167007446,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Nain Airport,0,56.5491981506,-61.6803016663,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Dawson Creek Airport,0,55.7422981262,-120.1829986572,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Arviat Airport,0,61.0942001343,-94.0708007812,0,0,0,0,0,0,0,0,0,7,1,0,Canada,0
+Fort Severn Airport,0,56.018901825,-87.6761016846,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Inuvik Mike Zubko Airport,0,68.3041992188,-133.483001709,0,0,0,0,0,0,0,0,0,8,1,0,Canada,0
+Fort Albany Airport,0,52.2014007568,-81.6968994141,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Iqaluit Airport,0,63.756402,-68.555801,0,0,0,0,0,0,0,0,0,18,1,0,Canada,0
+Fort Hope Airport,0,51.5619010925,-87.9077987671,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Wekweètì Airport,0,64.190804,-114.077002,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Flin Flon Airport,0,54.6781005859,-101.6819992065,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Fort Simpson Airport,0,61.7602005005,-121.2369995117,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Fort Good Hope Airport,0,66.2407989502,-128.6510009766,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+La Grande Rivière Airport,0,53.6253013611,-77.7042007446,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Gaspé (Michel-Pouliot) Airport,0,48.7752990723,-64.4785995483,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Îles-de-la-Madeleine Airport,0,47.4247016907,-61.7780990601,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Igloolik Airport,0,69.3647003174,-81.8161010742,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Havre St Pierre Airport,0,50.2818984985,-63.6114006042,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Kuujjuarapik Airport,0,55.2818984985,-77.765296936,0,0,0,0,0,0,0,0,0,7,1,0,Canada,0
+Gillam Airport,0,56.3574981689,-94.7106018066,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Grise Fiord Airport,0,76.4261016846,-82.9092025757,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Dryden Regional Airport,0,49.8316993713,-92.7442016602,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Ulukhaktok Holman Airport,0,70.762802124,-117.8059997559,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Gjoa Haven Airport,0,68.635597229,-95.8497009277,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+John C. Munro Hamilton International Airport,0,43.1735992432,-79.9349975586,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Hopedale Airport,0,55.448299408,-60.2285995483,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Poplar Hill Airport,0,52.1133,-94.2556,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Chevery Airport,0,50.4688987732,-59.6366996765,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Montréal / Saint-Hubert Airport,0,45.5175018311,-73.4169006348,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Hay River / Merlyn Carter Airport,0,60.8396987915,-115.782997131,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+St Augustin Airport,0,51.2117004395,-58.6582984924,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Ivujivik Airport,0,62.417301178,-77.9253005981,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Pond Inlet Airport,0,72.6832962036,-77.9666976929,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Stephenville Airport,0,48.5442008972,-58.5499992371,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Kamloops Airport,0,50.7022018433,-120.444000244,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Kangirsuk Airport,0,60.0271987915,-69.9991989136,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Schefferville Airport,0,54.8053016663,-66.8052978516,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Yakima Air Terminal McAllister Field,0,46.56819916,-120.5439987,0,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Waskaganish Airport,0,51.4733009338,-78.7583007813,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Chisasibi Airport,0,53.8055992126,-78.9169006348,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Kimmirut Airport,0,62.8499984741,-69.8833007812,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Whatì Airport,0,63.1316986084,-117.2460021973,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Lansdowne House Airport,0,52.1955986023,-87.9341964722,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Lloydminster Airport,0,53.3092002869,-110.0729980469,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Makkovik Airport,0,55.0769004822,-59.1864013672,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Moosonee Airport,0,51.2910995483,-80.6078033447,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Chapais Airport,0,49.771900177,-74.5280990601,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Natashquan Airport,0,50.1899986267,-61.7891998291,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Wemindji Airport,0,53.0106010437,-78.8311004639,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Youngstown Warren Regional Airport,0,41.26070023,-80.67910004,0,0,0,0,0,0,0,0,0,4,0,1,United States,0
+North Spirit Lake Airport,0,52.4900016785,-92.9710998535,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Natuashish Airport,0,55.913898,-61.184399,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Nemiscau Airport,0,51.6911010742,-76.135597229,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Ogoki Post Airport,0,51.6585998535,-85.9017028809,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+High Level Airport,0,58.6213989258,-117.1650009155,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Rainbow Lake Airport,0,58.4914016724,-119.4079971313,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Paulatuk (Nora Aliqatchialuk Ruben) Airport,0,69.3608381154,-124.075469971,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Inukjuak Airport,0,58.4719009399,-78.0768966675,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Aupaluk Airport,0,59.2966995239,-69.5997009277,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Pickle Lake Airport,0,51.4463996887,-90.2142028809,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Pikangikum Airport,0,51.8196983337,-93.9732971191,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Port Menier Airport,0,49.8363990784,-64.2885971069,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Peawanuck Airport,0,54.9880981445,-85.4432983398,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Prince Rupert Airport,0,54.2860984802,-130.445007324,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Powell River Airport,0,49.8342018127,-124.5,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Puvirnituq Airport,0,60.0505981445,-77.2869033813,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Fort Chipewyan Airport,0,58.76720047,-111.1169967651,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Quaqtaq Airport,0,61.0463981628,-69.6177978516,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+The Pas Airport,0,53.9714012146,-101.091003418,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Red Deer Regional Airport,0,52.1822013855,-113.8939971924,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Kenora Airport,0,49.7882995605,-94.3630981445,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Lethbridge County Airport,0,49.6302986145,-112.800003052,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Comox Airport,0,49.7108001709,-124.8870010376,0,0,0,0,0,0,0,0,0,7,1,0,Canada,0
+Grande Prairie Airport,0,55.1796989441,-118.885002136,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Gander International Airport,0,48.9369010925,-54.5680999756,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Quesnel Airport,0,53.0261001587,-122.5100021362,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Rae Lakes Airport,0,64.1160964966,-117.3099975586,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Resolute Bay Airport,0,74.7169036865,-94.9693984985,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Rigolet Airport,0,54.1796989441,-58.4575004578,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Red Lake Airport,0,51.0668983459,-93.7930984497,0,0,0,0,0,0,0,0,0,7,1,0,Canada,0
+Rankin Inlet Airport,0,62.8114013672,-92.1157989502,0,0,0,0,0,0,0,0,0,25,1,0,Canada,0
+Lutselk'e Airport,0,62.418303,-110.681998,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Sanikiluaq Airport,0,56.5377998352,-79.2466964722,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Fort Smith Airport,0,60.0203018188,-111.9619979858,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Postville Airport,0,54.9105,-59.78507,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Sachs Harbour (David Nasogaluak Jr. Saaryuaq) Airport,0,71.9938964844,-125.242996216,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Cape Dorset Airport,0,64.2300033569,-76.5267028809,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Thompson Airport,0,55.8011016846,-97.8641967773,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Big Trout Lake Airport,0,53.8177986145,-89.8968963623,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Tasiujaq Airport,0,58.6678009033,-69.9558029175,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Billy Bishop Toronto City Centre Airport,0,43.627499,-79.396202,0,0,0,0,0,0,0,0,0,14,1,0,Canada,0
+Tuktoyaktuk Airport,0,69.4332962036,-133.0260009766,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Umiujaq Airport,0,56.5360984802,-76.5183029175,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Yuma MCAS/Yuma International Airport,0,32.65660095,-114.6060028,0,0,0,0,0,0,0,0,0,3,0,1,United States,0
+Repulse Bay Airport,0,66.5214004517,-86.2247009277,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Hall Beach Airport,0,68.7761001587,-81.2425,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Rouyn Noranda Airport,0,48.2061004639,-78.8356018066,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Bonaventure Airport,0,48.0710983276,-65.4602966309,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Qikiqtarjuaq Airport,0,67.5457992554,-64.0314025879,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Val-d'Or Airport,0,48.0532989502,-77.7827987671,0,0,0,0,0,0,0,0,0,7,1,0,Canada,0
+Kuujjuaq Airport,0,58.0960998535,-68.426902771,0,0,0,0,0,0,0,0,0,10,1,0,Canada,0
+Norman Wells Airport,0,65.2816009521,-126.797996521,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Deer Lake Airport,0,52.6557998657,-94.0614013672,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Kangiqsujuaq (Wakeham Bay) Airport,0,61.5886001587,-71.929397583,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Victoria Harbour Seaplane Base,0,48.4249858939,-123.388867378,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Déline Airport,0,65.2110977173,-123.4359970093,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Wabush Airport,0,52.9219017029,-66.864402771,0,0,0,0,0,0,0,0,0,16,1,0,Canada,0
+Williams Lake Airport,0,52.1831016541,-122.054000854,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Webequie Airport,0,52.9593933975,-87.3748683929,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Cranbrook/Canadian Rockies International Airport,0,49.6108016968,-115.7819976807,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Medicine Hat Airport,0,50.018901825,-110.7210006714,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Fort St John Airport,0,56.2380981445,-120.7399978638,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Sioux Lookout Airport,0,50.113899231,-91.9052963257,0,0,0,0,0,0,0,0,0,18,1,0,Canada,0
+Whale Cove Airport,0,62.2400016785,-92.5980987549,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Pangnirtung Airport,0,66.1449966431,-65.7136001587,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Prince George Airport,0,53.8894004822,-122.679000854,0,0,0,0,0,0,0,0,0,10,1,0,Canada,0
+Northwest Regional Airport Terrace-Kitimat,0,54.468498,-128.576009,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Abbotsford Airport,0,49.0252990723,-122.361000061,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Whitehorse / Erik Nielsen International Airport,0,60.7095985413,-135.067001343,0,0,0,0,0,0,0,0,0,5,1,0,Canada,0
+Smithers Airport,0,54.8246994019,-127.1829986572,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Fort Nelson Airport,0,58.8363990784,-122.597000122,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Penticton Airport,0,49.4631004333,-119.6019973755,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Taloyoak Airport,0,69.5466995239,-93.5766983032,0,0,0,0,0,0,0,0,0,4,1,0,Canada,0
+Churchill Airport,0,58.739200592,-94.0650024414,0,0,0,0,0,0,0,0,0,8,1,0,Canada,0
+Goose Bay Airport,0,53.3191986084,-60.4258003235,0,0,0,0,0,0,0,0,0,15,1,0,Canada,0
+Kapuskasing Airport,0,49.413898468,-82.4674987793,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Mont Joli Airport,0,48.6086006165,-68.2080993652,0,0,0,0,0,0,0,0,0,8,1,0,Canada,0
+Yellowknife Airport,0,62.4627990723,-114.4400024414,0,0,0,0,0,0,0,0,0,30,1,0,Canada,0
+Salluit Airport,0,62.1794013977,-75.6671981812,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Sandspit Airport,0,53.2542991638,-131.813995361,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Coral Harbour Airport,0,64.1932983398,-83.3593978882,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Port Hardy Airport,0,50.6805992126,-127.3669967651,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Sept-Îles Airport,0,50.2233009338,-66.2656021118,0,0,0,0,0,0,0,0,0,22,1,0,Canada,0
+Trail Airport,0,49.0555992126,-117.60900116,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Bathurst Airport,0,47.629699707,-65.738899231,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Eastmain River Airport,0,52.226398468,-78.5224990845,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Fort Mcpherson Airport,0,67.4075012207,-134.8609924316,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Tulita Airport,0,64.909697,-125.572998,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+La Romaine Airport,0,50.259701,-60.679401,0,0,0,0,0,0,0,0,0,6,1,0,Canada,0
+Kashechewan Airport,0,52.2825012207,-81.6778030396,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Kegaska Airport,0,50.1958007812,-61.2658004761,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+La Tabatière Airport,0,50.8307991028,-58.9756011963,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Masset Airport,0,54.0275001526,-132.125,0,0,0,0,0,0,0,0,0,1,1,0,Canada,0
+Sachigo Lake Airport,0,53.8911018372,-92.1964035034,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Round Lake (Weagamow Lake) Airport,0,52.9435997009,-91.3127975464,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Sandy Lake Airport,0,53.064201355,-93.3443984985,0,0,0,0,0,0,0,0,0,3,1,0,Canada,0
+Tête-à-la-Baleine Airport,0,50.6744003296,-59.3835983276,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Churchill Falls Airport,0,53.5619010925,-64.1063995361,0,0,0,0,0,0,0,0,0,2,1,0,Canada,0
+Alpena County Regional Airport,0,45.0780983,-83.56030273,1,0,0,0,0,0,0,0,0,2,0,1,United States,0
+Greater Binghamton/Edwin A Link field,0,42.20869827,-75.97979736,1,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Bangor International Airport,0,44.8073997498,-68.8281021118,1,0,0,0,0,0,0,0,0,8,0,1,United States,0
+Chippewa County International Airport,0,46.2508010864,-84.4723968506,1,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Yeager Airport,0,38.3731002808,-81.5932006836,1,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Erie International Tom Ridge Field,0,42.0831270134,-80.1738667488,1,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Delta County Airport,0,45.7226982117,-87.0936965942,1,0,0,0,0,0,0,0,0,1,0,1,United States,0
+New Castle Airport,0,39.67869949,-75.60649872,1,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Ithaca Tompkins Regional Airport,0,42.4910011292,-76.4583969116,1,0,0,0,0,0,0,0,0,4,0,1,United States,0
+Chubu Centrair International Airport,0,34.8583984375,136.8049926758,1,0,0,0,0,0,0,0,0,84,0,0,Japan,0
+Pellston Regional Airport of Emmet County Airport,0,45.57089996,-84.79669952,1,0,0,0,0,0,0,0,0,1,0,1,United States,0
+Stewart International Airport,0,41.5041007996,-74.1047973633,1,0,0,0,0,0,0,0,0,6,0,1,United States,0
+Trenton Mercer Airport,0,40.2766990662,-74.8134994507,1,0,0,0,0,0,0,0,0,14,0,1,United States,0
+Chicago Midway International Airport,0,41.785999,-87.752403,3,0,0,0,0,0,0,0,0,139,0,1,United States,0
+Stockholm-Arlanda Airport,0,59.6519012451,17.9186000824,0,0,1,0,0,0,0,0,0,219,0,0,Sweden,0
+Boise Air Terminal/Gowen Field,0,43.5644,-116.223,0,0,1,0,0,0,0,0,0,21,0,1,United States,0
+Southeast Iowa Regional Airport,0,40.7831993103,-91.12550354,0,0,1,0,0,0,0,0,0,2,0,1,United States,0
+Gallatin Field,0,45.77750015,-111.1529999,0,0,1,0,0,0,0,0,0,8,0,1,United States,0
+Houghton County Memorial Airport,0,47.1683998108,-88.4890975952,0,0,1,0,0,0,0,0,0,1,0,1,United States,0
+City of Colorado Springs Municipal Airport,0,38.805801,-104.700996,0,0,1,0,0,0,0,0,0,13,0,1,United States,0
+Decatur Airport,0,39.8345985413,-88.8656997681,0,0,1,0,0,0,0,0,0,2,0,1,United States,0
+Indira Gandhi International Airport,0,28.5665,77.103104,0,0,1,0,0,0,0,0,0,264,0,0,India,0
+Duluth International Airport,0,46.8420982361,-92.1936035156,0,0,1,0,0,0,0,0,0,4,0,1,United States,0
+Chippewa Valley Regional Airport,0,44.8657989502,-91.4842987061,0,0,1,0,0,0,0,0,0,1,0,1,United States,0
+Topeka Regional Airport - Forbes Field,0,38.9509010315,-95.6635971069,0,0,1,0,0,0,0,0,0,1,0,1,United States,0
+Daniel K Inouye International Airport,0,21.32062,-157.924228,0,0,1,0,0,0,0,0,0,118,0,1,United States,0
+Jackson-Medgar Wiley Evers International Airport,0,32.3111991882,-90.0758972168,0,0,1,0,0,0,0,0,0,18,0,1,United States,0
+Lincoln Airport,0,40.8510017395,-96.7592010498,0,0,1,0,0,0,0,0,0,3,0,1,United States,0
+Muskegon County Airport,0,43.16949844,-86.23819733,0,0,1,0,0,0,0,0,0,1,0,1,United States,0
+Mobile Regional Airport,0,30.6912002563,-88.2427978516,0,0,1,0,0,0,0,0,0,9,0,1,United States,0
+Metropolitan Oakland International Airport,0,37.721298,-122.221001,0,0,1,0,0,0,0,0,0,54,0,1,United States,0
+Kahului Airport,0,20.8986,-156.429993,0,0,1,0,0,0,0,0,0,42,0,1,United States,0
+Barkley Regional Airport,0,37.060798645,-88.7738037109,0,0,1,0,0,0,0,0,0,1,0,1,United States,0
+Pensacola Regional Airport,0,30.473400116,-87.1865997314,0,0,1,0,0,0,0,0,0,21,0,1,United States,0
+Rapid City Regional Airport,0,44.04529953,-103.0569992065,0,0,1,0,0,0,0,0,0,8,0,1,United States,0
+Sacramento International Airport,0,38.695400238,-121.591003418,0,0,1,0,0,0,0,0,0,55,0,1,United States,0
+Sarasota Bradenton International Airport,0,27.3953990936,-82.554397583,0,0,1,0,0,0,0,0,0,13,0,1,United States,0
+St Cloud Regional Airport,0,45.5466003418,-94.0598983765,0,0,1,0,0,0,0,0,0,2,0,1,United States,0
+Cyril E. King Airport,0,18.3372993469,-64.9733963013,0,0,1,0,0,0,0,0,0,34,0,0,Virgin Islands,0
+Lehigh Valley International Airport,0,40.6520996094,-75.4408035278,1,0,1,0,0,0,0,0,0,13,0,1,United States,0
+Albany International Airport,0,42.748298645,-73.8016967773,1,0,1,0,0,0,0,0,0,31,0,1,United States,0
+Appleton International Airport,0,44.2580986023,-88.5190963745,1,0,1,0,0,0,0,0,0,9,0,1,United States,0
+Asheville Regional Airport,0,35.4361991882,-82.5418014526,1,0,1,0,0,0,0,0,0,12,0,1,United States,0
+Wilkes Barre Scranton International Airport,0,41.3385009766,-75.7233963013,1,0,1,0,0,0,0,0,0,9,0,1,United States,0
+Birmingham-Shuttlesworth International Airport,0,33.56290054,-86.75350189,1,0,1,0,0,0,0,0,0,36,0,1,United States,0
+Burlington International Airport,0,44.4719009399,-73.1532974243,1,0,1,0,0,0,0,0,0,13,0,1,United States,0
+Columbia Metropolitan Airport,0,33.9388008118,-81.1194992065,1,0,1,0,0,0,0,0,0,17,0,1,United States,0
+Akron Canton Regional Airport,0,40.9160995483,-81.442199707,1,0,1,0,0,0,0,0,0,22,0,1,United States,0
+Charleston Air Force Base-International Airport,0,32.89860153,-80.04049683,1,0,1,0,0,0,0,0,0,34,0,1,United States,0
+Elmira Corning Regional Airport,0,42.1599006653,-76.8916015625,1,0,1,0,0,0,0,0,0,6,0,1,United States,0
+Piedmont Triad International Airport,0,36.0978012085,-79.9373016357,1,0,1,0,0,0,0,0,0,25,0,1,United States,0
+Greenville Spartanburg International Airport,0,34.8956985474,-82.2189025879,1,0,1,0,0,0,0,0,0,29,0,1,United States,0
+Capital City Airport,0,42.7787017822,-84.5874023438,1,0,1,0,0,0,0,0,0,8,0,1,United States,0
+MBS International Airport,0,43.5329017639,-84.0795974731,1,0,1,0,0,0,0,0,0,5,0,1,United States,0
+Manchester-Boston Regional Airport,0,42.932598,-71.435699,1,0,1,0,0,0,0,0,0,20,0,1,United States,0
+Norfolk International Airport,0,36.8945999146,-76.2012023926,1,0,1,0,0,0,0,0,0,36,0,1,United States,0
+Theodore Francis Green State Airport,0,41.7326011658,-71.4204025269,1,0,1,0,0,0,0,0,0,27,0,1,United States,0
+Roanoke–Blacksburg Regional Airport,0,37.3255,-79.975403,1,0,1,0,0,0,0,0,0,15,0,1,United States,0
+Savannah Hilton Head International Airport,0,32.12760162,-81.20210266,1,0,1,0,0,0,0,0,0,23,0,1,United States,0
+South Bend Regional Airport,0,41.7086982727,-86.3172988892,1,0,1,0,0,0,0,0,0,11,0,1,United States,0
+University Park Airport,0,40.8493003845,-77.8487014771,1,0,1,0,0,0,0,0,0,5,0,1,United States,0
+General Mariano Escobedo International Airport,0,25.7784996033,-100.107002258,2,0,1,0,0,0,0,0,0,72,0,0,Mexico,0
+Waterloo Regional Airport,0,42.5570983887,-92.4002990723,0,0,2,0,0,0,0,0,0,2,0,1,United States,0
+Ted Stevens Anchorage International Airport,0,61.1744003296,-149.9960021973,0,0,2,0,0,0,0,0,0,59,0,1,United States,0
+Watertown International Airport,0,43.9919013977,-76.021697998,0,0,2,0,0,0,0,0,0,4,0,1,United States,0
+Charlottesville Albemarle Airport,0,38.1385993958,-78.4529037476,0,0,2,0,0,0,0,0,0,13,0,1,United States,0
+University of Illinois Willard Airport,0,40.03919983,-88.27809906,0,0,2,0,0,0,0,0,0,4,0,1,United States,0
+Columbia Regional Airport,0,38.8180999756,-92.2195968628,0,0,2,0,0,0,0,0,0,4,0,1,United States,0
+Dubuque Regional Airport,0,42.40200043,-90.70950317,0,0,2,0,0,0,0,0,0,2,0,1,United States,0
+El Paso International Airport,0,31.80719948,-106.3779984,0,0,2,0,0,0,0,0,0,24,0,1,United States,0
+Bishop International Airport,0,42.9654006958,-83.743598938,0,0,2,0,0,0,0,0,0,14,0,1,United States,0
+Don Miguel Hidalgo Y Costilla International Airport,0,20.5217990875,-103.3109970093,0,0,2,0,0,0,0,0,0,93,0,0,Mexico,0
+La Crosse Municipal Airport,0,43.879002,-91.256699,0,0,2,0,0,0,0,0,0,3,0,1,United States,0
+Manhattan Regional Airport,0,39.1409988403,-96.6707992554,0,0,2,0,0,0,0,0,0,4,0,1,United States,0
+Palm Springs International Airport,0,33.82970047,-116.5070037842,0,0,2,0,0,0,0,0,0,26,0,1,United States,0
+Reno Tahoe International Airport,0,39.4990997314,-119.7679977417,0,0,2,0,0,0,0,0,0,27,0,1,United States,0
+Rochester International Airport,0,43.9082984924,-92.5,0,0,2,0,0,0,0,0,0,4,0,1,United States,0
+Norman Y. Mineta San Jose International Airport,0,37.362598,-121.929001,0,0,2,0,0,0,0,0,0,60,0,1,United States,0
+Sioux Gateway Col. Bud Day Field,0,42.40259933,-96.38439941,0,0,2,0,0,0,0,0,0,2,0,1,United States,0
+Toledo Express Airport,0,41.58679962,-83.80780029,0,0,2,0,0,0,0,0,0,5,0,1,United States,0
+Tucson International Airport,0,32.1161003113,-110.9410018921,0,0,2,0,0,0,0,0,0,31,0,1,United States,0
+Berlin-Tegel Airport,0,52.5597,13.2877,0,0,2,0,0,0,0,0,0,208,0,0,Germany,0
+Waterloo Airport,0,43.4608001709,-80.3786010742,0,0,2,0,0,0,0,0,0,3,1,0,Canada,0
+Atlantic City International Airport,0,39.4575996399,-74.5772018433,1,0,2,0,0,0,0,0,0,10,0,1,United States,0
+Kalamazoo Battle Creek International Airport,0,42.2349014282,-85.5521011353,1,0,2,0,0,0,0,0,0,6,0,1,United States,0
+Central Illinois Regional Airport at Bloomington-Normal,0,40.47710037,-88.91590118,1,0,2,0,0,0,0,0,0,12,0,1,United States,0
+Lovell Field,0,35.0353012085,-85.2037963867,1,0,2,0,0,0,0,0,0,16,0,1,United States,0
+Evansville Regional Airport,0,38.0369987488,-87.5324020386,1,0,2,0,0,0,0,0,0,9,0,1,United States,0
+Sawyer International Airport,0,46.3535995483,-87.395401001,1,0,2,0,0,0,0,0,0,3,0,1,United States,0
+Palm Beach International Airport,0,26.6832008362,-80.0955963135,1,0,2,0,0,0,0,0,0,44,0,1,United States,0
+Albuquerque International Sunport,0,35.040199,-106.609001,0,0,3,0,0,0,0,0,0,42,0,1,United States,0
+Queen Alia International Airport,0,31.7226009369,35.9931983948,0,0,3,0,0,0,0,0,0,111,0,0,Jordan,0
+Hector International Airport,0,46.9207000732,-96.8158035278,0,0,3,0,0,0,0,0,0,14,0,1,United States,0
+Joe Foss Field Airport,0,43.5820007324,-96.741897583,0,0,3,0,0,0,0,0,0,13,0,1,United States,0
+Wichita Eisenhower National Airport,0,37.649899,-97.433098,0,0,3,0,0,0,0,0,0,20,0,1,United States,0
+Springfield Branson National Airport,0,37.24570084,-93.38860321,0,0,3,0,0,0,0,0,0,14,0,1,United States,0
+John Wayne Airport-Orange County Airport,0,33.67570114,-117.8679962,0,0,3,0,0,0,0,0,0,42,0,1,United States,0
+Austin Bergstrom International Airport,0,30.1944999695,-97.6698989868,1,0,3,0,0,0,0,0,0,83,0,1,United States,0
+Buffalo Niagara International Airport,0,42.94049835,-78.73220062,1,0,3,0,0,0,0,0,0,36,0,1,United States,0
+The Eastern Iowa Airport,0,41.8847007751,-91.7108001709,1,0,3,0,0,0,0,0,0,17,0,1,United States,0
+Central Wisconsin Airport,0,44.7775993347,-89.6668014526,1,0,3,0,0,0,0,0,0,5,0,1,United States,0
+James M Cox Dayton International Airport,0,39.9024009705,-84.2193984985,1,0,3,0,0,0,0,0,0,32,0,1,United States,0
+Des Moines International Airport,0,41.5340003967,-93.6631011963,1,0,3,0,0,0,0,0,0,29,0,1,United States,0
+Fort Wayne International Airport,0,40.97850037,-85.19509888,1,0,3,0,0,0,0,0,0,16,0,1,United States,0
+Austin Straubel International Airport,0,44.4850997925,-88.1296005249,1,0,3,0,0,0,0,0,0,8,0,1,United States,0
+Gerald R. Ford International Airport,0,42.88079834,-85.52279663,1,0,3,0,0,0,0,0,0,28,0,1,United States,0
+Westchester County Airport,0,41.0670013428,-73.7076034546,1,0,3,0,0,0,0,0,0,23,0,1,United States,0
+Huntsville International Carl T Jones Field,0,34.6371994019,-86.775100708,1,0,3,0,0,0,0,0,0,18,0,1,United States,0
+Jacksonville International Airport,0,30.4941005707,-81.6878967285,1,0,3,0,0,0,0,0,0,46,0,1,United States,0
+Blue Grass Airport,0,38.0364990234,-84.6059036255,1,0,3,0,0,0,0,0,0,20,0,1,United States,0
+Bill & Hillary Clinton National Airport/Adams Field,0,34.7294006348,-92.2242965698,1,0,3,0,0,0,0,0,0,29,0,1,United States,0
+Quad City International Airport,0,41.4485015869,-90.5074996948,1,0,3,0,0,0,0,0,0,15,0,1,United States,0
+Dane County Regional Truax Field,0,43.1399002075,-89.3375015259,1,0,3,0,0,0,0,0,0,17,0,1,United States,0
+Will Rogers World Airport,0,35.3931007385,-97.6007003784,1,0,3,0,0,0,0,0,0,40,0,1,United States,0
+Eppley Airfield,0,41.3032,-95.894096,1,0,3,0,0,0,0,0,0,34,0,1,United States,0
+General Wayne A. Downing Peoria International Airport,0,40.6641998291,-89.6932983398,1,0,3,0,0,0,0,0,0,15,0,1,United States,0
+Richmond International Airport,0,37.5051994324,-77.3197021484,1,0,3,0,0,0,0,0,0,38,0,1,United States,0
+San Antonio International Airport,0,29.533700943,-98.4698028564,1,0,3,0,0,0,0,0,0,68,0,1,United States,0
+Louisville International Standiford Field,0,38.1744,-85.736,1,0,3,0,0,0,0,0,0,41,0,1,United States,0
+Tulsa International Airport,0,36.1983985901,-95.8880996704,1,0,3,0,0,0,0,0,0,27,0,1,United States,0
+Cherry Capital Airport,0,44.7414016724,-85.5821990967,1,0,3,0,0,0,0,0,0,5,0,1,United States,0
+McGhee Tyson Airport,0,35.81100082,-83.9940033,1,0,3,0,0,0,0,0,0,31,0,1,United States,0
+Northwest Arkansas Regional Airport,0,36.281898,-94.306801,1,0,3,0,0,0,0,0,0,24,0,1,United States,0
+Adolfo Suárez Madrid–Barajas Airport,0,40.471926,-3.56264,0,0,4,0,0,0,0,0,0,330,0,0,Spain,0
+Licenciado Gustavo Díaz Ordaz International Airport,0,20.6800994873,-105.2539978027,0,0,4,0,0,0,0,0,0,47,0,0,Mexico,0
+Los Cabos International Airport,0,23.1518001556,-109.7210006714,0,0,4,0,0,0,0,0,0,51,0,0,Mexico,0
+Memphis International Airport,0,35.0424003601,-89.9766998291,1,0,4,0,0,0,0,0,0,58,0,1,United States,0
+Salt Lake City International Airport,0,40.7883987427,-111.9779968262,1,0,4,0,0,0,0,0,0,141,0,1,United States,0
+Portland International Airport,0,45.58869934,-122.5979996,2,0,4,0,0,0,0,0,0,113,0,1,United States,0
+Lester B. Pearson International Airport,0,43.6772003174,-79.6305999756,5,0,6,1,0,0,0,0,0,319,1,0,Canada,0
+Düsseldorf Airport,0,51.289501,6.76678,0,0,8,0,0,0,0,0,0,285,0,0,Germany,0
+Eleftherios Venizelos International Airport,0,37.9364013672,23.9444999695,0,0,0,0,1,0,0,0,0,197,0,0,Greece,0
+Cairo International Airport,0,30.1219005585,31.4055995941,0,0,0,0,1,0,0,0,0,151,0,0,Egypt,0
+Ignacio Agramonte International Airport,0,21.42029953,-77.8475036621,0,0,0,0,1,0,0,0,0,3,0,0,Cuba,0
+Dubai International Airport,0,25.2527999878,55.3643989563,0,0,0,0,1,0,0,0,0,356,0,0,United Arab Emirates,0
+Exuma International Airport,0,23.5625991821,-75.8779983521,0,0,0,0,1,0,0,0,0,10,0,0,Bahamas,0
+Glasgow International Airport,0,55.8718986511,-4.4330601692,0,0,0,0,1,0,0,0,0,100,0,0,United Kingdom,0
+José Martí International Airport,0,22.989200592,-82.4091033936,0,0,0,0,1,0,0,0,0,45,0,0,Cuba,0
+King Abdulaziz International Airport,0,21.6796,39.156502,0,0,0,0,1,0,0,0,0,194,0,0,Saudi Arabia,0
+Keflavik International Airport,0,63.9850006104,-22.6056003571,0,0,0,0,1,0,0,0,0,45,0,0,Iceland,0
+Jinnah International Airport,0,24.9065,67.160797,0,0,0,0,1,0,0,0,0,62,0,0,Pakistan,0
+London Gatwick Airport,0,51.148102,-0.190278,0,0,0,0,1,0,0,0,0,356,0,0,United Kingdom,0
+Alama Iqbal International Airport,0,31.5216007233,74.4036026001,0,0,0,0,1,0,0,0,0,56,0,0,Pakistan,0
+Jorge Chávez International Airport,0,-12.0219,-77.114305,0,0,0,0,1,0,0,0,0,115,0,0,Peru,0
+Comodoro Arturo Merino Benítez International Airport,0,-33.3930015564,-70.7857971191,0,0,0,0,1,0,0,0,0,79,0,0,Chile,0
+Sheremetyevo International Airport,0,55.972599,37.4146,0,0,0,0,1,0,0,0,0,199,0,0,Russia,0
+Taiwan Taoyuan International Airport,0,25.0777,121.233002,0,0,0,0,1,0,0,0,0,264,0,0,Taiwan,0
+Venice Marco Polo Airport,0,45.505299,12.3519,0,0,0,0,1,0,0,0,0,122,0,0,Italy,0
+Vnukovo International Airport,0,55.5914993286,37.2615013123,0,0,0,0,1,0,0,0,0,86,0,0,Russia,0
+Sault Ste Marie Airport,0,46.4850006104,-84.5093994141,0,0,0,0,1,0,0,0,0,4,1,0,Canada,0
+Fredericton Airport,0,45.8689002991,-66.5372009277,0,0,0,0,1,0,0,0,0,4,1,0,Canada,0
+Kingston Norman Rogers Airport,0,44.2252998352,-76.5969009399,0,0,0,0,1,0,0,0,0,1,1,0,Canada,0
+Kelowna International Airport,0,49.9561004639,-119.377998352,0,0,0,0,1,0,0,0,0,15,1,0,Canada,0
+Windsor Airport,0,42.2756004333,-82.9555969238,0,0,0,0,1,0,0,0,0,3,1,0,Canada,0
+Sydney / J.A. Douglas McCurdy Airport,0,46.1614,-60.047798,0,0,0,0,1,0,0,0,0,2,1,0,Canada,0
+Sudbury Airport,0,46.625,-80.7988967896,0,0,0,0,1,0,0,0,0,6,1,0,Canada,0
+Saint John Airport,0,45.3161010742,-65.890296936,0,0,0,0,1,0,0,0,0,3,1,0,Canada,0
+Timmins/Victor M. Power,0,48.5696983337,-81.376701355,0,0,0,0,1,0,0,0,0,5,1,0,Canada,0
+North Bay Airport,0,46.3636016846,-79.4227981567,0,0,0,0,1,0,0,0,0,2,1,0,Canada,0
+Chris Hadfield Airport,0,42.9994010925,-82.3088989258,0,0,0,0,1,0,0,0,0,1,1,0,Canada,0
+Monseñor Óscar Arnulfo Romero International Airport,0,13.4409,-89.055702,0,0,1,0,1,0,0,0,0,53,0,0,El Salvador,0
+Juan Santamaria International Airport,0,9.9938602448,-84.2088012695,0,0,1,0,1,0,0,0,0,76,0,0,Costa Rica,0
+Princess Juliana International Airport,0,18.0410003662,-63.1088981628,0,0,1,0,1,0,0,0,0,58,0,0,Netherlands Antilles,0
+Tocumen International Airport,0,9.0713596344,-79.3834991455,0,0,2,0,1,0,0,0,0,106,0,0,Panama,0
+London Airport,0,43.035599,-81.1539,0,0,2,0,1,0,0,0,0,6,1,0,Canada,0
+Myrtle Beach International Airport,0,33.6796989441,-78.9282989502,2,0,2,0,1,0,0,0,0,34,0,1,United States,0
+Incheon International Airport,0,37.4691009521,126.4509963989,1,0,3,0,1,0,0,0,0,370,0,0,South Korea,0
+Indianapolis International Airport,0,39.7173,-86.294403,1,0,3,0,1,0,0,0,0,69,0,1,United States,0
+Kansas City International Airport,0,39.2976,-94.713898,1,0,3,0,1,0,0,0,0,82,0,1,United States,0
+Harrisburg International Airport,0,40.1935005188,-76.7633972168,1,0,3,0,1,0,0,0,0,20,0,1,United States,0
+General Mitchell International Airport,0,42.9472007751,-87.8965988159,1,0,3,0,1,0,0,0,0,65,0,1,United States,0
+Raleigh Durham International Airport,0,35.8776016235,-78.7874984741,1,0,3,0,1,0,0,0,0,83,0,1,United States,0
+Greater Rochester International Airport,0,43.1189002991,-77.6724014282,1,0,3,0,1,0,0,0,0,30,0,1,United States,0
+Syracuse Hancock International Airport,0,43.1111984253,-76.106300354,1,0,3,0,1,0,0,0,0,26,0,1,United States,0
+Nashville International Airport,0,36.1245002747,-86.6781997681,2,0,3,0,1,0,0,0,0,82,0,1,United States,0
+Baltimore/Washington International Thurgood Marshall Airport,0,39.1754,-76.668297,3,0,3,0,1,0,0,0,0,142,0,1,United States,0
+Phoenix Sky Harbor International Airport,0,33.434299469,-112.0120010376,4,0,3,0,1,0,0,0,0,251,0,1,United States,0
+Seattle Tacoma International Airport,0,47.449001,-122.308998,1,0,4,0,1,0,0,0,0,201,0,1,United States,0
+Luis Munoz Marin International Airport,0,18.4393997192,-66.0018005371,1,0,4,0,1,0,0,0,0,102,0,0,Puerto Rico,0
+San Diego International Airport,0,32.7336006165,-117.190002441,2,0,4,0,1,0,0,0,0,119,0,1,United States,0
+Manchester Airport,0,53.3536987305,-2.2749500275,0,0,5,0,1,0,0,0,0,316,0,0,United Kingdom,0
+V.C. Bird International Airport,0,17.1367,-61.792702,0,0,0,0,2,0,0,0,0,35,0,0,Antigua and Barbuda,0
+Queen Beatrix International Airport,0,12.5014,-70.015198,0,0,0,0,2,0,0,0,0,44,0,0,Aruba,0
+Samaná El Catey International Airport,0,19.2670001984,-69.7419967651,0,0,0,0,2,0,0,0,0,6,0,0,Dominican Republic,0
+Barcelona International Airport,0,41.2971,2.07846,0,0,0,0,2,0,0,0,0,391,0,0,Spain,0
+L.F. Wade International International Airport,0,32.3639984131,-64.6787033081,0,0,0,0,2,0,0,0,0,15,0,0,Bermuda,0
+Sir Grantley Adams International Airport,0,13.0746002197,-59.4925003052,0,0,0,0,2,0,0,0,0,23,0,0,Barbados,0
+El Dorado International Airport,0,4.70159,-74.1469,0,0,0,0,2,0,0,0,0,152,0,0,Colombia,0
+Jardines Del Rey Airport,0,22.4610004425,-78.3283996582,0,0,0,0,2,0,0,0,0,6,0,0,Cuba,0
+Cheddi Jagan International Airport,0,6.4985499382,-58.2541007996,0,0,0,0,2,0,0,0,0,8,0,0,Guyana,0
+Point Salines International Airport,0,12.0041999817,-61.7862014771,0,0,0,0,2,0,0,0,0,14,0,0,Grenada,0
+Frank Pais International Airport,0,20.7856006622,-76.3151016235,0,0,0,0,2,0,0,0,0,11,0,0,Cuba,0
+Daniel Oduber Quiros International Airport,0,10.5933,-85.544403,0,0,0,0,2,0,0,0,0,24,0,0,Costa Rica,0
+Francisco de Sá Carneiro Airport,0,41.2481002808,-8.6813898087,0,0,0,0,2,0,0,0,0,100,0,0,Portugal,0
+João Paulo II Airport,0,37.7411994934,-25.6979007721,0,0,0,0,2,0,0,0,0,23,0,0,Portugal,0
+Providenciales Airport,0,21.7735996246,-72.2658996582,0,0,0,0,2,0,0,0,0,31,0,0,Turks and Caicos Islands,0
+Gregorio Luperon International Airport,0,19.757900238,-70.5699996948,0,0,0,0,2,0,0,0,0,16,0,0,Dominican Republic,0
+Piarco International Airport,0,10.5953998566,-61.3372001648,0,0,0,0,2,0,0,0,0,35,0,0,Trinidad and Tobago,0
+Ben Gurion International Airport,0,32.0113983154,34.8866996765,0,0,0,0,2,0,0,0,0,136,0,0,Israel,0
+Hewanorra International Airport,0,13.7332,-60.952599,0,0,0,0,2,0,0,0,0,19,0,0,Saint Lucia,0
+Deer Lake Airport,0,49.2108001709,-57.3913993835,0,0,0,0,2,0,0,0,0,7,1,0,Canada,0
+Fort McMurray Airport,0,56.653301239,-111.222000122,0,0,0,0,2,0,0,0,0,12,1,0,Canada,0
+Greater Moncton International Airport,0,46.1122016907,-64.6785964966,0,0,0,0,2,0,0,0,0,10,1,0,Canada,0
+Thunder Bay Airport,0,48.3718986511,-89.3238983154,0,0,0,0,2,0,0,0,0,13,1,0,Canada,0
+Charlottetown Airport,0,46.2900009155,-63.1211013794,0,0,0,0,2,0,0,0,0,4,1,0,Canada,0
+Victoria International Airport,0,48.646900177,-123.426002502,0,0,0,0,2,0,0,0,0,13,1,0,Canada,0
+St. John's International Airport,0,47.618598938,-52.7518997192,0,0,0,0,2,0,0,0,0,22,1,0,Canada,0
+Warsaw Chopin Airport,0,52.1656990051,20.9671001434,0,0,1,0,2,0,0,0,0,120,0,0,Poland,0
+Saskatoon John G. Diefenbaker International Airport,0,52.1707992554,-106.6999969482,0,0,1,0,2,0,0,0,0,15,1,0,Canada,0
+Owen Roberts International Airport,0,19.2928009033,-81.3576965332,1,0,1,0,2,0,0,0,0,25,0,0,Cayman Islands,0
+Lynden Pindling International Airport,0,25.0389995575,-77.4662017822,1,0,1,0,2,0,0,0,0,67,0,0,Bahamas,0
+Guarulhos - Governador André Franco Montoro International Airport,0,-23.4355564117,-46.4730567932,2,0,1,0,2,0,0,0,0,193,0,0,Brazil,0
+Washington Dulles International Airport,0,38.94449997,-77.45580292,2,0,1,0,2,0,0,0,0,196,0,1,United States,0
+Abu Dhabi International Airport,0,24.4330005646,54.6511001587,0,0,2,0,2,0,0,0,0,241,0,0,United Arab Emirates,0
+Atatürk International Airport,0,40.976898,28.8146,0,0,2,0,2,0,0,0,0,358,0,0,Turkey,0
+Munich Airport,0,48.353802,11.7861,0,0,2,0,2,0,0,0,0,368,0,0,Germany,0
+Edmonton International Airport,0,53.3097000122,-113.580001831,0,0,2,0,2,0,0,0,0,68,1,0,Canada,0
+Quebec Jean Lesage International Airport,0,46.7911,-71.393303,0,0,2,0,2,0,0,0,0,28,1,0,Canada,0
+Regina International Airport,0,50.4319000244,-104.6660003662,0,0,2,0,2,0,0,0,0,16,1,0,Canada,0
+Winnipeg / James Armstrong Richardson International Airport,0,49.9099998474,-97.2398986816,0,0,2,0,2,0,0,1,0,41,1,0,Canada,0
+Zürich Airport,0,47.464699,8.54917,0,0,2,0,2,0,0,0,0,247,0,0,Switzerland,0
+Frankfurt am Main Airport,0,50.033333,8.570556,5,0,2,0,2,0,0,0,0,497,0,0,Germany,0
+Hong Kong International Airport,0,22.308901,113.915001,0,0,3,0,2,0,0,0,0,355,0,0,Hong Kong,0
+Bradley International Airport,0,41.9388999939,-72.6831970215,1,0,3,0,2,0,0,0,0,51,0,1,United States,0
+Cleveland Hopkins International Airport,0,41.4117012024,-81.8498001099,1,0,3,0,2,0,0,0,0,81,0,1,United States,0
+John Glenn Columbus International Airport,0,39.998001,-82.891899,1,0,3,0,2,0,0,0,0,63,0,1,United States,0
+Pittsburgh International Airport,0,40.49150085,-80.23290253,1,0,3,0,2,0,0,0,0,74,0,1,United States,0
+Newark Liberty International Airport,0,40.6925010681,-74.1687011719,2,0,3,0,2,0,0,0,0,253,0,1,United States,0
+St Louis Lambert International Airport,0,38.748697,-90.370003,3,0,3,0,2,0,0,0,0,114,0,1,United States,0
+Southwest Florida International Airport,0,26.5361995697,-81.7552032471,2,0,4,0,2,0,0,0,0,63,0,1,United States,0
+Tampa International Airport,0,27.9755001068,-82.533203125,2,0,4,0,2,0,0,0,0,138,0,1,United States,0
+George Bush Intercontinental Houston Airport,0,29.9843997955,-95.3414001465,3,0,4,0,2,0,0,0,0,243,0,1,United States,0
+Denver International Airport,0,39.8616981506,-104.672996521,5,0,4,0,2,0,0,0,0,361,0,1,United States,0
+San Francisco International Airport,0,37.6189994812,-122.375,1,0,5,0,2,0,0,0,0,249,0,1,United States,0
+General Edward Lawrence Logan International Airport,0,42.36429977,-71.00520325,2,0,5,0,2,0,0,0,0,212,0,1,United States,0
+Shanghai Pudong International Airport,0,31.1434001923,121.8050003052,3,0,5,0,2,0,0,0,0,411,0,0,China,0
+Narita International Airport,0,35.7647018433,140.386001587,1,0,6,0,2,0,0,0,0,286,0,0,Japan,0
+Licenciado Benito Juarez International Airport,0,19.4363,-99.072098,2,0,6,0,2,0,0,0,0,243,0,0,Mexico,0
+Louis Armstrong New Orleans International Airport,0,29.9934005737,-90.2580032349,5,0,8,0,2,0,0,0,0,123,0,1,United States,0
+Humberto Delgado Airport (Lisbon Portela Airport),0,38.7813,-9.13592,0,0,0,0,3,0,0,0,0,214,0,0,Portugal,0
+Juan Gualberto Gomez International Airport,0,23.0344009399,-81.4353027344,0,0,0,0,3,0,0,0,0,13,0,0,Cuba,0
+Copenhagen Kastrup Airport,0,55.6179008484,12.6560001373,0,0,1,0,3,0,0,0,0,229,0,0,Denmark,0
+Brussels Airport,0,50.9014015198,4.4844398499,0,0,2,0,3,0,0,0,0,316,0,0,Belgium,0
+Vienna International Airport,0,48.1102981567,16.5697002411,0,0,2,0,3,0,0,0,0,308,0,0,Austria,0
+Halifax / Stanfield International Airport,0,44.8807983398,-63.5085983276,0,0,2,0,3,0,0,0,0,43,1,0,Canada,0
+Punta Cana International Airport,0,18.5673999786,-68.3634033203,1,0,2,0,3,0,0,0,0,73,0,0,Dominican Republic,0
+Ottawa Macdonald-Cartier International Airport,0,45.3224983215,-75.6691970825,1,0,2,0,3,0,0,0,0,45,1,0,Canada,0
+Sangster International Airport,0,18.5037002563,-77.9133987427,1,0,3,0,3,0,0,0,0,45,0,0,Jamaica,0
+Charlotte Douglas International Airport,0,35.2140007019,-80.9430999756,3,0,3,0,3,0,0,0,0,301,0,1,United States,0
+Cancún International Airport,0,21.0365009308,-86.8770980835,3,0,3,0,3,0,0,0,0,157,0,0,Mexico,0
+Ronald Reagan Washington National Airport,0,38.8521,-77.037697,3,0,3,0,3,0,0,0,0,196,0,1,United States,0
+Cincinnati Northern Kentucky International Airport,0,39.0488014221,-84.6678009033,1,0,4,0,3,0,0,0,0,75,0,1,United States,0
+Amsterdam Airport Schiphol,0,52.308601,4.76389,2,0,4,0,3,0,0,0,0,453,0,0,Netherlands,0
+Vancouver International Airport,0,49.193901062,-123.183998108,0,0,5,0,3,0,0,0,0,158,1,0,Canada,0
+Calgary International Airport,0,51.113899231,-114.019996643,0,0,5,0,3,0,0,0,0,115,1,0,Canada,0
+Beijing Capital International Airport,0,40.0801010132,116.5849990845,3,0,5,0,3,0,0,0,0,535,0,0,China,0
+Dublin Airport,0,53.421299,-6.27007,0,0,7,0,3,0,0,0,0,207,0,0,Ireland,0
+Norman Manley International Airport,0,17.9356994629,-76.7874984741,0,0,0,0,4,0,0,0,0,30,0,0,Jamaica,0
+Abel Santamaria Airport,0,22.4922008514,-79.9436035156,0,0,0,0,4,0,0,0,0,9,0,0,Cuba,0
+Miami International Airport,0,25.7931995392,-80.2906036377,3,0,3,0,4,0,0,0,0,368,0,1,United States,0
+Philadelphia International Airport,0,39.8718986511,-75.2410964966,3,0,3,0,4,0,0,0,0,289,0,1,United States,0
+Detroit Metropolitan Wayne County Airport,1,42.2123985291,-83.3534011841,0,0,4,0,4,0,0,0,0,216,0,1,United States,0
+Fort Lauderdale Hollywood International Airport,0,26.072599,-80.152702,2,0,4,0,4,0,0,0,0,186,0,1,United States,0
+McCarran International Airport,0,36.08010101,-115.1520004,3,0,4,0,4,0,0,0,0,246,0,1,United States,0
+Minneapolis-St Paul International/Wold-Chamberlain Airport,0,44.882,-93.221802,1,0,5,0,4,1,0,0,0,218,0,1,United States,0
+Orlando International Airport,0,28.4293994904,-81.3089981079,2,0,4,0,5,0,0,0,0,237,0,1,United States,0
+Dallas Fort Worth International Airport,0,32.896801,-97.038002,4,0,4,0,5,0,0,0,0,469,0,1,United States,0
+Leonardo da Vinci–Fiumicino Airport,0,41.8002778,12.2388889,0,0,7,0,5,0,0,0,0,331,0,0,Italy,0
+Los Angeles International Airport,0,33.94250107,-118.4079971,2,0,7,0,5,0,0,0,0,492,0,1,United States,0
+Chicago O'Hare International Airport,0,41.9786,-87.9048,4,1,0,0,6,0,0,0,0,558,0,1,United States,0
+La Guardia Airport,0,40.77719879,-73.87259674,4,0,5,0,6,0,0,0,0,158,0,1,United States,0
+Montreal / Pierre Elliott Trudeau International Airport,0,45.4706001282,-73.7407989502,4,0,6,0,6,0,0,0,0,185,1,0,Canada,0
+Charles de Gaulle International Airport,0,49.012798,2.55,3,0,10,0,6,0,0,0,0,524,0,0,France,0
+Hartsfield Jackson Atlanta International Airport,0,33.6367,-84.428101,8,0,19,0,6,0,0,0,0,915,0,1,United States,0
+John F Kennedy International Airport,0,40.63980103,-73.77890015,1,0,5,0,7,0,0,0,0,456,0,1,United States,0
+London Heathrow Airport,0,51.4706,-0.461941,4,0,9,0,7,0,0,0,0,527,0,0,United Kingdom,0
