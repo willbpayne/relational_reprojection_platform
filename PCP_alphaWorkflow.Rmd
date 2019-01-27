@@ -17,26 +17,26 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 * Read and give headers and datatypes for each (eventually do more sophisticated validation/type detection)
 
 ```{r}
-airports <- read.csv(file = "testData/airports_bare_sm.csv")
-summary(airports)
+routes <- read.csv(file = "testData/routes_bare_sm.csv")
+summary(routes)
 # at some point, we need to enforce generic column headers
 
-typeof(airports$isDTW)
+typeof(routes$isDTW)
 
        # obnoxiously explicit validation
 
-if (typeof(airports$airport) != "character")
-  airports$airport <- as.character(airports$airport)
-if (typeof(airports$isDTW) != "logical")
-  airports$isDTW <- as.logical(airports$isDTW)
-if (typeof(airports$lat) != "double")
-  airports$isDTW <- as.double(airports$lat)
-if (typeof(airports$long) != "double")
-  airports$isDTW <- as.double(airports$long)
-if (typeof(airports$flightsDTW) != "integer" && typeof(airports$flightsDTW) != "double" )
-  airports$flightsDTW <- as.double(airports$flightsDTW)
+if (typeof(routes$airport) != "character")
+  routes$airport <- as.character(routes$airport)
+if (typeof(routes$isDTW) != "logical")
+  routes$isDTW <- as.logical(routes$isDTW)
+if (typeof(routes$lat) != "double")
+  routes$isDTW <- as.double(routes$lat)
+if (typeof(routes$long) != "double")
+  routes$isDTW <- as.double(routes$long)
+if (typeof(routes$flightsDTW) != "integer" && typeof(routes$flightsDTW) != "double" )
+  routes$flightsDTW <- as.double(routes$flightsDTW)
 
-typeof(airports$isDTW)
+typeof(routes$isDTW)
 
 ```
 
@@ -46,18 +46,18 @@ typeof(airports$isDTW)
 * validate that there is only one center
 
 ```{r}
-if (sum(airports$isDTW) > 1)
+if (sum(routes$isDTW) > 1)
   print("Too many centers. Check data")
-if (sum(airports$isDTW) == 0)
+if (sum(routes$isDTW) == 0)
     print("No center. Check data. Maybe we'll have an interface to select one later")
-if (sum(airports$isDTW) == 1)
+if (sum(routes$isDTW) == 1)
   print("There is one center! Hooray!")
 ```
 
 ## Declare a data frame; make it an object we want to use
 
 ```{r}
-class(airports)
+class(routes)
 ```
 
 ## Coordinates
