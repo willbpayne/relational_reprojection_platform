@@ -1,0 +1,95 @@
+---
+title: "PCP_alphaWorkflow"
+author: "VanMcG"
+date: "January 26, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+## Input CSV into R
+* Read and give headers and datatypes for each (eventually do more sophisticated validation/type detection)
+
+```{r}
+airports <- read.csv(file = "testData/airports_bare_sm.csv")
+summary(airports)
+# at some point, we need to enforce generic column headers
+
+typeof(airports$isDTW)
+
+       # obnoxiously explicit validation
+
+if (typeof(airports$airport) != "character")
+  airports$airport <- as.character(airports$airport)
+if (typeof(airports$isDTW) != "logical")
+  airports$isDTW <- as.logical(airports$isDTW)
+if (typeof(airports$lat) != "double")
+  airports$isDTW <- as.double(airports$lat)
+if (typeof(airports$long) != "double")
+  airports$isDTW <- as.double(airports$long)
+if (typeof(airports$flightsDTW) != "integer" && typeof(airports$flightsDTW) != "double" )
+  airports$flightsDTW <- as.double(airports$flightsDTW)
+
+typeof(airports$isDTW)
+
+```
+
+## Select origin point from rows
+* column "iscenter" value = 1
+    + __currently pre-set in test data__
+* validate that there is only one center
+
+```{r}
+if (sum(airports$isDTW) > 1)
+  print("Too many centers. Check data")
+if (sum(airports$isDTW) == 0)
+    print("No center. Check data. Maybe we'll have an interface to select one later")
+if (sum(airports$isDTW) == 1)
+  print("There is one center! Hooray!")
+```
+
+## Declare a data frame; make it an object we want to use
+
+```{r}
+class(airports)
+```
+
+## Coordinates
+* Go through lat and long
+* find min and max
+* set bounding box for plot and save for later
+
+```{r}
+
+```
+
+# Distance
+* Find longest distance between origin and any other point (RADIANS? GREAT CIRCLES? GEOGRAPHY?)
+
+```{r}
+
+```
+
+# Units
+* Convert this measurement in degrees into kilometers, and show user "The great circle distance between your origin, POINTNAME1, and farthest point, POINTNAME2, is X km"
+* Save this measurement = var longestdistance (float)
+
+```{r}
+
+```
+
+## Plot
+* GGplot of the lat and long with low-res world background
+* REPROJECT on logarithmic scale
+* GGplot again
+
+```{r}
+
+```
+
