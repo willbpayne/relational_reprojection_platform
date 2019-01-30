@@ -62,8 +62,18 @@ class(routes)
 
 ## Coordinates
 * Go through lat and long
-* find min and max
+* Calculate distance (pairs) btwn all pairs and origin
+     + __important__ right angle indiv coorinate distance, not diagonal pt distance
+     + eg, dist btwn X(a) and X(1) in km assuming constant Lat, not dist btwn X(a),Y(a) and X(1),Y(1)
+          + also __surely there's a library for this__ : spDistN1? recs from geodessy-dorks? library geosphere?
+* Save values as new columns called latDist and lonDist
+* Find max dist of any value within latDist OR lonDist
+     + WP: this would probably eff up a basemap, but helpful for us in our analytical purpose. 
+     + __NB:__ do we need to think more about great circles?
 * set bounding box for plot and save for later
+     + Take maxVal and double for height and width of bounding box
+          + This solves some of our hypotenuse fears bc max coord dist still captured
+     + not a proper bounding box, setting an extent, but don't necessarily need to declare lat/long coordos ()
 
 ```{r}
 
