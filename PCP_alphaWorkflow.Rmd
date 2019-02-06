@@ -171,8 +171,17 @@ ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_poi
 # determine if maxCoord is NSEW of ctrPt
 # http://mathforum.org/library/drmath/view/51816.html ?
 
+# take the maxdist
+earthrad <- 6371
+
 # radius of earth in km: 6,371 km
-latN <- asin(sin(ctrY)*cos(maxdist/6366.565)+cos(ctrY)*sin(maxdist/6366.565))
+latS <- asin((sin(ctrY)*cos(maxdist/earthrad))
+             +(cos(ctrY)*sin(maxdist/earthrad)*cos(180)))
+
+
+latS <- asin(sin(ctrY)*cos(maxdist/earthrad) + cos(ctrY)*sin(maxdist/earthrad)*cos(180))
+
+latN <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad))
 latN
 
 latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
