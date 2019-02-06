@@ -121,7 +121,16 @@ routes$distance <- NA
 
   # for loop
   # actually maybe apply/sapply??
-      #VALUE <- geodist(ctrY, ctrX, iY, iX, units = "km")
+dfLen <- nrow(routes)
+#pseudo for  for loop (even though prob not the right way)
+# for (i in 1: dfLen){
+#   
+#     iX <- routes$long[i]
+#     iY <- routes$lat[i]
+#     
+#     routes$distance[i] <- geodist(ctrY, ctrX, iY, iX, units = "km")
+# }
+      
   # max distance
 
 
