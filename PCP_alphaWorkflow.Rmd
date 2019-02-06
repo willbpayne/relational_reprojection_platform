@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(sp)
 library(ggplot2)
+library(dplyr)
+library(devtools)
 ```
 
 ## R Markdown
@@ -87,6 +89,32 @@ class(routes)
      + not a proper bounding box, setting an extent, but don't necessarily need to declare lat/long coordos ()
 
 ```{r}
+# make an array with long/lat as columns 1 &2 and isDTW as column 3
+distMat <- routes[c(4,3)]
+distMat <- as.matrix(distMat)
+
+# give DTW row an id
+#if(distMat$isDTW == 1) print("nearly there")
+ctrX <- routes$long[routes$isDTW == TRUE]
+ctrY <- routes$lat[routes$isDTW == TRUE]
+ctrPt <- c(ctrX,ctrY)
+ctrPt
+
+# run latlong2grid to turn to km
+# do we need this?
+# I think so
+latlong2grid
+
+# run spdistsn1 to find distances
+distMat_result <- spDistsN1(distMat, ctrPt, longlat = TRUE)
+
+as.data.frame(distMat_result)
+
+max(distMat_result)
+
+# find max distance
+# assign variable to max dist
+    # maxdist <- max()
 
 ```
 
