@@ -7,6 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(sp)
+library(ggplot2)
 ```
 
 ## R Markdown
@@ -23,7 +25,7 @@ summary(routes)
 
 typeof(routes$isDTW)
 
-       # obnoxiously explicit validation
+     # obnoxiously explicit validation
 
 if (typeof(routes$airport) != "character")
   routes$airport <- as.character(routes$airport)
@@ -38,6 +40,15 @@ if (typeof(routes$flightsDTW) != "integer" && typeof(routes$flightsDTW) != "doub
 
 typeof(routes$isDTW)
 
+```
+
+## Plot test
+```{r}
+# coordinate validation
+ifelse(max(routes$lat > 90.0) || min(routes$lat < -90.0) || max(routes$long > 180.0) || min(routes$long < -180.0), print("Check your coordinate system..."), print("Coordinates look ok!"))
+
+# test plot
+plot(routes$long, routes$lat)
 ```
 
 ## Select origin point from rows
