@@ -167,8 +167,38 @@ print(
 # first plot
 ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
 
+# determine if maxCoord is NSEW of ctrPt
+# http://mathforum.org/library/drmath/view/51816.html ?
+
+# radius of earth in km: 6,371 km
+latN <- asin(sin(ctrY)*cos(maxdist/6366.565)+cos(ctrY)*sin(maxdist/6366.565))
+latN
+
+latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
+latNdist
+maxdist
+
+# GAH, not right!! ^^^
+
+# N (tc=0): lat = asin(sin(lat1)*cos(d)+cos(lat1)*sin(d))
+#               = asin(sin(lat1 + d)
+#               = lat1 + d
+
+    # cheating example
+#           N (tc=0): lat = asin(sin(lat1)*cos(d)+cos(lat1)*sin(d))
+#               = asin(sin(lat1 + d)
+#               = lat1 + d
+# 
+# S (tc=pi): lat = asin(sin(lat1)*cos(d)-cos(lat1)*sin(d))
+#                = asin(sin(lat1 - d)
+#                = lat1 - d
+# 
+# E, W (tc=pi/2 or 3*pi/2): lat = asin(sin(lat1)*cos(d))
+
 # some algebra to get xlim of long via km maxdistX in other position
 # ditto for ylim
+
+# determine if maxCoord is NSEW of ctrPt
 
 # replot
 # + xlim(maxXcoord, OPPOSITE_maxXcoord)
