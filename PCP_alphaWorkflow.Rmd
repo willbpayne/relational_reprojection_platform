@@ -151,10 +151,9 @@ routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")
 ```{r}
 print(
   paste0("The greatest distance between your origin, ",
-         routes$airport[routes$isDTW == TRUE], ",
-         and farthest point, ",
+         routes$airport[routes$isDTW == TRUE], ", and farthest point, ",
          routes$airport[routes$distance == max(routes$distance)], ", is ",
-         round(max(routes$distance), 0), " km")
+         round(max(routes$distance), 0), " km.")
   )
 
 
