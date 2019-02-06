@@ -145,6 +145,8 @@ routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")
 # Units
 * Convert this measurement in degrees into kilometers, and show user "The great circle distance between your origin, POINTNAME1, and farthest point, POINTNAME2, is X km"
 * Save this measurement = var longestdistance (float)
+* __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
+    + example data max is 7,241 km
 
 ```{r}
 print(
@@ -178,6 +180,15 @@ latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
 latNdist
 maxdist
 
+pi = 
+# mod() = %%
+lonE = (ctrX+asin(sin(3*pi/2)*sin(maxdist/6366.565)/cos(ctrY))+pi %% 2*pi)-pi ## ARGH!
+
+# lonE = mod(lon1+asin(sin(tc)*sin(d)/cos(lat))+pi,2*pi)-pi
+
+latE <- 
+  # E, W (tc=pi/2 or 3*pi/2): lat = asin(sin(lat1)*cos(d))
+
 # GAH, not right!! ^^^
 
 # N (tc=0): lat = asin(sin(lat1)*cos(d)+cos(lat1)*sin(d))
@@ -205,5 +216,6 @@ maxdist
 # + ylim( SOME MATH ABOUT DISTANCE )
 
 # replot on log scale
+
 ```
 
