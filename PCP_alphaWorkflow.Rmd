@@ -92,10 +92,7 @@ class(routes)
      + not a proper bounding box, setting an extent, but don't necessarily need to declare lat/long coordos ()
 
 ```{r}
-# SCRAP
-# make an array with long/lat as columns 1 &2 and isDTW as column 3
-# distMat <- routes[c(4,3)]
-# distMat <- as.matrix(distMat)
+
 
 # give DTW row an id
 #if(distMat$isDTW == 1) print("nearly there")
@@ -115,15 +112,7 @@ HNLpt <- c(HNLx,HNLy)
 geodist(ctrY, ctrX, HNLy, HNLx, units = "km")
   # test passed
 
-# create for loop that goes through each line in routes, runs geodist, then appends to routes table
 
-  # create a column in routes call distance
-  # fill with km distances
-routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")  
-
-# find max distance
-# assign variable to max dist
-  maxdist <- max(routes$distance)
 
 ```
 
@@ -132,6 +121,25 @@ routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")
 
 ```{r}
 # currently in km
+
+  # create a column in routes call distance
+    # EM: I added a few options here, but we should trim for final product
+
+  # fill with km distances
+routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")  
+  # fill with km horiz distances
+routes$distanceX <- geodist(ctrY, ctrX, ctrY, routes$long, units = "km")  
+  # fill with km vert distances
+routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")  
+
+# find max distance
+# assign variable to max dist
+  maxdistPT <- max(routes$distance) # distance of real points
+  maxdistX <- max(routes$distanceX) # longest EW dist
+  maxdistY <- max(routes$distanceY) # longest NS dit
+  maxdist <- max(routes$distanceX, routes$distanceY) # max between NS and EW distances
+  # cheating because I know it's X dist here, but we should write a test to find out
+  maxXcoord <- routes$long[routes$distanceX == maxdistX]
 ```
 
 # Units
@@ -156,6 +164,16 @@ print(
 * GGplot again
 
 ```{r}
+# first plot
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
 
+# some algebra to get xlim of long via km maxdistX in other position
+# ditto for ylim
+
+# replot
+# + xlim(maxXcoord, OPPOSITE_maxXcoord)
+# + ylim( SOME MATH ABOUT DISTANCE )
+
+# replot on log scale
 ```
 
