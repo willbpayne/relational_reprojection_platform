@@ -9,10 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(sp)
 library(ggplot2)
-library(dplyr)
-library(devtools)
-library(SpatialEpi)
+#library(dplyr)
+#library(devtools)
+#library(SpatialEpi)
 library(gmt)
+library(tidyverse)
 ```
 
 ## R Markdown
@@ -116,27 +117,13 @@ geodist(ctrY, ctrX, HNLy, HNLx, units = "km")
 
 # create for loop that goes through each line in routes, runs geodist, then appends to routes table
 
-  # create an empty column in routes call distance
-routes$distance <- NA
-
-  # for loop
-  # actually maybe apply/sapply??
-dfLen <- nrow(routes)
-#pseudo for  for loop (even though prob not the right way)
-# for (i in 1: dfLen){
-#   
-#     iX <- routes$long[i]
-#     iY <- routes$lat[i]
-#     
-#     routes$distance[i] <- geodist(ctrY, ctrX, iY, iX, units = "km")
-# }
-      
-  # max distance
-
+  # create a column in routes call distance
+  # fill with km distances
+routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")  
 
 # find max distance
 # assign variable to max dist
-    # maxdist <- max()
+  maxdist <- max(routes$distance)
 
 ```
 
@@ -144,7 +131,7 @@ dfLen <- nrow(routes)
 * Find longest distance between origin and any other point (RADIANS? GREAT CIRCLES? GEOGRAPHY?)
 
 ```{r}
-
+# currently in km
 ```
 
 # Units
@@ -152,6 +139,14 @@ dfLen <- nrow(routes)
 * Save this measurement = var longestdistance (float)
 
 ```{r}
+print(
+  paste0("The greatest distance between your origin, ",
+         routes$airport[routes$isDTW == TRUE], ",
+         and farthest point, ",
+         routes$airport[routes$distance == max(routes$distance)], ", is ",
+         round(max(routes$distance), 0), " km")
+  )
+
 
 ```
 
