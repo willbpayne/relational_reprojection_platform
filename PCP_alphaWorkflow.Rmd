@@ -188,7 +188,35 @@ latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
 latNdist
 maxdist
 
-pi = 
+# variation based on ed williams for less-than-half-the-earth-distances
+pi <- 3.141592653589793238462643383279502884197169399375105820974944592307816406286 
+
+# a different answer ~ -36S, that is also wrong
+latS_alt <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad)*cos(2*pi))
+    ifelse((cos(ctrY) == 0),
+       lonS_alt <- ctrX,
+       lonS_alt <- ((ctrX-asin(sin(2*pi)*sin(maxdist/earthrad)/cos(latS_alt)) + pi) %% pi) - pi
+    )
+
+
+# lat=asin(sin(lat1)*cos(d)+cos(lat1)*sin(d)*cos(tc))
+#      IF (cos(lat)=0)
+#         lon=lon1      // endpoint a pole
+#      ELSE
+     #    lon=mod(lon1-asin(sin(tc)*sin(d)/cos(lat))+pi,2*pi)-pi
+     # ENDIF
+
+# var δ = d/R;
+# var Δφ = δ * Math.cos(θ);
+# var φ2 = φ1 + Δφ;
+# 
+# var Δψ = Math.log(Math.tan(φ2/2+Math.PI/4)/Math.tan(φ1/2+Math.PI/4));
+# var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
+# 
+# var Δλ = δ*Math.sin(θ)/q;
+# var λ2 = λ1 + Δλ;
+
+
 # mod() = %%
 lonE = (ctrX+asin(sin(3*pi/2)*sin(maxdist/6366.565)/cos(ctrY))+pi %% 2*pi)-pi ## ARGH!
 
