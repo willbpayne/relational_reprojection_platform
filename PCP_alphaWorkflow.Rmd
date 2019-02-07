@@ -14,6 +14,7 @@ library(ggplot2)
 #library(SpatialEpi)
 library(gmt)
 library(tidyverse)
+library(sf)
 ```
 
 ## R Markdown
@@ -189,6 +190,7 @@ latNdist
 maxdist
 
 # variation based on ed williams for less-than-half-the-earth-distances
+# ugh, I cleaned my environment and pi is still effed up. Here's a bunch of digits
 pi <- 3.141592653589793238462643383279502884197169399375105820974944592307816406286 
 
 # a different answer ~ -36S, that is also wrong
@@ -206,6 +208,8 @@ latS_alt <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad)
      #    lon=mod(lon1-asin(sin(tc)*sin(d)/cos(lat))+pi,2*pi)-pi
      # ENDIF
 
+  
+    
 # var δ = d/R;
 # var Δφ = δ * Math.cos(θ);
 # var φ2 = φ1 + Δφ;
@@ -241,6 +245,22 @@ latE <-
 #                = lat1 - d
 # 
 # E, W (tc=pi/2 or 3*pi/2): lat = asin(sin(lat1)*cos(d))
+
+
+# The circle example
+
+    # added pkg sf
+
+ctrPt_sf <- st_as_sf(ctrPt)
+ctrCirc <-  st_buffer(ctrPt, as.numeric(maxdist/earthrad), nQuadSegs = 1)
+
+
+
+
+df <- st_sfc(st_point(cbind(ctrY, ctrX)),crs=4326)
+df_sf_buff <- st_buffer(df, (maxdist*10)) #meters*10
+plot(df_sf_buff) 
+points(routes$long, routes$lat)
 
 # some algebra to get xlim of long via km maxdistX in other position
 # ditto for ylim
