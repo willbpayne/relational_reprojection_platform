@@ -270,7 +270,7 @@ ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_poi
 Ah crap, that was painful, no?
 Here's something closer to working below
   
-  
+  \/  \/  \/
   
 ```{r}  
 # geosphere::geodesic
@@ -298,11 +298,22 @@ limPts <- as.data.frame(limPts)
 # ditto for ylim
 
 
-ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
+plot1 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
 
 # determine if maxCoord is NSEW of ctrPt
 
 # replot on log scale
 
+```
+
+
+## Scale changes
+```{r}
+plot2 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
+# this doesn't work (produces NaNs or infintes), but sets a basic structure
+plot2 + scale_x_log10(limits = c(xlim1,xlim2)) + scale_y_log10(c(ylim1,ylim2))
+
+# really, we need a radial log scale, which would create a different structure than perhaps ggplot2 can offer
 ```
 
