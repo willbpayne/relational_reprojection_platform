@@ -12,9 +12,10 @@ library(ggplot2)
 #library(dplyr)
 #library(devtools)
 #library(SpatialEpi)
-library(gmt)
+#library(gmt) # geodist is in geosphere
 library(tidyverse)
-library(sf)
+#library(sf)
+library(geosphere)
 ```
 
 ## R Markdown
@@ -26,6 +27,8 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 ```{r}
 routes <- read.csv(file = "testData/routes_bare_sm.csv")
+
+routes <- routes[!(routes$lat>50 | routes$long < -125),]
 summary(routes)
 # at some point, we need to enforce generic column headers
 
@@ -167,7 +170,8 @@ print(
 
 ```{r}
 # first plot
-ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
 
 # determine if maxCoord is NSEW of ctrPt
 # http://mathforum.org/library/drmath/view/51816.html ?
@@ -251,25 +255,52 @@ latE <-
 
     # added pkg sf
 
-ctrPt_sf <- st_as_sf(ctrPt)
-ctrCirc <-  st_buffer(ctrPt, as.numeric(maxdist/earthrad), nQuadSegs = 1)
-
-
-
-
-df <- st_sfc(st_point(cbind(ctrY, ctrX)),crs=4326)
-df_sf_buff <- st_buffer(df, (maxdist*10)) #meters*10
+sfdf <- st_sfc(st_point(cbind(ctrY, ctrX)),crs=4326)
+df_sf_buff <- st_buffer(sfdf, (maxdist*10)) #meters*10
 plot(df_sf_buff) 
 points(routes$long, routes$lat)
+
+# circle in ggplot
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
+  
+  ggplot((as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2])) + geom_point(color = "Orange")
+  # then would add a big buffer. Gah.
+```  
+  
+Ah crap, that was painful, no?
+Here's something closer to working below
+  
+  
+  
+```{r}  
+# geosphere::geodesic
+
+latLon_S <- geodesic(ctrPt, 180, (maxdist*1000), f=1/298.257223563)
+
+latLon_N <- geodesic(ctrPt, 0, (maxdist*1000), f=1/298.257223563)
+
+latLon_E  <- geodesic(ctrPt, 90, (maxdist*1000), f=1/298.257223563)
+
+latLon_W  <- geodesic(ctrPt, 270, (maxdist*1000), f=1/298.257223563)
+
+limPts <- data.frame(longitude = double(), latitude = double(), azimuth = numeric())
+limPts <- rbind(latLon_N,latLon_S,latLon_E,latLon_W)
+limPts <- as.data.frame(limPts)
+
+# now we make a data.frame of all the geodesic results
+
+  xlim1 <- limPts$longitude[limPts$longitude == min(limPts$longitude)]
+  xlim2 <- limPts$longitude[limPts$longitude == max(limPts$longitude)]
+  ylim1 <- limPts$latitude[limPts$latitude == min(limPts$latitude)]
+  ylim2 <- limPts$latitude[limPts$latitude == max(limPts$latitude)]
 
 # some algebra to get xlim of long via km maxdistX in other position
 # ditto for ylim
 
-# determine if maxCoord is NSEW of ctrPt
 
-# replot
-# + xlim(maxXcoord, OPPOSITE_maxXcoord)
-# + ylim( SOME MATH ABOUT DISTANCE )
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
+
+# determine if maxCoord is NSEW of ctrPt
 
 # replot on log scale
 
