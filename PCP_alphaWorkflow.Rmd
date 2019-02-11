@@ -12,8 +12,10 @@ library(ggplot2)
 #library(dplyr)
 #library(devtools)
 #library(SpatialEpi)
-library(gmt)
+#library(gmt) # geodist is in geosphere
 library(tidyverse)
+#library(sf)
+library(geosphere)
 ```
 
 ## R Markdown
@@ -25,6 +27,8 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 ```{r}
 routes <- read.csv(file = "testData/routes_bare_sm.csv")
+
+routes <- routes[!(routes$lat>50 | routes$long < -125),]
 summary(routes)
 # at some point, we need to enforce generic column headers
 
@@ -166,7 +170,8 @@ print(
 
 ```{r}
 # first plot
-ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
 
 # determine if maxCoord is NSEW of ctrPt
 # http://mathforum.org/library/drmath/view/51816.html ?
@@ -198,6 +203,42 @@ latN
 latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
 latNdist
 maxdist
+<<<<<<< HEAD
+=======
+
+# variation based on ed williams for less-than-half-the-earth-distances
+# ugh, I cleaned my environment and pi is still effed up. Here's a bunch of digits
+pi <- 3.141592653589793238462643383279502884197169399375105820974944592307816406286 
+
+# a different answer ~ -36S, that is also wrong
+latS_alt <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad)*cos(2*pi))
+    ifelse((cos(ctrY) == 0),
+       lonS_alt <- ctrX,
+       lonS_alt <- ((ctrX-asin(sin(2*pi)*sin(maxdist/earthrad)/cos(latS_alt)) + pi) %% pi) - pi
+    )
+
+
+# lat=asin(sin(lat1)*cos(d)+cos(lat1)*sin(d)*cos(tc))
+#      IF (cos(lat)=0)
+#         lon=lon1      // endpoint a pole
+#      ELSE
+     #    lon=mod(lon1-asin(sin(tc)*sin(d)/cos(lat))+pi,2*pi)-pi
+     # ENDIF
+
+  
+    
+# var δ = d/R;
+# var Δφ = δ * Math.cos(θ);
+# var φ2 = φ1 + Δφ;
+# 
+# var Δψ = Math.log(Math.tan(φ2/2+Math.PI/4)/Math.tan(φ1/2+Math.PI/4));
+# var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
+# 
+# var Δλ = δ*Math.sin(θ)/q;
+# var λ2 = λ1 + Δλ;
+
+
+>>>>>>> cdbc1607200ad4fd66562bb2754a3d728e0f69d6
 # mod() = %%
 lonE = (ctrX+asin(sin(3*pi/2)*sin(maxdist/6366.565)/cos(ctrY))+pi %% 2*pi)-pi ## ARGH!
 
@@ -223,16 +264,70 @@ latE <-
 # 
 # E, W (tc=pi/2 or 3*pi/2): lat = asin(sin(lat1)*cos(d))
 
+
+# The circle example
+
+    # added pkg sf
+
+sfdf <- st_sfc(st_point(cbind(ctrY, ctrX)),crs=4326)
+df_sf_buff <- st_buffer(sfdf, (maxdist*10)) #meters*10
+plot(df_sf_buff) 
+points(routes$long, routes$lat)
+
+# circle in ggplot
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
+  
+  ggplot((as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2])) + geom_point(color = "Orange")
+  # then would add a big buffer. Gah.
+```  
+  
+Ah crap, that was painful, no?
+Here's something closer to working below
+  
+  \/  \/  \/
+  
+```{r}  
+# geosphere::geodesic
+
+latLon_S <- geodesic(ctrPt, 180, (maxdist*1000), f=1/298.257223563)
+
+latLon_N <- geodesic(ctrPt, 0, (maxdist*1000), f=1/298.257223563)
+
+latLon_E  <- geodesic(ctrPt, 90, (maxdist*1000), f=1/298.257223563)
+
+latLon_W  <- geodesic(ctrPt, 270, (maxdist*1000), f=1/298.257223563)
+
+limPts <- data.frame(longitude = double(), latitude = double(), azimuth = numeric())
+limPts <- rbind(latLon_N,latLon_S,latLon_E,latLon_W)
+limPts <- as.data.frame(limPts)
+
+# now we make a data.frame of all the geodesic results
+
+  xlim1 <- limPts$longitude[limPts$longitude == min(limPts$longitude)]
+  xlim2 <- limPts$longitude[limPts$longitude == max(limPts$longitude)]
+  ylim1 <- limPts$latitude[limPts$latitude == min(limPts$latitude)]
+  ylim2 <- limPts$latitude[limPts$latitude == max(limPts$latitude)]
+
 # some algebra to get xlim of long via km maxdistX in other position
 # ditto for ylim
 
-# determine if maxCoord is NSEW of ctrPt
 
-# replot
-# + xlim(maxXcoord, OPPOSITE_maxXcoord)
-# + ylim( SOME MATH ABOUT DISTANCE )
+plot1 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
+
+# determine if maxCoord is NSEW of ctrPt
 
 # replot on log scale
 
+```
+
+
+## Scale changes
+```{r}
+plot2 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
+# this doesn't work (produces NaNs or infintes), but sets a basic structure
+plot2 + scale_x_log10(limits = c(xlim1,xlim2)) + scale_y_log10(c(ylim1,ylim2))
+
+# really, we need a radial log scale, which would create a different structure than perhaps ggplot2 can offer
 ```
 
