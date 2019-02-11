@@ -12,7 +12,7 @@ library(ggplot2)
 #library(dplyr)
 #library(devtools)
 #library(SpatialEpi)
-#library(gmt) # geodist is in geosphere
+library(gmt) # geodist is in geosphere
 library(tidyverse)
 #library(sf)
 library(geosphere)
@@ -69,7 +69,7 @@ plot(routes$long, routes$lat)
 if (sum(routes$isDTW) > 1)
   print("Too many centers. Check data")
 if (sum(routes$isDTW) == 0)
-    print("No center. Check data. Maybe we'll have an interface to select one later")
+  print("No center. Check data. Maybe we'll have an interface to select one later")
 if (sum(routes$isDTW) == 1)
   print("There is one center! Hooray!")
 ```
@@ -103,18 +103,18 @@ class(routes)
 ctrX <- routes$long[routes$isDTW == TRUE]
 ctrY <- routes$lat[routes$isDTW == TRUE]
 ctrPt <- c(ctrX,ctrY)
-ctrPt
+cat("Your center point has the following coordinates:", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 
 # Test point
-# HNL is approx 7120km from DTW
-HNLx <- routes$long[routes$airport == "HNL"]
-HNLy <- routes$lat[routes$airport == "HNL"]
+# ATL is approx ???km from DTW (took out HNL since it's not in the dataset anymore)
+ATLx <- routes$long[routes$airport == "ATL"]
+ATLy <- routes$lat[routes$airport == "ATL"]
 
-HNLpt <- c(HNLx,HNLy)
+ATLpt <- c(ATLx,ATLy)
 
 # test distance
-geodist(ctrY, ctrX, HNLy, HNLx, units = "km")
-  # test passed
+cat("The distance between ATL and your center point is", geodist(ctrY, ctrX, ATLy, ATLx, units = "km"), "km.")
+# test passed
 
 
 
@@ -140,10 +140,25 @@ routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")
 # assign variable to max dist
   maxdistPT <- max(routes$distance) # distance of real points
   maxdistX <- max(routes$distanceX) # longest EW dist
-  maxdistY <- max(routes$distanceY) # longest NS dit
+  maxdistY <- max(routes$distanceY) # longest NS dist
   maxdist <- max(routes$distanceX, routes$distanceY) # max between NS and EW distances
   # cheating because I know it's X dist here, but we should write a test to find out
   maxXcoord <- routes$long[routes$distanceX == maxdistX]
+  maxYcoord <- routes$long[routes$distanceY == maxdistY]
+  
+  if (maxdistX > maxdistY)
+    {cat("Longest axial distance from center is", maxdist, "km east-west. ")
+    if (maxXcoord < ctrX)
+      {cat("Farthest point is", maxdistX, "km west of center point."); maxdistBearing <- 270}
+    if (maxXcoord > ctrX)
+      {cat("Farthest point is", maxdistX, "km east of center point."); maxdistBearing <- 90}}
+  if (maxdistY > maxdistX)
+    {cat("Longest axial distance from the center point is", maxdist, "km north-south. ")
+    if (maxYcoord < ctrY)
+      {cat("Farthest point is", maxdistY, "km south of center point."); maxdistBearing <- 180}
+    if (maxYcoord > ctrY)
+      {cat("Farthest point is", maxdistY, "km north of center point."); maxdistBearing <- 0}}
+
 ```
 
 # Units
@@ -203,8 +218,8 @@ latN
 latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
 latNdist
 maxdist
-<<<<<<< HEAD
-=======
+#<<<<<<< HEAD
+#=======
 
 # variation based on ed williams for less-than-half-the-earth-distances
 # ugh, I cleaned my environment and pi is still effed up. Here's a bunch of digits
@@ -238,7 +253,7 @@ latS_alt <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad)
 # var λ2 = λ1 + Δλ;
 
 
->>>>>>> cdbc1607200ad4fd66562bb2754a3d728e0f69d6
+#>>>>>>> cdbc1607200ad4fd66562bb2754a3d728e0f69d6
 # mod() = %%
 lonE = (ctrX+asin(sin(3*pi/2)*sin(maxdist/6366.565)/cos(ctrY))+pi %% 2*pi)-pi ## ARGH!
 
@@ -325,7 +340,7 @@ plot1 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) +
 ```{r}
 plot2 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
 
-# this doesn't work (produces NaNs or infintes), but sets a basic structure
+# this doesn't work (produces NaNs or infinites), but sets a basic structure
 plot2 + scale_x_log10(limits = c(xlim1,xlim2)) + scale_y_log10(c(ylim1,ylim2))
 
 # really, we need a radial log scale, which would create a different structure than perhaps ggplot2 can offer
