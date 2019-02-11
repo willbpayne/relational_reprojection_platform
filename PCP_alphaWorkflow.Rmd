@@ -175,11 +175,22 @@ ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_poi
 earthrad <- 6371
 
 # radius of earth in km: 6,371 km
-latS <- asin((sin(ctrY)*cos(maxdist/earthrad))
-             +(cos(ctrY)*sin(maxdist/earthrad)*cos(180)))
 
+pi2 <- 3.14159265358979323846
+ctrYrad <- ((ctrY * pi2) / 180)
+angdistY <- maxdist/earthrad # get angular distance in radians
+# rad2deg <- function(rad) {(rad * 180) / (pi)}
+# deg2rad <- function(deg) {(deg * pi) / (180)}
 
-latS <- asin(sin(ctrY)*cos(maxdist/earthrad) + cos(ctrY)*sin(maxdist/earthrad)*cos(180))
+latSrad <- asin((sin(ctrYrad)*cos(angdistY))
+             +(cos(ctrYrad)*sin(angdistY)*cos(180)))
+
+latSrad <- asin((sin(ctrY)*cos(maxdist/earthrad) + cos(ctrY)*sin(maxdist/earthrad)*cos(180)))
+
+latS <- ((latSrad * 180)/(pi2))
+
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
 
 latN <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad))
 latN
@@ -187,8 +198,6 @@ latN
 latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
 latNdist
 maxdist
-
-pi = 
 # mod() = %%
 lonE = (ctrX+asin(sin(3*pi/2)*sin(maxdist/6366.565)/cos(ctrY))+pi %% 2*pi)-pi ## ARGH!
 
