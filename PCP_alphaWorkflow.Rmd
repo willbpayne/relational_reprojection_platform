@@ -157,9 +157,9 @@ routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")
   print( # print out both the longest axial and great circle distances
     paste0("The farthest point, ", 
            routes$airport[routes$distance == max(routes$distance)], 
-           ", is ", round(maxdist,digits=2), "km ", maxbearing, " of center point, ",
+           ", is ", round(maxdist,digits=2), " km ", maxbearing, " of your center point, ",
            routes$airport[routes$isDTW == TRUE],", along the longest axis of distance.",
-           " The longest great circle distance between your origin, ",
+           " The longest great circle distance between your center point, ",
            routes$airport[routes$isDTW == TRUE], ", and farthest point, ",
            routes$airport[routes$distance == max(routes$distance)], ", is ",
            round(max(routes$distance), 0), " km.")
