@@ -12,7 +12,7 @@ library(ggplot2)
 #library(dplyr)
 #library(devtools)
 #library(SpatialEpi)
-#library(gmt) # geodist is in geosphere
+library(gmt) # geodist is in geosphere
 library(tidyverse)
 #library(sf)
 library(geosphere)
@@ -69,7 +69,7 @@ plot(routes$long, routes$lat)
 if (sum(routes$isDTW) > 1)
   print("Too many centers. Check data")
 if (sum(routes$isDTW) == 0)
-    print("No center. Check data. Maybe we'll have an interface to select one later")
+  print("No center. Check data. Maybe we'll have an interface to select one later")
 if (sum(routes$isDTW) == 1)
   print("There is one center! Hooray!")
 ```
@@ -103,18 +103,18 @@ class(routes)
 ctrX <- routes$long[routes$isDTW == TRUE]
 ctrY <- routes$lat[routes$isDTW == TRUE]
 ctrPt <- c(ctrX,ctrY)
-ctrPt
+cat("Your center point has the following coordinates:", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 
 # Test point
-# HNL is approx 7120km from DTW
-HNLx <- routes$long[routes$airport == "HNL"]
-HNLy <- routes$lat[routes$airport == "HNL"]
+# ATL is approx ???km from DTW (took out HNL since it's not in the dataset anymore)
+ATLx <- routes$long[routes$airport == "ATL"]
+ATLy <- routes$lat[routes$airport == "ATL"]
 
-HNLpt <- c(HNLx,HNLy)
+ATLpt <- c(ATLx,ATLy)
 
 # test distance
-geodist(ctrY, ctrX, HNLy, HNLx, units = "km")
-  # test passed
+cat("The distance between ATL and your center point is", geodist(ctrY, ctrX, ATLy, ATLx, units = "km"), "km.")
+# test passed
 
 
 
@@ -126,42 +126,55 @@ geodist(ctrY, ctrX, HNLy, HNLx, units = "km")
 ```{r}
 # currently in km
 
-  # create a column in routes call distance
-    # EM: I added a few options here, but we should trim for final product
-
-  # fill with km distances
+  # create a column in routes, fill with km distances
 routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")  
-  # fill with km horiz distances
+  # create a column in routes, fill with km east-west distances
 routes$distanceX <- geodist(ctrY, ctrX, ctrY, routes$long, units = "km")  
-  # fill with km vert distances
+  # create a column in routes, fill with km north-south distances
 routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")  
+
+routes$longDiff <- routes$long - ctrX # actual latitude difference, use for square plot later
+routes$longDiffSign <- ifelse(routes$long - ctrX < 0, -1, 1)
+
+routes$latDiff <- routes$lat - ctrY # actal longitude difference, use for square plot later
+routes$latDiffSign <- ifelse(routes$lat - ctrY < 0 , -1, 1)
 
 # find max distance
 # assign variable to max dist
   maxdistPT <- max(routes$distance) # distance of real points
-  maxdistX <- max(routes$distanceX) # longest EW dist
-  maxdistY <- max(routes$distanceY) # longest NS dit
-  maxdist <- max(routes$distanceX, routes$distanceY) # max between NS and EW distances
-  # cheating because I know it's X dist here, but we should write a test to find out
-  maxXcoord <- routes$long[routes$distanceX == maxdistX]
+  maxdistX <- max(routes$distanceX) # longest east-west distance
+  maxdistY <- max(routes$distanceY) # longest north-south distance
+  maxdist <- max(routes$distanceX, routes$distanceY) # max between both axial distances
+  maxXcoord <- routes$lat[routes$distanceX == maxdistX]
+  maxYcoord <- routes$long[routes$distanceY == maxdistY]
+  
+  if (maxdistX > maxdistY) # figure out which direction the farthest point along
+    # either the east-west or north-south axis is, store its bearing in text and num
+    if (maxXcoord < ctrX)
+      {maxdistBearing <- 270; maxbearing <- "west"}
+    if (maxXcoord > ctrX)
+      {maxdistBearing <- 90; maxbearing <- "east"}
+  if (maxdistY > maxdistX)
+    if (maxYcoord < ctrY)
+      {maxdistBearing <- 180; maxbearing <- "south"}
+    if (maxYcoord > ctrY)
+      {maxdistBearing <- 0; maxbearing <- "north"}
+
+  print( # print out both the longest axial and great circle distances
+    paste0("The farthest point, ", 
+           routes$airport[routes$distance == max(routes$distance)], 
+           ", is ", round(maxdist,digits=2), " km ", maxbearing, " of your center point, ",
+           routes$airport[routes$isDTW == TRUE],", along the longest axis of distance.",
+           " The longest great circle distance between your center point, ",
+           routes$airport[routes$isDTW == TRUE], ", and farthest point, ",
+           routes$airport[routes$distance == max(routes$distance)], ", is ",
+           round(max(routes$distance), 0), " km.")
+    )
+  
 ```
 
-# Units
-* Convert this measurement in degrees into kilometers, and show user "The great circle distance between your origin, POINTNAME1, and farthest point, POINTNAME2, is X km"
-* Save this measurement = var longestdistance (float)
 * __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
     + example data max is 7,241 km
-
-```{r}
-print(
-  paste0("The greatest distance between your origin, ",
-         routes$airport[routes$isDTW == TRUE], ", and farthest point, ",
-         routes$airport[routes$distance == max(routes$distance)], ", is ",
-         round(max(routes$distance), 0), " km.")
-  )
-
-
-```
 
 ## Plot
 * GGplot of the lat and long with low-res world background
@@ -172,7 +185,6 @@ print(
 # first plot
 ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
 
-
 # determine if maxCoord is NSEW of ctrPt
 # http://mathforum.org/library/drmath/view/51816.html ?
 
@@ -180,11 +192,22 @@ ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_poi
 earthrad <- 6371
 
 # radius of earth in km: 6,371 km
-latS <- asin((sin(ctrY)*cos(maxdist/earthrad))
-             +(cos(ctrY)*sin(maxdist/earthrad)*cos(180)))
 
+pi2 <- 3.14159265358979323846
+ctrYrad <- ((ctrY * pi2) / 180)
+angdistY <- maxdist/earthrad # get angular distance in radians
+# rad2deg <- function(rad) {(rad * 180) / (pi)}
+# deg2rad <- function(deg) {(deg * pi) / (180)}
 
-latS <- asin(sin(ctrY)*cos(maxdist/earthrad) + cos(ctrY)*sin(maxdist/earthrad)*cos(180))
+latSrad <- asin((sin(ctrYrad)*cos(angdistY))
+             +(cos(ctrYrad)*sin(angdistY)*cos(180)))
+
+latSrad <- asin((sin(ctrY)*cos(maxdist/earthrad) + cos(ctrY)*sin(maxdist/earthrad)*cos(180)))
+
+latS <- ((latSrad * 180)/(pi2))
+
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
 
 latN <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad))
 latN
@@ -192,6 +215,8 @@ latN
 latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
 latNdist
 maxdist
+#<<<<<<< HEAD
+#=======
 
 # variation based on ed williams for less-than-half-the-earth-distances
 # ugh, I cleaned my environment and pi is still effed up. Here's a bunch of digits
@@ -225,6 +250,7 @@ latS_alt <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad)
 # var λ2 = λ1 + Δλ;
 
 
+#>>>>>>> cdbc1607200ad4fd66562bb2754a3d728e0f69d6
 # mod() = %%
 lonE = (ctrX+asin(sin(3*pi/2)*sin(maxdist/6366.565)/cos(ctrY))+pi %% 2*pi)-pi ## ARGH!
 
@@ -255,10 +281,10 @@ latE <-
 
     # added pkg sf
 
-sfdf <- st_sfc(st_point(cbind(ctrY, ctrX)),crs=4326)
-df_sf_buff <- st_buffer(sfdf, (maxdist*10)) #meters*10
-plot(df_sf_buff) 
-points(routes$long, routes$lat)
+# sfdf <- st_sfc(st_point(cbind(ctrY, ctrX)),crs=4326)
+# df_sf_buff <- st_buffer(sfdf, (maxdist*10)) #meters*10
+# plot(df_sf_buff) 
+# points(routes$long, routes$lat)
 
 # circle in ggplot
 ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
@@ -274,6 +300,8 @@ Here's something closer to working below
   
 ```{r}  
 # geosphere::geodesic
+
+# calculate limit points in each direction
 
 latLon_S <- geodesic(ctrPt, 180, (maxdist*1000), f=1/298.257223563)
 
@@ -300,12 +328,41 @@ limPts <- as.data.frame(limPts)
 
 plot1 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
 
+<<<<<<< HEAD
 plot1
 
+=======
+
+plot1
+>>>>>>> 02823bc9df161e561811f2cc3a248a660be5c540
 # determine if maxCoord is NSEW of ctrPt
+
+routes$DTWconnectivity <- (routes$flightsDTW * .5) + .5 
+
+plot3 <- ggplot(routes, aes(routes$distanceX * longDiffSign, routes$distanceY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km", x = "E-W distance in km", y = ("N-S distance in km")) + xlim(maxdist * -1,maxdist) + ylim(maxdist * -1,maxdist) + guides(colour = "colorbar",size = "legend")
+
+# + scale_x_continuous(breaks = seq(-3500, 3500, by = 500)) + scale_y_continuous(breaks = seq(-3500, 3500, by = 500)) 
+# scale_x_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist)) + scale_y_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist))
+# , size = routes$flightsDTW
+
+
+plot3
 
 # replot on log scale
 
+routes$distanceXlog <- log(routes$distanceX)
+routes$distanceYlog <- log(routes$distanceY)
+
+plot4 <- ggplot(routes, aes(routes$distanceXlog * longDiffSign, routes$distanceYlog * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km")
+
+plot4
+
+routes$distanceXsqrt <- sqrt(routes$distanceX)
+routes$distanceYsqrt <- sqrt(routes$distanceY)
+
+plot5 <- ggplot(routes, aes(routes$distanceXsqrt * longDiffSign, routes$distanceYsqrt * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(sqrt(maxdist) * -1,sqrt(maxdist)) + ylim(sqrt(maxdist) * -1,sqrt(maxdist))
+
+plot5
 ```
 
 
@@ -313,9 +370,50 @@ plot1
 ```{r}
 plot2 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
 
-# this doesn't work (produces NaNs or infintes), but sets a basic structure
+# this doesn't work (produces NaNs or infinites), but sets a basic structure
 plot2 + scale_x_log10(limits = c(xlim1,xlim2)) + scale_y_log10(c(ylim1,ylim2))
 
 # really, we need a radial log scale, which would create a different structure than perhaps ggplot2 can offer
 ```
+```{r} 
 
+# we need a way of fitting a distance decay function (or is this an inverse distance decay function technically?) to the actual data, finding what's appropriate for the patterns you're trying to show in any given set.
+
+# experimenting with a few basic ones for the test data, a square root function looks decent. and for people who are stats/quantitative geography junkies they might already know what distance decay suits their data based on previous literature (see the Taylor piece I added to the GitHub repo for some of the space cadet thoughts on this in geography). but what if there was a more custom solution that used math, but didn't really rely on our users knowing any? CATEGORICAL MAPPING (with a great R package name: catmaps), or PSEUDOSPATIAL CHARTS.
+
+# two ideas:
+
+# A. user-defined control points for the decay function. we say that 0 is the origin and 1200 pixels/units is maxdist (or whatever; i chose a number divisible by three for purposes of illustration, ggplot resizes dynamically but you get the point), and since we're trying to show things that are roughly (i) close, (ii) medium, and (iii) far; ask the user: how far away would something need to be from the origin to still be considered "close" in this data set? how far away would it need to get to be considered "far"? if the user says that airports within 500 miles are close, then 500 miles of distance in any direction would give you 400 pixels/units from the origin. if they say that over 2000 miles would be far, then that tells us that 800 pixels/units from the origin is equivalent to 2000 miles of real distance.
+
+# so now we have the following four points and we need to find the smoothest function we can to fit them: (0,0), (500,400), (2000,800), (maxdist,1200). sounds like a regression problem! which R has been known to handle once or twice before. once we have the equation figured out, we just send all our distances through it. again, radial distances and bearings would be ideal since this is another potentially earth-distorting step, but that's okay for now. replot and PROFIT.
+
+# B. data-driven approach using a similar approach to choropleth classes; obviously equal interval is boring, but we could define classes using natural breaks or some other clustering algorithm. does this get us closer to a liquid resize? maybe, but as long as it's labeled, is it still workable?
+
+```
+
+```{r}
+# code to find a Lagrange interpolation polynomial for our control points. for now I'm just defining some, later we should explore the user input and/or data-driven methods.
+
+geodist <- c(0, 500, 1000, 3500) # let's say under 500 km is close, over 1000km is far
+chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+
+dat <- data.frame(cbind(geodist, chartdist))
+ 
+ggplot(dat, aes(x=chartdist, y=geodist)) + 
+  geom_point(size=5, col='blue')
+
+library(polynom)
+lagrangepoly <- poly.calc(geodist, chartdist)
+
+predict(lagrangepoly, 2000)
+
+# routes$lagrangedistX <- (3 * routes$distanceX)
+
+routes$lagrangedistX <- predict(lagrangepoly, routes$distanceX)
+routes$lagrangedistY <- predict(lagrangepoly, routes$distanceY)
+
+plot6 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,1200) + ylim(-1200,1200)
+
+plot6
+
+```
