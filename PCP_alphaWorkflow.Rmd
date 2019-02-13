@@ -300,6 +300,8 @@ limPts <- as.data.frame(limPts)
 
 plot1 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
 
+plot1
+
 # determine if maxCoord is NSEW of ctrPt
 
 # replot on log scale
