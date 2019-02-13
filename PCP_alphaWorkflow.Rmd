@@ -386,3 +386,29 @@ plot2 + scale_x_log10(limits = c(xlim1,xlim2)) + scale_y_log10(c(ylim1,ylim2))
 
 ```
 
+```{r}
+# code to find a Lagrange interpolation polynomial for our control points. for now I'm just defining some, later we should explore the user input and/or data-driven methods.
+
+geodist <- c(0, 500, 1000, 3500) # let's say under 500 km is close, over 1000km is far
+chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+
+dat <- data.frame(cbind(geodist, chartdist))
+ 
+ggplot(dat, aes(x=chartdist, y=geodist)) + 
+  geom_point(size=5, col='blue')
+
+library(polynom)
+lagrangepoly <- poly.calc(geodist, chartdist)
+
+predict(lagrangepoly, 2000)
+
+# routes$lagrangedistX <- (3 * routes$distanceX)
+
+routes$lagrangedistX <- predict(lagrangepoly, routes$distanceX)
+routes$lagrangedistY <- predict(lagrangepoly, routes$distanceY)
+
+plot6 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,1200) + ylim(-1200,1200)
+
+plot6
+
+```
