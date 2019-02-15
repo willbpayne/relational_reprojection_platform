@@ -333,7 +333,7 @@ plot1
 
 # determine if maxCoord is NSEW of ctrPt
 
-routes$DTWconnectivity <- (routes$flightsDTW * .5) + .5 
+routes$DTWconnectivity <- (routes$flightsDTW * 1) + .5 
 
 plot3 <- ggplot(routes, aes(routes$distanceX * longDiffSign, routes$distanceY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km", x = "E-W distance in km", y = ("N-S distance in km")) + xlim(maxdist * -1,maxdist) + ylim(maxdist * -1,maxdist) + guides(colour = "colorbar",size = "legend")
 
@@ -390,18 +390,19 @@ plot2 + scale_x_log10(limits = c(xlim1,xlim2)) + scale_y_log10(c(ylim1,ylim2))
 ```{r}
 # code to find a Lagrange interpolation polynomial for our control points. for now I'm just defining some, later we should explore the user input and/or data-driven methods.
 
-geodist <- c(0, 500, 1000, 3500) # let's say under 500 km is close, over 1000km is far
+geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 1000km is far
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
-dat <- data.frame(cbind(geodist, chartdist))
+dat <- data.frame(cbind(geogdist, chartdist))
  
-ggplot(dat, aes(x=chartdist, y=geodist)) + 
+ggplot(dat, aes(x=chartdist, y=geogdist)) + 
   geom_point(size=5, col='blue')
 
 library(polynom)
-lagrangepoly <- poly.calc(geodist, chartdist)
+lagrangepoly <- poly.calc(geogdist, chartdist)
 
-predict(lagrangepoly, 2000)
+lagrangepoly
+predict(lagrangepoly, 200)
 
 # routes$lagrangedistX <- (3 * routes$distanceX)
 
@@ -411,5 +412,9 @@ routes$lagrangedistY <- predict(lagrangepoly, routes$distanceY)
 plot6 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,1200) + ylim(-1200,1200)
 
 plot6
+
+plot7 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,700) + ylim(-850,600)
+
+plot7
 
 ```
