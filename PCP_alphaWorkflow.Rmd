@@ -416,7 +416,11 @@ plot6
 plot7 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,700) + ylim(-850,600)
 
 plot7
+```
 
+
+making maps, breaking shit
+```{r}
 ### STYLE TEST from plot7
 
 
@@ -427,10 +431,25 @@ plot7a <- ggplot(routes, aes(x = aesX, y = aesY,
                           z = routes$flightsDTW)) +
                 geom_tile(aes(fill = routes$flightsDTW)) +
               #  + geom_point(stroke = 1, size = routes$DTWconnectivity)  %>%
-               stat_contour() +
+              geom_text(routes$airport) +
+               #stat_contour() +
                #geom_contour(binwidth = 1) +
                labs(color = "Great circle distance in km") +
                xlim(-1200,700) + ylim(-850,600) +
             scale_fill_continuous(name = "connectivity", low = "white", high = "blue" )
 plot7a
+
+
+
+plot1a <- ggplot(routes, 
+                aes(routes$long, routes$lat, 
+                    color = routes$distance)) + 
+  geom_text(label=routes$airport) + 
+  geom_point(data = (as.data.frame(ctrPt)), 
+             aes(ctrPt[1], ctrPt[2]), color = "orange") +
+  xlim(xlim1,xlim2) +
+  ylim(ylim1,ylim2)
+
+
+plot1a
 ```

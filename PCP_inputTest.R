@@ -128,6 +128,9 @@ library(gmt) # geodist is in geosphere under a different name--need to fix
     
     df$latDiff <- df$lat - ctrY # actal longitude difference, use for square plot later
     df$latDiffSign <- ifelse(df$lat - ctrY < 0 , -1, 1)
+  
+  
+#### interface works up to here, returning to alpha workflow until axial distances figured out EM 2/27    
     
     # find max distance
     # assign variable to max dist
