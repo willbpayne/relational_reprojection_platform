@@ -417,4 +417,20 @@ plot7 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrange
 
 plot7
 
+### STYLE TEST from plot7
+
+
+aesX <- routes$lagrangedistX * routes$longDiffSign
+aesY <- routes$lagrangedistY * routes$latDiffSign
+
+plot7a <- ggplot(routes, aes(x = aesX, y = aesY, 
+                          z = routes$flightsDTW)) +
+                geom_tile(aes(fill = routes$flightsDTW)) +
+              #  + geom_point(stroke = 1, size = routes$DTWconnectivity)  %>%
+               stat_contour() +
+               #geom_contour(binwidth = 1) +
+               labs(color = "Great circle distance in km") +
+               xlim(-1200,700) + ylim(-850,600) +
+            scale_fill_continuous(name = "connectivity", low = "white", high = "blue" )
+plot7a
 ```
