@@ -11,8 +11,6 @@ library(gmt) # geodist is in geosphere under a different name--need to fix
   
   df <- read.csv(file = dataPath)
 
-### DATA VALIDATION
-
 
 ### DATA PROCESSING
   #### AT SOME POINT WE SHOULD VALIDATE.
@@ -25,7 +23,7 @@ library(gmt) # geodist is in geosphere under a different name--need to fix
   # paste0("is this [1] Name, [2] Center, [3] Lat, [4] Long, [5] Data value, [6] Other")
   # col1Orig <- readline(prompt="Enter answer (1-6)")
   # 
-  # col1Orig
+  # col1Orig # I don't know how to feed this into the if statement without printing it
   # ifelse(col1Orig == 1,
   #   colnames(df)[1] <- "dfName",
   #   ifelse(col1Orig == 2,
@@ -58,7 +56,7 @@ library(gmt) # geodist is in geosphere under a different name--need to fix
     colnames(df)[5] <- "val1"
     colnames(df[5])
     
-    colnames(df)
+    colnames(df) #delete later
   
     # VALIDATION
       if (typeof(df$dfName) != "character")
@@ -72,7 +70,7 @@ library(gmt) # geodist is in geosphere under a different name--need to fix
       if (typeof(df$val1) != "integer" && typeof(df$val1) != "double" )
         df$val1 <- as.double(df$val1)
       
-      summary(df)
+      summary(df) # delete later and/or add some better feedback
 
       # coordinate validation
       ifelse(max(df$lat > 90.0) || 
@@ -80,11 +78,17 @@ library(gmt) # geodist is in geosphere under a different name--need to fix
                max(df$long > 180.0) || 
                min(df$long < -180.0), 
              print("Check your coordinate system..."), 
-             print("Coordinates look ok!"))
+             print("Coordinates look ok!"))       ##runs twice
+      
+ print("Plotting data...")   
       
       # test plot
       plot(df$long, df$lat)
       print("Please check to make sure your data looks ok")
+      testPlotValid <- readline(prompt ="Does this look right? (Y/N): ")
+      ifelse(testPlotValid == "Y",
+        print("Great! Moving on"),
+        print("Oh. This might be on you.")) # runs twice
 
       
 ## CENTERS
@@ -100,10 +104,16 @@ library(gmt) # geodist is in geosphere under a different name--need to fix
     ctrX <- df$long[df$ctrBin == TRUE]
     ctrY <- df$lat[df$ctrBin == TRUE]
     ctrPt <- c(ctrX,ctrY)
-    cat("Your center point has the following coordinates:", 
-        ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
+    ctrPtName <- df$dfName[df$ctrBin == TRUE]
+    cat("Your center point, ", ctrPtName, ", has the following coordinates:\n", 
+        ctrPt[1],"longitude\n", ctrPt[2], "latitude. ")
+    
+  ctrValid <- readline(prompt = "does that look correct? (Y/N)")
+  ifelse(ctrValid == "Y",
+         paste("Great! Moving on."),
+         paste("Oh. Please check your data."))
 
-
+##################################################
 #### DISTANCES
     # create a column in df, fill with km distances
     df$distance <- geodist(ctrY, ctrX, df$lat, df$long, units = "km")  
