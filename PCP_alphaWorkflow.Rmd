@@ -16,6 +16,7 @@ library(gmt) # geodist is in geosphere
 library(tidyverse)
 #library(sf)
 library(geosphere)
+library(useful)
 ```
 
 ## R Markdown
@@ -116,7 +117,22 @@ ATLpt <- c(ATLx,ATLy)
 cat("The distance between ATL and your center point is", geodist(ctrY, ctrX, ATLy, ATLx, units = "km"), "km.")
 # test passed
 
+# convert to polar coordinates (WE NEED TO DO THIS EARLY ON AND THEN STORE THE BEARING ALONG WITH GREAT CIRCLE DISTANCE, THEN WE TRANSFORM DISTANCE USING GREAT CIRCLE DISTANCE, AND FINALLY REPLOT USING pol2cart and the new distance)
 
+cart2pol(-2347.424429, -975.4223676, degrees = TRUE) # convert from cartesian coordinates to polar
+
+# p1 <- c(-83.35340, 42.21240) # DTW (long then lat) NOT NEEDED ANYMORE
+p2 <- c(-112.0120, 33.43430) # PHX (long then lat)
+
+routes$bearing
+
+bearing(ctrPt, p2, a=6378137, f=1/298.257223563) # great circle distance should be 2684
+
+# if geobearing is negative, mathbearing is 90 plus bearing
+# if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
+# if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+
+pol2cart(2684, 202.5643, degrees = TRUE) # get from great circle distance and bearing back to cartesian coordinates
 
 ```
 
