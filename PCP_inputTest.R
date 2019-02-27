@@ -5,18 +5,44 @@ library(geosphere)
 library(gmt) # geodist is in geosphere under a different name--need to fix
 
 ### DATA READING
-  
+  # test file: testData/routes_bare_sm.csv
   dataPath <- readline(prompt="Enter file Path: ")
   dataPath <- file.path(dataPath)
   
   df <- read.csv(file = dataPath)
 
+### DATA VALIDATION
+
+
 ### DATA PROCESSING
   #### AT SOME POINT WE SHOULD VALIDATE.
   #### FOR THE TIME BEING, JUST NAIVE COL RE-NAME
-  # col1 <- readline(prompt="is column 1 ID (Y/N): ")
-  # col2 <- readline(prompt="is column 1 a binary (Y/N): ")
-
+  
+  ### THIS WORKS, BUT FOR SIMPLICITY, JUMP TO LINE 46-ish FOR NAIVE SETUP
+  # paste0("please validate the following columns:")
+  # paste0(colnames(df))
+  # paste0("validating column, ", colnames(df[1]))
+  # paste0("is this [1] Name, [2] Center, [3] Lat, [4] Long, [5] Data value, [6] Other")
+  # col1Orig <- readline(prompt="Enter answer (1-6)")
+  # 
+  # col1Orig
+  # ifelse(col1Orig == 1,
+  #   colnames(df)[1] <- "dfName",
+  #   ifelse(col1Orig == 2,
+  #          colnames(df)[1] <- "ctrBin",
+  #          ifelse(col1Orig == 3,
+  #                 colnames(df)[1] <- "lat",
+  #                 ifelse(col1Orig == 4,
+  #                        colnames(df)[1] <- "long",
+  #                        ifelse(col1Orig == 5,
+  #                               colnames(df)[1] <- "val1",
+  #                               paste("We don't have any more options! Yell at Eve and her sloppy code!")
+  #                        )
+  #                 )
+  #          )
+  #          )
+  # )
+  
     colnames(df)[1] <- "dfName"
     colnames(df[1])
     
