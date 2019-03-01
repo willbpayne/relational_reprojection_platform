@@ -448,10 +448,10 @@ aesY <- routes$lagrangedistY * routes$latDiffSign
 
 plot7a <- ggplot(routes, aes(x = aesX, y = aesY, 
                           z = routes$flightsDTW)) +
-                geom_tile(aes(fill = routes$flightsDTW)) +
+             # geom_tile(aes(fill = routes$flightsDTW)) +
               #  + geom_point(stroke = 1, size = routes$DTWconnectivity)  %>%
               geom_text(routes$airport) +
-               #stat_contour() +
+               stat_contour() +
                #geom_contour(binwidth = 1) +
                labs(color = "Great circle distance in km") +
                xlim(-1200,700) + ylim(-850,600) +
@@ -463,11 +463,19 @@ plot7a
 plot1a <- ggplot(routes, 
                 aes(routes$long, routes$lat, 
                     color = routes$distance)) + 
-  geom_text(label=routes$airport) + 
+  geom_text(aes(label=routes$airport), size = 2, check_overlap = TRUE) + 
   geom_point(data = (as.data.frame(ctrPt)), 
              aes(ctrPt[1], ctrPt[2]), color = "orange") +
   xlim(xlim1,xlim2) +
-  ylim(ylim1,ylim2)
+  ylim(ylim1,ylim2) +
+  labs(x="long", y="lat") +
+  theme_bw() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 
 
 plot1a
