@@ -5,6 +5,8 @@ date: "January 26, 2019"
 output: html_document
 ---
 
+## 00: R Setup
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(sp)
@@ -19,11 +21,7 @@ library(geosphere)
 library(useful)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-## Input CSV into R
+## 01: Input CSV into R
 * Read and give headers and datatypes for each (eventually do more sophisticated validation/type detection)
 
 ```{r}
@@ -52,7 +50,8 @@ typeof(routes$isDTW)
 
 ```
 
-## Plot test
+## 02: Plot test
+
 ```{r}
 # coordinate validation
 ifelse(max(routes$lat > 90.0) || min(routes$lat < -90.0) || max(routes$long > 180.0) || min(routes$long < -180.0), print("Check your coordinate system..."), print("Coordinates look ok!"))
@@ -61,7 +60,8 @@ ifelse(max(routes$lat > 90.0) || min(routes$lat < -90.0) || max(routes$long > 18
 plot(routes$long, routes$lat)
 ```
 
-## Select origin point from rows
+## 03: Select origin point from rows
+
 * column "iscenter" value = 1
     + __currently pre-set in test data__
 * validate that there is only one center
@@ -75,29 +75,15 @@ if (sum(routes$isDTW) == 1)
   print("There is one center! Hooray!")
 ```
 
-## Declare a data frame; make it an object we want to use
+## 04: Declare a data frame; make it an object we want to use
 
 ```{r}
 class(routes)
 ```
 
-## Coordinates
-* Go through lat and long
-* Calculate distance (pairs) btwn all pairs and origin
-     + __important__ right angle indiv coorinate distance, not diagonal pt distance
-     + eg, dist btwn X(a) and X(1) in km assuming constant Lat, not dist btwn X(a),Y(a) and X(1),Y(1)
-          + also __surely there's a library for this__ : spDistN1? recs from geodessy-dorks? library geosphere?
-* Save values as new columns called latDist and lonDist
-* Find max dist of any value within latDist OR lonDist
-     + WP: this would probably eff up a basemap, but helpful for us in our analytical purpose. 
-     + __NB:__ do we need to think more about great circles?
-* set bounding box for plot and save for later
-     + Take maxVal and double for height and width of bounding box
-          + This solves some of our hypotenuse fears bc max coord dist still captured
-     + not a proper bounding box, setting an extent, but don't necessarily need to declare lat/long coordos ()
+## 05: Center point and test point distance
 
 ```{r}
-
 
 # give DTW row an id
 #if(distMat$isDTW == 1) print("nearly there")
@@ -117,44 +103,12 @@ ATLpt <- c(ATLx,ATLy)
 cat("The distance between ATL and your center point is", geodist(ctrY, ctrX, ATLy, ATLx, units = "km"), "km.")
 # test passed
 
-# convert to polar coordinates (WE NEED TO DO THIS EARLY ON AND THEN STORE THE BEARING ALONG WITH GREAT CIRCLE DISTANCE, THEN WE TRANSFORM DISTANCE USING GREAT CIRCLE DISTANCE, AND FINALLY REPLOT USING pol2cart and the new distance)
-
-cart2pol(-2347.424429, -975.4223676, degrees = TRUE) # convert from cartesian coordinates to polar
-
-# p2 <- c(-112.0120, 33.43430) # PHX (long then lat) TEST POINT 2 (P1 STORED ALREADY)
-# bearing(ctrPt, p2, a=6378137, f=1/298.257223563) # great circle distance should be 2684
-
-for (row in 1:nrow(routes)){
-  airportlong <- routes[row,"long"]
-  airportlat <- routes[row,"lat"]
-  airportlonglat <- c(airportlong, airportlat)
-  routes[row,"crtPtGeobearing"] <- bearing(ctrPt, airportlonglat, a=6378137, f=1/298.257223563)
-}
-
-# for (row in 1:nrow(routes)) # USE TO RESET
-#   {routes[row,"crtPtMathbearing"] <- 0}
-
-for (row in 1:nrow(routes)) # convert from geographic bearings to polar coordinates
-  {if(routes$crtPtGeobearing[row] <= 0)
-  # if geobearing is 0 or negative negative, mathbearing is 90 plus bearing
-  routes$crtPtMathbearing[row] <- abs(routes$crtPtGeobearing[row]) + 90
-  if(routes$crtPtGeobearing[row] > 0 & routes$crtPtGeobearing[row] < 90)
-  # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
-  routes$crtPtMathbearing[row] <- (90 - routes$crtPtGeobearing[row])
-  if(routes$crtPtGeobearing[row] >= 90 & routes$crtPtGeobearing[row] <= 180)
-  # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
-  routes$crtPtMathbearing[row] <- 360 - (routes$crtPtGeobearing[row] - 90)}
-
-# later we use the ctrPtMathbearing and the transformed distances to get back to cartesian coordinates
-
-pol2cart(routes$distance[2], routes$crtPtMathbearing[2], degrees = TRUE)
-
-pol2cart(2684, 202.5643, degrees = TRUE) # get from great circle distance and bearing back to cartesian coordinates
-
 ```
 
-# Distance
-* Find longest distance between origin and any other point (RADIANS? GREAT CIRCLES? GEOGRAPHY?)
+## 06: Calculate all distances (Great circle, X, Y)
+
+* __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
+    + example data max is 7,241 km
 
 ```{r}
 # currently in km
@@ -206,10 +160,46 @@ routes$latDiffSign <- ifelse(routes$lat - ctrY < 0 , -1, 1)
   
 ```
 
-* __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
-    + example data max is 7,241 km
+## 07: Calculate all bearings to center point
 
-## Plot
+```{r}
+
+# convert to polar coordinates 
+
+for (row in 1:nrow(routes)){
+  airportlong <- routes[row,"long"]
+  airportlat <- routes[row,"lat"]
+  airportlonglat <- c(airportlong, airportlat)
+  routes[row,"crtPtGeobearing"] <- bearing(ctrPt, airportlonglat, a=6378137, f=1/298.257223563)
+}
+
+for (row in 1:nrow(routes)) # convert from geographic bearings to polar coordinates
+  {if(routes$crtPtGeobearing[row] <= 0)
+  # if geobearing is 0 or negative negative, mathbearing is 90 plus bearing
+  routes$crtPtMathbearing[row] <- abs(routes$crtPtGeobearing[row]) + 90
+  if(routes$crtPtGeobearing[row] > 0 & routes$crtPtGeobearing[row] < 90)
+  # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
+  routes$crtPtMathbearing[row] <- (90 - routes$crtPtGeobearing[row])
+  if(routes$crtPtGeobearing[row] >= 90 & routes$crtPtGeobearing[row] <= 180)
+  # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+  routes$crtPtMathbearing[row] <- 360 - (routes$crtPtGeobearing[row] - 90)}
+
+# later we use the ctrPtMathbearing and the transformed distances to get back to cartesian coordinates
+
+pol2cart(routes$distance[2], routes$crtPtMathbearing[2], degrees = TRUE)
+
+pol2cart(2684, 202.5643, degrees = TRUE) # get from great circle distance and bearing back to cartesian coordinates
+
+# CODE STASH
+# for (row in 1:nrow(routes)) # USE TO RESET
+#   {routes[row,"crtPtMathbearing"] <- 0}
+# cart2pol(-2347.424429, -975.4223676, degrees = TRUE) # convert from cartesian coordinates to polar
+# p2 <- c(-112.0120, 33.43430) # PHX (long then lat) TEST POINT 2 (P1 STORED ALREADY)
+# bearing(ctrPt, p2, a=6378137, f=1/298.257223563) # great circle distance should be 2684
+
+```
+
+## 08: Initial plot
 * GGplot of the lat and long with low-res world background
 * REPROJECT on logarithmic scale
 * GGplot again
@@ -217,9 +207,6 @@ routes$latDiffSign <- ifelse(routes$lat - ctrY < 0 , -1, 1)
 ```{r}
 # first plot
 ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
-
-# determine if maxCoord is NSEW of ctrPt
-# http://mathforum.org/library/drmath/view/51816.html ?
 
 # take the maxdist
 earthrad <- 6371
@@ -270,8 +257,6 @@ latS_alt <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad)
      #    lon=mod(lon1-asin(sin(tc)*sin(d)/cos(lat))+pi,2*pi)-pi
      # ENDIF
 
-  
-    
 # var δ = d/R;
 # var Δφ = δ * Math.cos(θ);
 # var φ2 = φ1 + Δφ;
@@ -395,7 +380,7 @@ plot5
 ```
 
 
-## Scale changes
+## 09: Scale changes
 ```{r}
 plot2 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
 
