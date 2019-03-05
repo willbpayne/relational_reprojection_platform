@@ -121,19 +121,33 @@ cat("The distance between ATL and your center point is", geodist(ctrY, ctrX, ATL
 
 cart2pol(-2347.424429, -975.4223676, degrees = TRUE) # convert from cartesian coordinates to polar
 
-# p1 <- c(-83.35340, 42.21240) # DTW (long then lat) NOT NEEDED ANYMORE
-p2 <- c(-112.0120, 33.43430) # PHX (long then lat)
+# p2 <- c(-112.0120, 33.43430) # PHX (long then lat) TEST POINT 2 (P1 STORED ALREADY)
+# bearing(ctrPt, p2, a=6378137, f=1/298.257223563) # great circle distance should be 2684
 
-routes$longlat <- list(c(routes$long, routes$lat)) # WHY DOESN'T THIS WORK?
+for (row in 1:nrow(routes)){
+  airportlong <- routes[row,"long"]
+  airportlat <- routes[row,"lat"]
+  airportlonglat <- c(airportlong, airportlat)
+  routes[row,"crtPtGeobearing"] <- bearing(ctrPt, airportlonglat, a=6378137, f=1/298.257223563)
+}
 
-routes$ctrPtbearing <- bearing(ctrPt, c(routes$long, routes$lat), a=6378137, f=1/298.257223563) # great circle distance should be 2684
+# for (row in 1:nrow(routes)) # USE TO RESET
+#   {routes[row,"crtPtMathbearing"] <- 0}
 
+for (row in 1:nrow(routes)) # convert from geographic bearings to polar coordinates
+  {if(routes$crtPtGeobearing[row] <= 0)
+  # if geobearing is 0 or negative negative, mathbearing is 90 plus bearing
+  routes$crtPtMathbearing[row] <- abs(routes$crtPtGeobearing[row]) + 90
+  if(routes$crtPtGeobearing[row] > 0 & routes$crtPtGeobearing[row] < 90)
+  # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
+  routes$crtPtMathbearing[row] <- (90 - routes$crtPtGeobearing[row])
+  if(routes$crtPtGeobearing[row] >= 90 & routes$crtPtGeobearing[row] <= 180)
+  # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+  routes$crtPtMathbearing[row] <- 360 - (routes$crtPtGeobearing[row] - 90)}
 
-bearing(ctrPt, p2, a=6378137, f=1/298.257223563) # great circle distance should be 2684
+# later we use the ctrPtMathbearing and the transformed distances to get back to cartesian coordinates
 
-# if geobearing is negative, mathbearing is 90 plus bearing
-# if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
-# if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+pol2cart(routes$distance[2], routes$crtPtMathbearing[2], degrees = TRUE)
 
 pol2cart(2684, 202.5643, degrees = TRUE) # get from great circle distance and bearing back to cartesian coordinates
 
