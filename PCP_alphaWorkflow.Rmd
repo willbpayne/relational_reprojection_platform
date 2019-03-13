@@ -20,7 +20,7 @@ library(tidyverse)
 library(geosphere)
 library(useful)
 library(akima)
-library(xkcd)
+library(xkcd) # I don't know if it was my setup or a differnet problem, but had to reinstall ggplot and rlang a few times, so be wary--also, easy enough to just download the font separately
 library(extrafont)
 library(reshape2)
 
@@ -522,13 +522,25 @@ interpolation experiments
 
 flts <- with(routes, interp(x = aesX, y = aesY, z = routes$flightsDTW))
 
-# Base R version (not super working yet)
-# filled.contour(x = flts$x,
-#                y = flts$y,
-#                z = flts$z,
-#                color.palette = colorRampPalette(c("white", "blue")),
-#                main = "DTW Flights")
+# Base R version
+contourEX <- filled.contour(x = flts$x,
+               y = flts$y,
+               z = flts$z,
+               color.palette = colorRampPalette(c("white", "blue")),
+               main = "DTW Flights") +
+                xlim(-1200,700) +
+                ylim(-850,600)
+contourEX
+#########
+plot8 <- ggplot(flts)
 
+#################
+f_df <- data.frame(f_z = flts$z,
+                   f_x = flts$x,
+                   f_y = flts$y)
+        # f_df is very strange looking. Not sure what's going on there
+
+f_df <- melt(f_df, id = "f_z")
 
 # GGPLOT2
 f_df <- melt(flts$z, na.rm = TRUE)
