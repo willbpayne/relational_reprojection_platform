@@ -20,6 +20,17 @@ library(tidyverse)
 library(geosphere)
 library(useful)
 library(akima)
+library(xkcd)
+library(extrafont)
+
+## USE TO DOWNLOAD XKCD FONT
+# download.file("http://simonsoftware.se/other/xkcd.ttf", dest="xkcd.ttf", mode="wb")
+#  system("mkdir ~/.fonts")
+#  system("cp xkcd.ttf  ~/.fonts")
+#  font_import(pattern = "xkcd", prompt=FALSE)
+#  fonts()
+#  fonttable()
+
 ```
 
 ## 01: Input CSV into R
@@ -446,30 +457,52 @@ making maps, breaking shit
 aesX <- routes$lagrangedistX * routes$longDiffSign
 aesY <- routes$lagrangedistY * routes$latDiffSign
 
-plot7a <- ggplot(routes, aes(x = aesX, y = aesY, 
-                          z = routes$flightsDTW)) +
+plot7a <- ggplot(routes, aes(aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance))) +
              # geom_tile(aes(fill = routes$flightsDTW)) +
               #  + geom_point(stroke = 1, size = routes$DTWconnectivity)  %>%
               geom_text(routes$airport) +
-               stat_contour() +
+               #stat_contour() +
                #geom_contour(binwidth = 1) +
-               labs(color = "Great circle distance in km") +
+               labs(x="long", y="lat") +
                xlim(-1200,700) + ylim(-850,600) +
-            scale_fill_continuous(name = "connectivity", low = "white", high = "blue" )
+            #scale_fill_continuous(name = "connectivity", low = "white", high = "blue" )
 plot7a
 
+
+
+
+plot7b <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, 
+                   routes$lagrangedistY * latDiffSign, 
+                   color = routes$distance)) + 
+  geom_text(aes(label=routes$airport), size = 2, check_overlap = TRUE) + 
+  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+  coord_fixed() + 
+  labs(color = "Great circle distance in km") + 
+  xlim(-1200,700) + 
+  ylim(-850,600) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+plot7b
 
 
 plot1a <- ggplot(routes, 
                 aes(routes$long, routes$lat, 
                     color = routes$distance)) + 
-  geom_text(aes(label=routes$airport), size = 2, check_overlap = TRUE) + 
+  geom_text(aes(label=routes$airport), size = 2, family= "xkcd", check_overlap = TRUE) + 
   geom_point(data = (as.data.frame(ctrPt)), 
              aes(ctrPt[1], ctrPt[2]), color = "orange") +
   xlim(xlim1,xlim2) +
   ylim(ylim1,ylim2) +
   labs(x="long", y="lat") +
-  theme_bw() +
+  theme_xkcd() +
   theme(
     axis.text.x = element_blank(),
     axis.text.y = element_blank(),
@@ -480,3 +513,12 @@ plot1a <- ggplot(routes,
 
 plot1a
 ```
+
+interpolation experiments
+```{r}
+
+
+
+
+```
+
