@@ -22,6 +22,7 @@ library(useful)
 library(akima)
 library(xkcd)
 library(extrafont)
+library(reshape2)
 
 ## USE TO DOWNLOAD XKCD FONT
 # download.file("http://simonsoftware.se/other/xkcd.ttf", dest="xkcd.ttf", mode="wb")
@@ -468,11 +469,12 @@ plot7a <- ggplot(routes, aes(aes(routes$lagrangedistX * longDiffSign, routes$lag
             #scale_fill_continuous(name = "connectivity", low = "white", high = "blue" )
 plot7a
 
+# aes(routes$lagrangedistX * longDiffSign, 
+#                    routes$lagrangedistY * latDiffSign, 
+#                    color = routes$distance)
 
 
-
-plot7b <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, 
-                   routes$lagrangedistY * latDiffSign, 
+plot7b <- ggplot(routes, aes(aesX, aesY, 
                    color = routes$distance)) + 
   geom_text(aes(label=routes$airport), size = 2, check_overlap = TRUE) + 
   geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
@@ -502,6 +504,7 @@ plot1a <- ggplot(routes,
   xlim(xlim1,xlim2) +
   ylim(ylim1,ylim2) +
   labs(x="long", y="lat") +
+  labs(color = "distance") +
   theme_xkcd() +
   theme(
     axis.text.x = element_blank(),
@@ -517,8 +520,25 @@ plot1a
 interpolation experiments
 ```{r}
 
+flts <- with(routes, interp(x = aesX, y = aesY, z = routes$flightsDTW))
+
+# Base R version (not super working yet)
+# filled.contour(x = flts$x,
+#                y = flts$y,
+#                z = flts$z,
+#                color.palette = colorRampPalette(c("white", "blue")),
+#                main = "DTW Flights")
 
 
+# GGPLOT2
+f_df <- melt(flts$z, na.rm = TRUE)
+names(df) <- c("x", "y", "z")
+f_df$X <- flts$x[flts$x]
+f_df$Y <- flts$y[flts$y]
+
+ggplot(data = f_df, aes(x = X, y = Y, z = Z)) +
+  geom_tile(aes(fill = flights)) +
+  stat_contour()
 
 ```
 
