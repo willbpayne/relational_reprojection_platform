@@ -19,6 +19,7 @@ library(tidyverse)
 #library(sf)
 library(geosphere)
 library(useful)
+library(akima)
 ```
 
 ## 01: Input CSV into R
