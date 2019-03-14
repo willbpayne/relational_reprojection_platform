@@ -531,8 +531,12 @@ contourEX <- filled.contour(x = flts$x,
                 xlim(-1200,700) +
                 ylim(-850,600)
 contourEX
+<<<<<<< HEAD
 #########
 plot8 <- ggplot(flts)
+=======
+
+>>>>>>> 80e2ab1175dae216199c53295d9b4db5ee6b149f
 
 #################
 f_df <- data.frame(f_z = flts$z,
