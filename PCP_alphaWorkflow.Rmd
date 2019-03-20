@@ -24,13 +24,14 @@ library(xkcd)
 library(extrafont)
 library(reshape2)
 
-## USE TO DOWNLOAD XKCD FONT
-# download.file("http://simonsoftware.se/other/xkcd.ttf", dest="xkcd.ttf", mode="wb")
-#  system("mkdir ~/.fonts")
-#  system("cp xkcd.ttf  ~/.fonts")
-#  font_import(pattern = "xkcd", prompt=FALSE)
-#  fonts()
-#  fonttable()
+# USE TO DOWNLOAD XKCD FONT
+download.file("http://simonsoftware.se/other/xkcd.ttf", dest="xkcd.ttf", mode="wb")
+system("mkdir ~/.fonts")
+system("cp xkcd.ttf  ~/.fonts")
+font_import(pattern = "xkcd", prompt=FALSE)
+fonts()
+fonttable()
+
 
 ```
 
