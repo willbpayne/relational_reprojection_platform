@@ -20,7 +20,7 @@ library(tidyverse)
 library(geosphere)
 library(useful)
 library(akima)
-library(xkcd)
+library(xkcd) # I don't know if it was my setup or a differnet problem, but had to reinstall ggplot and rlang a few times, so be wary--also, easy enough to just download the font separately
 library(extrafont)
 library(reshape2)
 
@@ -532,7 +532,12 @@ contourEX <- filled.contour(x = flts$x,
                 xlim(-1200,700) +
                 ylim(-850,600)
 contourEX
+<<<<<<< HEAD
+#########
+plot8 <- ggplot(flts)
+=======
 
+>>>>>>> 80e2ab1175dae216199c53295d9b4db5ee6b149f
 
 #################
 f_df <- data.frame(f_z = flts$z,
