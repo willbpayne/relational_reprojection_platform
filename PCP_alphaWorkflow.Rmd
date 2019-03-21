@@ -29,9 +29,8 @@ download.file("http://simonsoftware.se/other/xkcd.ttf", dest="xkcd.ttf", mode="w
 system("mkdir ~/.fonts")
 system("cp xkcd.ttf  ~/.fonts")
 font_import(pattern = "xkcd", prompt=FALSE)
-fonts()
-fonttable()
-
+# fonts()
+# fonttable()
 
 ```
 
@@ -43,6 +42,8 @@ routes <- read.csv(file = "testData/routes_bare_sm.csv")
 
 routes <- routes[!(routes$lat>50 | routes$long < -125),]
 summary(routes)
+class(routes) # test to make sure it's a data frame
+
 # at some point, we need to enforce generic column headers
 
 typeof(routes$isDTW)
@@ -89,13 +90,7 @@ if (sum(routes$isDTW) == 1)
   print("There is one center! Hooray!")
 ```
 
-## 04: Declare a data frame; make it an object we want to use
-
-```{r}
-class(routes)
-```
-
-## 05: Center point and test point distance
+## 04: Center point and test point distance
 
 ```{r}
 
@@ -119,7 +114,7 @@ cat("The distance between ATL and your center point is", geodist(ctrY, ctrX, ATL
 
 ```
 
-## 06: Calculate all distances (Great circle, X, Y)
+## 05: Calculate all distances (Great circle, X, Y)
 
 * __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
     + example data max is 7,241 km
@@ -174,7 +169,7 @@ routes$latDiffSign <- ifelse(routes$lat - ctrY < 0 , -1, 1)
   
 ```
 
-## 07: Calculate all bearings to center point
+## 06: Calculate all bearings to center point
 
 ```{r}
 
@@ -213,7 +208,7 @@ pol2cart(2684, 202.5643, degrees = TRUE) # get from great circle distance and be
 
 ```
 
-## 08: Initial plot
+## 07: Initial plot
 * GGplot of the lat and long with low-res world background
 * REPROJECT on logarithmic scale
 * GGplot again
@@ -357,9 +352,7 @@ limPts <- as.data.frame(limPts)
 # some algebra to get xlim of long via km maxdistX in other position
 # ditto for ylim
 
-
 plot1 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
-
 
 plot1
 
@@ -372,7 +365,6 @@ plot3 <- ggplot(routes, aes(routes$distanceX * longDiffSign, routes$distanceY * 
 # + scale_x_continuous(breaks = seq(-3500, 3500, by = 500)) + scale_y_continuous(breaks = seq(-3500, 3500, by = 500)) 
 # scale_x_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist)) + scale_y_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist))
 # , size = routes$flightsDTW
-
 
 plot3
 
