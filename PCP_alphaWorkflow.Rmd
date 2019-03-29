@@ -435,32 +435,12 @@ geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 200
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
 dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
-lagrangemonpol <- monpol(formula = chartdist~geogdist, data = dat, plot.it = TRUE,
-                         ptype = "SOS", monotone = "increasing")
-
-lagrangemonpol
-predict(lagrangemonpol,100)
-
-predict(lagrangemonpol, c(0,100,200,300,400,500,600), scale = c("original"))
-
-curve(predict(lagrangemonpol,x), from = 0, to = maxdist, n = 4)
-
-print(lagrangemonpol, digits = max(3, getOption("digits") - 3))
-
-plot(lagrangemonpol) #EM 3/29: this breaks for me. "'x' is a list, but does not have components 'x' and 'y'"
-
-median(routes[["distance"]])
-geogdist <- c(0, 1220.595, maxdist) # let's say under 500 km is close, over 2000km is far
-chartdist <- c(0, 600, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
-
-dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
 ggplot(dat, aes(x=geogdist, y=chartdist)) + geom_point(size=5, col='blue') 
 
 lagrangepoly <- poly.calc(geogdist, chartdist) # calculate polynomial from control points
 lagrangepoly # print polynomial 
 
 curve(predict(lagrangepoly,x), from = 0, to = maxdist, n = 100)
-abline(lm(chartdist~geogdist)) #EM 3/29: breaks for me, possibly due to line 450
 
 predict(lagrangepoly, 200) # print predicted value for geogdist of 200
 
@@ -468,7 +448,6 @@ routes$lagrangedistX <- predict(lagrangepoly, routes$distanceX) # predict X dist
 routes$lagrangedistY <- predict(lagrangepoly, routes$distanceY) # predict Y distances
 
 routes$lagrangedistcirc <- predict(lagrangepoly, routes$distance) # predict great circle distances
-
 
 # function to make new circles with any lagrange polynomial set above
 lagrange_predict <- function(circlesdataframe) { 
@@ -647,7 +626,7 @@ plot1a
 interpolation experiments
 ```{r}
 
-flts <- with(routes, interp(x = aesX, y = aesY, z = routes$flightsDTW))
+flts <- with(routes, interp(x = lagrangedistcircX, y = lagrangedistcircY, z = routes$flightsDTW))
 
 # Base R version
 contourEX <- filled.contour(x = flts$x,
@@ -655,8 +634,8 @@ contourEX <- filled.contour(x = flts$x,
                z = flts$z,
                color.palette = colorRampPalette(c("white", "blue")),
                main = "DTW Flights") +
-                xlim(-1200,700) +
-                ylim(-850,600)
+               xlim(-1200,700) +
+               ylim(-850,600)
 contourEX
 
 #########
@@ -683,3 +662,29 @@ ggplot(data = f_df, aes(x = X, y = Y, z = Z)) +
 
 ```
 
+# TEST FOR NEW LAGRANGE METHODS
+
+```{r} 
+
+dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
+lagrangemonpol <- monpol(formula = chartdist~geogdist, data = dat, plot.it = TRUE,
+                         ptype = "SOS", monotone = "increasing")
+
+lagrangemonpol
+predict(lagrangemonpol,100)
+
+predict(lagrangemonpol, c(0,100,200,300,400,500,600), scale = c("original"))
+
+curve(predict(lagrangemonpol,x), from = 0, to = maxdist, n = 4)
+
+print(lagrangemonpol, digits = max(3, getOption("digits") - 3))
+
+# plot(lagrangemonpol) #EM 3/29: this breaks for me. "'x' is a list, but does not have components 'x' and 'y'"
+
+median(routes[["distance"]])
+geogdist <- c(0, 1220.595, maxdist) # let's say under 500 km is close, over 2000km is far
+chartdist <- c(0, 600, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+
+# abline(lm(chartdist~geogdist)) #EM 3/29: breaks for me, possibly due to line 450
+
+```
