@@ -1,0 +1,112 @@
+---
+title: "PCP_scrapfile"
+author: "Will P."
+date: "3/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Scrap from PCP_alphaWorkflow.Rmd
+```{r}
+#<<<<<<< HEAD
+#=======
+
+# variation based on ed williams for less-than-half-the-earth-distances
+# ugh, I cleaned my environment and pi is still effed up. Here's a bunch of digits
+pi <- 3.141592653589793238462643383279502884197169399375105820974944592307816406286 
+
+# a different answer ~ -36S, that is also wrong
+latS_alt <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad)*cos(2*pi))
+    ifelse((cos(ctrY) == 0),
+       lonS_alt <- ctrX,
+       lonS_alt <- ((ctrX-asin(sin(2*pi)*sin(maxdist/earthrad)/cos(latS_alt)) + pi) %% pi) - pi
+    )
+
+
+# lat=asin(sin(lat1)*cos(d)+cos(lat1)*sin(d)*cos(tc))
+#      IF (cos(lat)=0)
+#         lon=lon1      // endpoint a pole
+#      ELSE
+     #    lon=mod(lon1-asin(sin(tc)*sin(d)/cos(lat))+pi,2*pi)-pi
+     # ENDIF
+
+# var δ = d/R;
+# var Δφ = δ * Math.cos(θ);
+# var φ2 = φ1 + Δφ;
+# 
+# var Δψ = Math.log(Math.tan(φ2/2+Math.PI/4)/Math.tan(φ1/2+Math.PI/4));
+# var q = Math.abs(Δψ) > 10e-12 ? Δφ / Δψ : Math.cos(φ1); // E-W course becomes ill-conditioned with 0/0
+# 
+# var Δλ = δ*Math.sin(θ)/q;
+# var λ2 = λ1 + Δλ;
+
+
+#>>>>>>> cdbc1607200ad4fd66562bb2754a3d728e0f69d6
+# mod() = %%
+lonE = (ctrX+asin(sin(3*pi/2)*sin(maxdist/6366.565)/cos(ctrY))+pi %% 2*pi)-pi ## ARGH!
+
+# lonE = mod(lon1+asin(sin(tc)*sin(d)/cos(lat))+pi,2*pi)-pi
+
+latE <- 
+  # E, W (tc=pi/2 or 3*pi/2): lat = asin(sin(lat1)*cos(d))
+
+# GAH, not right!! ^^^
+
+# N (tc=0): lat = asin(sin(lat1)*cos(d)+cos(lat1)*sin(d))
+#               = asin(sin(lat1 + d)
+#               = lat1 + d
+
+    # cheating example
+#           N (tc=0): lat = asin(sin(lat1)*cos(d)+cos(lat1)*sin(d))
+#               = asin(sin(lat1 + d)
+#               = lat1 + d
+# 
+# S (tc=pi): lat = asin(sin(lat1)*cos(d)-cos(lat1)*sin(d))
+#                = asin(sin(lat1 - d)
+#                = lat1 - d
+# 
+# E, W (tc=pi/2 or 3*pi/2): lat = asin(sin(lat1)*cos(d))
+
+
+# The circle example
+
+    # added pkg sf
+
+# sfdf <- st_sfc(st_point(cbind(ctrY, ctrX)),crs=4326)
+# df_sf_buff <- st_buffer(sfdf, (maxdist*10)) #meters*10
+# plot(df_sf_buff) 
+# points(routes$long, routes$lat)
+
+# circle in ggplot
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + theme_bw()
+  
+  ggplot((as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2])) + geom_point(color = "Orange")
+  # then would add a big buffer. Gah.
+```
+
+
+## 09E: Other Scale changes
+```{r}
+plot2 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
+# this doesn't work (produces NaNs or infinites), but sets a basic structure
+plot2 + scale_x_log10(limits = c(xlim1,xlim2)) + scale_y_log10(c(ylim1,ylim2))
+
+# really, we need a radial log scale, which would create a different structure than perhaps ggplot2 can offer
+
+# we need a way of fitting a distance decay function (or is this an inverse distance decay function technically?) to the actual data, finding what's appropriate for the patterns you're trying to show in any given set.
+
+# experimenting with a few basic ones for the test data, a square root function looks decent. and for people who are stats/quantitative geography junkies they might already know what distance decay suits their data based on previous literature (see the Taylor piece I added to the GitHub repo for some of the space cadet thoughts on this in geography). but what if there was a more custom solution that used math, but didn't really rely on our users knowing any? CATEGORICAL MAPPING (with a great R package name: catmaps), or PSEUDOSPATIAL CHARTS.
+
+# two ideas:
+
+# A. user-defined control points for the decay function. we say that 0 is the origin and 1200 pixels/units is maxdist (or whatever; i chose a number divisible by three for purposes of illustration, ggplot resizes dynamically but you get the point), and since we're trying to show things that are roughly (i) close, (ii) medium, and (iii) far; ask the user: how far away would something need to be from the origin to still be considered "close" in this data set? how far away would it need to get to be considered "far"? if the user says that airports within 500 miles are close, then 500 miles of distance in any direction would give you 400 pixels/units from the origin. if they say that over 2000 miles would be far, then that tells us that 800 pixels/units from the origin is equivalent to 2000 miles of real distance.
+
+# so now we have the following four points and we need to find the smoothest function we can to fit them: (0,0), (500,400), (2000,800), (maxdist,1200). sounds like a regression problem! which R has been known to handle once or twice before. once we have the equation figured out, we just send all our distances through it. again, radial distances and bearings would be ideal since this is another potentially earth-distorting step, but that's okay for now. replot and PROFIT.
+
+# B. data-driven approach using a similar approach to choropleth classes; obviously equal interval is boring, but we could define classes using natural breaks or some other clustering algorithm. does this get us closer to a liquid resize? maybe, but as long as it's labeled, is it still workable?
+
+```
