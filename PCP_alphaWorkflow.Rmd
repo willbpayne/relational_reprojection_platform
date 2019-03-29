@@ -317,7 +317,20 @@ ggplot() +
   geom_circle(aes(x0 = x0, y0 = y0, r = r), colour = "orange", data = circles, show.legend = NA, inherit.aes = FALSE) +
   coord_fixed()
 
-plot2 <- ggplot(routes, aes(routes$circdistancex, routes$circdistancey, color = routes$distance)) +  geom_circle(aes(x0 = x0, y0 = y0, r = r), colour = "orange", data = circles, show.legend = NA, inherit.aes = FALSE) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Distance in km", x = NULL, y = NULL) + guides(colour = "colorbar",size = "legend") + theme(panel.background = element_blank())
+plot2 <- ggplot(routes, aes(
+                routes$circdistancex, 
+                routes$circdistancey, 
+                color = routes$distance)) +
+        geom_circle(aes(x0 = x0, y0 = y0, r = r),
+          colour = "orange", 
+          data = circles, 
+          show.legend = NA, 
+          inherit.aes = FALSE) +
+        geom_point(stroke = 1, size = routes$DTWconnectivity) +
+        geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+        coord_fixed() + labs(color = "Distance in km", x = NULL, y = NULL) +
+        guides(colour = "colorbar",size = "legend") +
+        theme(panel.background = element_blank())
 
 plot2
 
@@ -339,7 +352,14 @@ routes$distanceXlog <- log(routes$distanceX)
 routes$distanceYlog <- log(routes$distanceY)
 routes$distancelog <- log(routes$distance)
 
-plot3a <- ggplot(routes, aes(routes$distanceXlog * longDiffSign, routes$distanceYlog * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km")
+plot3a <- ggplot(routes, aes(
+                routes$distanceXlog * longDiffSign, 
+                routes$distanceYlog * latDiffSign, 
+                color = routes$distance)) + 
+           geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+  coord_fixed() + 
+  labs(color = "Great circle distance in km")
 
 plot3a
 
@@ -348,7 +368,13 @@ for (row in 1:nrow(routes)){
   routes[row,"distancelogcircy"] <- (pol2cart(routes$distancelog[row], routes$crtPtMathbearing[row], degrees = TRUE))[2]
 }
 
-plot3b <- ggplot(routes, aes(routes$distancelogcircx, routes$distancelogcircy, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km")
+plot3b <- ggplot(routes, aes(
+                routes$distancelogcircx, 
+                routes$distancelogcircy, 
+                color = routes$distance)) + 
+  geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+  coord_fixed() + labs(color = "Great circle distance in km")
 
 plot3b
 
@@ -362,16 +388,37 @@ routes$distanceXsqrt <- (routes$distanceX)
 routes$distanceYsqrt <- sqrt(routes$distanceY)
 routes$distancesqrt <- sqrt(routes$distance)
 
-plot4a <- ggplot(routes, aes(routes$distanceXsqrt * longDiffSign, routes$distanceYsqrt * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(sqrt(maxdist) * -1,sqrt(maxdist)) + ylim(sqrt(maxdist) * -1,sqrt(maxdist))
+plot4a <- ggplot(routes, aes(
+                routes$distanceXsqrt * longDiffSign, 
+                routes$distanceYsqrt * latDiffSign, 
+                color = routes$distance)) + 
+            geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+            geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+            coord_fixed() + 
+            labs(color = "Great circle distance in km") + 
+        xlim(sqrt(maxdist) * -1,sqrt(maxdist)) + 
+        ylim(sqrt(maxdist) * -1,sqrt(maxdist))
 
-plot4a
+plot4a #EM 3/29: getting most points removed in this version, but not the same prob in plot4
 
 for (row in 1:nrow(routes)){
   routes[row,"sqrtcircX"] <- (pol2cart(routes$distancesqrt[row], routes$crtPtMathbearing[row], degrees = TRUE))[1]
   routes[row,"sqrtcircY"] <- (pol2cart(routes$distancesqrt[row], routes$crtPtMathbearing[row], degrees = TRUE))[2]
 }
 
-plot4b <- ggplot(routes, aes(routes$sqrtcircX, routes$sqrtcircY, color = routes$distance)) +  geom_circle(aes(x0 = x0, y0 = y0, r = r), colour = "orange", data = sqrt(circles), show.legend = NA, inherit.aes = FALSE) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Distance in km", x = NULL, y = NULL) + theme(panel.background = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank(),axis.text.y = element_blank())
+plot4b <- ggplot(routes, aes(
+                routes$sqrtcircX, 
+                routes$sqrtcircY, 
+                color = routes$distance)) +  
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "orange", data = sqrt(circles), 
+                      show.legend = NA, inherit.aes = FALSE) + 
+          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Distance in km", x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
 
 plot4b
 
@@ -388,7 +435,8 @@ geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 200
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
 dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
-lagrangemonpol <- monpol(formula = chartdist~geogdist, data = dat, plot.it = TRUE, ptype = "SOS", monotone = "increasing")
+lagrangemonpol <- monpol(formula = chartdist~geogdist, data = dat, plot.it = TRUE,
+                         ptype = "SOS", monotone = "increasing")
 
 lagrangemonpol
 predict(lagrangemonpol,100)
@@ -399,7 +447,7 @@ curve(predict(lagrangemonpol,x), from = 0, to = maxdist, n = 4)
 
 print(lagrangemonpol, digits = max(3, getOption("digits") - 3))
 
-plot(lagrangemonpol)
+plot(lagrangemonpol) #EM 3/29: this breaks for me. "'x' is a list, but does not have components 'x' and 'y'"
 
 median(routes[["distance"]])
 geogdist <- c(0, 1220.595, maxdist) # let's say under 500 km is close, over 2000km is far
@@ -412,7 +460,7 @@ lagrangepoly <- poly.calc(geogdist, chartdist) # calculate polynomial from contr
 lagrangepoly # print polynomial 
 
 curve(predict(lagrangepoly,x), from = 0, to = maxdist, n = 100)
-abline(lm(chartdist ~ geogdist))
+abline(lm(chartdist~geogdist)) #EM 3/29: breaks for me, possibly due to line 450
 
 predict(lagrangepoly, 200) # print predicted value for geogdist of 200
 
@@ -447,16 +495,48 @@ for (row in 1:nrow(routes)){
   routes[row,"lagrangedistcircY"] <- (pol2cart(routes$lagrangedistcirc[row], routes$crtPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
 }
 
-plot6a <- ggplot(routes, aes(lagrangedistcircX, lagrangedistcircY, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,1200) + ylim(-1200,1200)
+plot6a <- ggplot(routes, aes(
+                lagrangedistcircX, 
+                lagrangedistcircY, 
+                color = routes$distance)) + 
+          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Great circle distance in km") + 
+          xlim(-1200,1200) + 
+          ylim(-1200,1200)
 
 plot6a
 
-plot6b <- ggplot(routes, aes(lagrangedistcircX, lagrangedistcircY, color = routes$distance)) +  geom_circle(aes(x0 = x0, y0 = y0, r = r), colour = "orange", data = lagrange_predict(circles), show.legend = NA, inherit.aes = FALSE) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Distance in km", x = NULL, y = NULL) + theme(panel.background = element_blank(), axis.ticks = element_blank(), axis.text.x = element_blank(),axis.text.y = element_blank())
+plot6b <- ggplot(routes, aes(
+                lagrangedistcircX, 
+                lagrangedistcircY, 
+                color = routes$distance)) +  
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "orange", data = lagrange_predict(circles), 
+                      show.legend = NA, inherit.aes = FALSE) + 
+          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Distance in km", x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank())
 
 plot6b
 
 
-plot7 <- ggplot(routes, aes(lagrangedistcircX, lagrangedistcircY, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,700) + ylim(-850,600)
+plot7 <- ggplot(routes, aes(
+                lagrangedistcircX, 
+                lagrangedistcircY, 
+                color = routes$distance)) + 
+          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Great circle distance in km") + 
+          xlim(-1200,700) + 
+          ylim(-850,600)
 
 plot7
 
@@ -465,7 +545,15 @@ plot7
 ## 11A: Plot 1 with manual control points (square)
 
 ```{r}
-plot6 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,1200) + ylim(-1200,1200)
+plot6 <- ggplot(routes, aes(
+                routes$lagrangedistX * longDiffSign, 
+                routes$lagrangedistY * latDiffSign, color = routes$distance)) +
+        geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+        geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+        coord_fixed() + 
+        labs(color = "Great circle distance in km") + 
+        xlim(-1200,1200) + 
+        ylim(-1200,1200)
 
 plot6
 ```
@@ -474,7 +562,16 @@ plot6
 
 ```{r}
 
-plot7 <- ggplot(routes, aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km") + xlim(-1200,700) + ylim(-850,600)
+plot7 <- ggplot(routes, aes(
+                routes$lagrangedistX * longDiffSign, 
+                routes$lagrangedistY * latDiffSign, 
+                color = routes$distance)) + 
+          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Great circle distance in km") + 
+          xlim(-1200,700) + 
+          ylim(-850,600)
 
 plot7
 ```
