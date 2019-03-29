@@ -107,6 +107,7 @@ cat("Your center point has the following coordinates:", ctrPt[1],"longitude and"
 ```{r}
 # create a column in routes, fill with km distances
   routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")  
+  maxdist <- max(routes$distance) # max great circle distance
 
   print( # print out both the longest axial and great circle distances
     paste0("The longest great circle distance between your center point, ",
@@ -144,13 +145,15 @@ for (row in 1:nrow(routes)) # convert from geographic bearings to polar coordina
 * GGplot of the lat and long with low-res world background
 
 ```{r}
-# first plot with ctrPt and data visualized
-ggplot(routes, 
+# first plot with ctrPt and data visualized, still using lat/long
+plot05 <- ggplot(routes, 
        aes(routes$long, 
            routes$lat, 
            color = routes$distance)) + 
            geom_point() + 
            geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
+plot05
 
 ```  
   
@@ -164,8 +167,9 @@ for (row in 1:nrow(routes)){
   routes[row,"circdistancex"] <- (pol2cart(routes$distance[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1]
   routes[row,"circdistancey"] <- (pol2cart(routes$distance[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2]
 }
+rm(row)
 
-# Lets make some data
+# Lets make some circles
 circles <- data.frame(
   x0 = 0,
   y0 = 0,
@@ -177,7 +181,7 @@ ggplot() +
   geom_circle(aes(x0 = x0, y0 = y0, r = r), colour = "orange", data = circles, show.legend = NA, inherit.aes = FALSE) +
   coord_fixed()
 
-plot2 <- ggplot(routes, aes(
+plot06 <- ggplot(routes, aes(
                 routes$circdistancex, 
                 routes$circdistancey, 
                 color = routes$distance)) +
@@ -192,7 +196,7 @@ plot2 <- ggplot(routes, aes(
         guides(colour = "colorbar",size = "legend") +
         theme(panel.background = element_blank())
 
-plot2
+plot06
 
 ```  
 
@@ -202,65 +206,52 @@ plot2
 ```{r} 
 # replot on log scale
 
-routes$distanceXlog <- log(routes$distanceX)
-routes$distanceYlog <- log(routes$distanceY)
 routes$distancelog <- log(routes$distance)
-
-plot3a <- ggplot(routes, aes(
-                routes$distanceXlog * longDiffSign, 
-                routes$distanceYlog * latDiffSign, 
-                color = routes$distance)) + 
-           geom_point(stroke = 1, size = routes$DTWconnectivity) + 
-           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-  coord_fixed() + 
-  labs(color = "Great circle distance in km")
-
-plot3a
 
 for (row in 1:nrow(routes)){
   routes[row,"distancelogcircx"] <- (pol2cart(routes$distancelog[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1]
   routes[row,"distancelogcircy"] <- (pol2cart(routes$distancelog[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2]
 }
 
-plot3b <- ggplot(routes, aes(
+logcircles <- data.frame()
+
+for (row in 1:nrow(circles)){
+  logcircles[row,"r"] <- log(circles[row,"r"])
+  logcircles[row,"x0"] <- circles[row,"x0"]
+  logcircles[row,"y0"] <- circles[row,"y0"]
+}
+rm(row)
+
+plot07 <- ggplot(routes, aes(
                 routes$distancelogcircx, 
                 routes$distancelogcircy, 
                 color = routes$distance)) + 
+  geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "orange", data = logcircles, 
+                      show.legend = NA, inherit.aes = FALSE) +
   geom_point(stroke = 1, size = routes$DTWconnectivity) + 
   geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-  coord_fixed() + labs(color = "Great circle distance in km")
+  coord_fixed() + labs(color = "Great circle distance in km", x = NULL, y = NULL) +
+  theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
 
-plot3b
+plot07
 
 ```  
 
-## 09D: Plot 4 - Square root scale
+## 08 Plot 4 - Square root scale
 * Plot witn square root scale
   
 ```{r} 
-routes$distanceXsqrt <- (routes$distanceX)
-routes$distanceYsqrt <- sqrt(routes$distanceY)
 routes$distancesqrt <- sqrt(routes$distance)
-
-plot4a <- ggplot(routes, aes(
-                routes$distanceXsqrt * longDiffSign, 
-                routes$distanceYsqrt * latDiffSign, 
-                color = routes$distance)) + 
-            geom_point(stroke = 1, size = routes$DTWconnectivity) + 
-            geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-            coord_fixed() + 
-            labs(color = "Great circle distance in km") + 
-        xlim(sqrt(maxdist) * -1,sqrt(maxdist)) + 
-        ylim(sqrt(maxdist) * -1,sqrt(maxdist))
-
-plot4a #EM 3/29: getting most points removed in this version, but not the same prob in plot4
 
 for (row in 1:nrow(routes)){
   routes[row,"sqrtcircX"] <- (pol2cart(routes$distancesqrt[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1]
   routes[row,"sqrtcircY"] <- (pol2cart(routes$distancesqrt[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2]
 }
+rm(row)
 
-plot4b <- ggplot(routes, aes(
+plot08 <- ggplot(routes, aes(
                 routes$sqrtcircX, 
                 routes$sqrtcircY, 
                 color = routes$distance)) +  
@@ -274,11 +265,11 @@ plot4b <- ggplot(routes, aes(
           theme(panel.background = element_blank(), axis.ticks = element_blank(),
                 axis.text.x = element_blank(),axis.text.y = element_blank())
 
-plot4b
+plot08
 
 ```
 
-## 10: Manual Control Points
+## 09: Manual Control Points
 * Define a decay function using manual control points
 
 ```{r}
@@ -298,9 +289,6 @@ curve(predict(lagrangepoly,x), from = 0, to = maxdist, n = 100)
 
 predict(lagrangepoly, 200) # print predicted value for geogdist of 200
 
-routes$lagrangedistX <- predict(lagrangepoly, routes$distanceX) # predict X distances
-routes$lagrangedistY <- predict(lagrangepoly, routes$distanceY) # predict Y distances
-
 routes$lagrangedistcirc <- predict(lagrangepoly, routes$distance) # predict great circle distances
 
 # function to make new circles with any lagrange polynomial set above
@@ -311,8 +299,8 @@ lagrange_predict <- function(circlesdataframe) {
   return(lagrangecirclesdataframe)
 }
 
-lagrangetest <- lagrange_predict(circles) # check if it worked
-lagrangetest
+lagrangecircles <- lagrange_predict(circles) # check if it worked
+lagrangecircles
 
 ```
 

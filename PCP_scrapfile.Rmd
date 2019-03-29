@@ -14,6 +14,25 @@ Scrap from PCP_alphaWorkflow.Rmd
 #<<<<<<< HEAD
 #=======
 
+routes$lagrangedistX <- predict(lagrangepoly, routes$distanceX) # predict X distances
+routes$lagrangedistY <- predict(lagrangepoly, routes$distanceY) # predict Y distances
+
+routes$distanceXsqrt <- (routes$distanceX)
+routes$distanceYsqrt <- sqrt(routes$distanceY)
+
+plot4a <- ggplot(routes, aes(
+                routes$distanceXsqrt * longDiffSign, 
+                routes$distanceYsqrt * latDiffSign, 
+                color = routes$distance)) + 
+            geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+            geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+            coord_fixed() + 
+            labs(color = "Great circle distance in km") + 
+        xlim(sqrt(maxdist) * -1,sqrt(maxdist)) + 
+        ylim(sqrt(maxdist) * -1,sqrt(maxdist))
+
+plot08 #EM 3/29: getting most points removed in this version, but not the same prob in plot4
+
 ## 08: Limit Points
 ##* Calculate the limit points in each direction
 
