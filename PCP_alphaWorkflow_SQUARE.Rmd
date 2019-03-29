@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(sp)
 library(ggplot2)
 library(ggforce) # to plot circles
-library(dplyr)
+#library(dplyr)
 #library(devtools)
 #library(SpatialEpi)
 library(gmt) # geodist is in geosphere
@@ -91,78 +91,205 @@ if (sum(routes$isDTW) == 0)
   print("No center. Check data. Maybe we'll have an interface to select one later")
 if (sum(routes$isDTW) == 1)
   print("There is one center! Hooray!")
+```
 
+## 04: Center point and test point distance
+
+```{r}
+
+# give DTW row an id
+#if(distMat$isDTW == 1) print("nearly there")
 ctrX <- routes$long[routes$isDTW == TRUE]
 ctrY <- routes$lat[routes$isDTW == TRUE]
 ctrPt <- c(ctrX,ctrY)
 cat("Your center point has the following coordinates:", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 
+# Test point
+# ATL is approx ???km from DTW (took out HNL since it's not in the dataset anymore)
+ATLx <- routes$long[routes$airport == "ATL"]
+ATLy <- routes$lat[routes$airport == "ATL"]
+
+ATLpt <- c(ATLx,ATLy)
+
+# test distance
+cat("The distance between ATL and your center point is", geodist(ctrY, ctrX, ATLy, ATLx, units = "km"), "km.")
+# test passed
+
 ```
 
-## 04: Calculate all great circle distances and bearings to center point
+## 05: Calculate all distances (Great circle, X, Y)
 
 * __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
     + example data max is 7,241 km
 
 ```{r}
-# create a column in routes, fill with km distances
-  routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")  
+# currently in km
+
+  # create a column in routes, fill with km distances
+routes$distance <- geodist(ctrY, ctrX, routes$lat, routes$long, units = "km")  
+
+  # create a column in routes, fill with km east-west distances
+routes$distanceX <- geodist(ctrY, ctrX, ctrY, routes$long, units = "km")  
+  # create a column in routes, fill with km north-south distances
+routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")  
+
+routes$longDiff <- routes$long - ctrX # actual latitude difference, use for square plot later
+routes$longDiffSign <- ifelse(routes$long - ctrX < 0, -1, 1)
+
+routes$latDiff <- routes$lat - ctrY # actal longitude difference, use for square plot later
+routes$latDiffSign <- ifelse(routes$lat - ctrY < 0 , -1, 1)
+
+# assign variable to max distances
+  maxdistPT <- max(routes$distance) # distance of real points
+  maxdistX <- max(routes$distanceX) # longest east-west distance
+  maxdistY <- max(routes$distanceY) # longest north-south distance
+  maxdist <- max(routes$distanceX, routes$distanceY) # max between both axial distances
+  maxXcoord <- routes$lat[routes$distanceX == maxdistX]
+  maxYcoord <- routes$long[routes$distanceY == maxdistY]
+  
+  if (maxdistX > maxdistY) # figure out which direction the farthest point along
+    # either the east-west or north-south axis is, store its bearing in text and num
+    if (maxXcoord < ctrX)
+      {maxdistBearing <- 270; maxbearing <- "west"}
+    if (maxXcoord > ctrX)
+      {maxdistBearing <- 90; maxbearing <- "east"}
+  if (maxdistY > maxdistX)
+    if (maxYcoord < ctrY)
+      {maxdistBearing <- 180; maxbearing <- "south"}
+    if (maxYcoord > ctrY)
+      {maxdistBearing <- 0; maxbearing <- "north"}
 
   print( # print out both the longest axial and great circle distances
-    paste0("The longest great circle distance between your center point, ",
+    paste0("The farthest point, ", 
+           routes$airport[routes$distance == max(routes$distance)], 
+           ", is ", round(maxdist,digits=2), " km ", maxbearing, " of your center point, ",
+           routes$airport[routes$isDTW == TRUE],", along the longest axis of distance.",
+           " The longest great circle distance between your center point, ",
            routes$airport[routes$isDTW == TRUE], ", and farthest point, ",
            routes$airport[routes$distance == max(routes$distance)], ", is ",
            round(max(routes$distance), 0), " km.")
     )
   
+```
+
+## 06: Calculate all bearings to center point
+
+```{r}
+
 for (row in 1:nrow(routes)){ # convert to polar coordinates
   airportlong <- routes[row,"long"]
   airportlat <- routes[row,"lat"]
   airportlonglat <- c(airportlong, airportlat)
-  routes[row,"ctrPtGeobearing"] <- bearing(ctrPt, airportlonglat, a=6378137, f=1/298.257223563)
+  routes[row,"crtPtGeobearing"] <- bearing(ctrPt, airportlonglat, a=6378137, f=1/298.257223563)
 }
-  rm(airportlat,airportlong,airportlonglat,row)
-  
-for (row in 1:nrow(routes)) # convert from geographic bearings to polar coordinates
-  {if(routes$ctrPtGeobearing[row] <= 0)
-  # if geobearing is 0 or negative, mathbearing is 90 plus bearing
-  routes$ctrPtMathbearing[row] <- abs(routes$ctrPtGeobearing[row]) + 90
-  if(routes$ctrPtGeobearing[row] > 0 & routes$ctrPtGeobearing[row] < 90)
-  # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
-  routes$ctrPtMathbearing[row] <- (90 - routes$ctrPtGeobearing[row])
-  if(routes$ctrPtGeobearing[row] >= 90 & routes$ctrPtGeobearing[row] <= 180)
-  # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
-  routes$ctrPtMathbearing[row] <- 360 - (routes$ctrPtGeobearing[row] - 90)}
-  rm(row)
 
-  routes <- select(routes,-starts_with("ctrPtGeo"))
-  # later we use the ctrPtMathbearing and the transformed distances to get back to cartesian coordinates
+for (row in 1:nrow(routes)) # convert from geographic bearings to polar coordinates
+  {if(routes$crtPtGeobearing[row] <= 0)
+  # if geobearing is 0 or negative, mathbearing is 90 plus bearing
+  routes$crtPtMathbearing[row] <- abs(routes$crtPtGeobearing[row]) + 90
+  if(routes$crtPtGeobearing[row] > 0 & routes$crtPtGeobearing[row] < 90)
+  # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
+  routes$crtPtMathbearing[row] <- (90 - routes$crtPtGeobearing[row])
+  if(routes$crtPtGeobearing[row] >= 90 & routes$crtPtGeobearing[row] <= 180)
+  # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+  routes$crtPtMathbearing[row] <- 360 - (routes$crtPtGeobearing[row] - 90)}
+
+# later we use the ctrPtMathbearing and the transformed distances to get back to cartesian coordinates
 
 ```
 
-## 05: Initial plot
+## 07: Initial plot
 * GGplot of the lat and long with low-res world background
+* REPROJECT on logarithmic scale
+* GGplot again
 
 ```{r}
-# first plot with ctrPt and data visualized
-ggplot(routes, 
-       aes(routes$long, 
-           routes$lat, 
-           color = routes$distance)) + 
-           geom_point() + 
-           geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+# first plot
+ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
+# take the maxdist
+earthrad <- 6371
+
+# radius of earth in km: 6,371 km
+
+pi2 <- 3.14159265358979323846
+ctrYrad <- ((ctrY * pi2) / 180)
+angdistY <- maxdist/earthrad # get angular distance in radians
+# rad2deg <- function(rad) {(rad * 180) / (pi)}
+# deg2rad <- function(deg) {(deg * pi) / (180)}
+
+latSrad <- asin((sin(ctrYrad)*cos(angdistY))
+             +(cos(ctrYrad)*sin(angdistY)*cos(180)))
+
+latSrad <- asin((sin(ctrY)*cos(maxdist/earthrad) + cos(ctrY)*sin(maxdist/earthrad)*cos(180)))
+
+latS <- ((latSrad * 180)/(pi2))
+
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
+
+latN <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad))
+latN
+
+latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
+latNdist
+maxdist
 
 ```  
   
-## 06: Plot 2 - DTW connectivity
+## 08: Limit Points
+* Calculate the limit points in each direction
+  
+```{r}  
+# geosphere::geodesic
+# calculate limit points in each direction
+
+latLon_S <- geodesic(ctrPt, 180, (maxdist*1000), f=1/298.257223563)
+
+latLon_N <- geodesic(ctrPt, 0, (maxdist*1000), f=1/298.257223563)
+
+latLon_E  <- geodesic(ctrPt, 90, (maxdist*1000), f=1/298.257223563)
+
+latLon_W  <- geodesic(ctrPt, 270, (maxdist*1000), f=1/298.257223563)
+
+limPts <- data.frame(longitude = double(), latitude = double(), azimuth = numeric())
+limPts <- rbind(latLon_N,latLon_S,latLon_E,latLon_W)
+limPts <- as.data.frame(limPts)
+
+# now we make a data.frame of all the geodesic results
+
+xlim1 <- limPts$longitude[limPts$longitude == min(limPts$longitude)]
+xlim2 <- limPts$longitude[limPts$longitude == max(limPts$longitude)]
+ylim1 <- limPts$latitude[limPts$latitude == min(limPts$latitude)]
+ylim2 <- limPts$latitude[limPts$latitude == max(limPts$latitude)]
+
+# some algebra to get xlim of long via km maxdistX in other position
+# ditto for ylim
+
+```  
+
+## 09A: Plot 1 - Basic
+* Plain vanilla plot
+  
+```{r}  
+plot1 <- ggplot(routes, aes(routes$long, routes$lat, color = routes$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange") + xlim(xlim1,xlim2) + ylim(ylim1,ylim2)
+
+plot1
+```  
+
+## 09B: Plot 2 - DTW connectivity
 * Plot witn DTW connectivity
   
 ```{r} 
 routes$DTWconnectivity <- (routes$flightsDTW * 1) + .5 
 
+plot2a <- ggplot(routes, aes(routes$distanceX * longDiffSign, routes$distanceY * latDiffSign, color = routes$distance)) + geom_point(stroke = 1, size = routes$DTWconnectivity) + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + coord_fixed() + labs(color = "Great circle distance in km", x = "E-W distance in km", y = ("N-S distance in km")) + xlim(maxdist * -1,maxdist) + ylim(maxdist * -1,maxdist) + guides(colour = "colorbar",size = "legend")
+
+plot2a
+
 for (row in 1:nrow(routes)){
-  routes[row,"circdistancex"] <- (pol2cart(routes$distance[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1]
-  routes[row,"circdistancey"] <- (pol2cart(routes$distance[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2]
+  routes[row,"circdistancex"] <- (pol2cart(routes$distance[row], routes$crtPtMathbearing[row], degrees = TRUE))[1]
+  routes[row,"circdistancey"] <- (pol2cart(routes$distance[row], routes$crtPtMathbearing[row], degrees = TRUE))[2]
 }
 
 # Lets make some data
@@ -194,9 +321,15 @@ plot2 <- ggplot(routes, aes(
 
 plot2
 
+# xlim(maxdist * -1,maxdist) + ylim(maxdist * -1,maxdist)
+
+# + scale_x_continuous(breaks = seq(-3500, 3500, by = 500)) + scale_y_continuous(breaks = seq(-3500, 3500, by = 500)) 
+# scale_x_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist)) + scale_y_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist))
+# , size = routes$flightsDTW
+
 ```  
 
-## 07: Plot 3 - Log scale
+## 09C: Plot 3 - Log scale
 * Plot witn log scale
   
 ```{r} 
@@ -218,8 +351,8 @@ plot3a <- ggplot(routes, aes(
 plot3a
 
 for (row in 1:nrow(routes)){
-  routes[row,"distancelogcircx"] <- (pol2cart(routes$distancelog[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1]
-  routes[row,"distancelogcircy"] <- (pol2cart(routes$distancelog[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2]
+  routes[row,"distancelogcircx"] <- (pol2cart(routes$distancelog[row], routes$crtPtMathbearing[row], degrees = TRUE))[1]
+  routes[row,"distancelogcircy"] <- (pol2cart(routes$distancelog[row], routes$crtPtMathbearing[row], degrees = TRUE))[2]
 }
 
 plot3b <- ggplot(routes, aes(
@@ -256,8 +389,8 @@ plot4a <- ggplot(routes, aes(
 plot4a #EM 3/29: getting most points removed in this version, but not the same prob in plot4
 
 for (row in 1:nrow(routes)){
-  routes[row,"sqrtcircX"] <- (pol2cart(routes$distancesqrt[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1]
-  routes[row,"sqrtcircY"] <- (pol2cart(routes$distancesqrt[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2]
+  routes[row,"sqrtcircX"] <- (pol2cart(routes$distancesqrt[row], routes$crtPtMathbearing[row], degrees = TRUE))[1]
+  routes[row,"sqrtcircY"] <- (pol2cart(routes$distancesqrt[row], routes$crtPtMathbearing[row], degrees = TRUE))[2]
 }
 
 plot4b <- ggplot(routes, aes(
@@ -324,8 +457,8 @@ routes$lagrangedistcircX <- NA
 routes$lagrangedistcircY <- NA
 
 for (row in 1:nrow(routes)){
-  routes[row,"lagrangedistcircX"] <- (pol2cart(routes$lagrangedistcirc[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1] # returns x coordinate only
-  routes[row,"lagrangedistcircY"] <- (pol2cart(routes$lagrangedistcirc[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
+  routes[row,"lagrangedistcircX"] <- (pol2cart(routes$lagrangedistcirc[row], routes$crtPtMathbearing[row], degrees = TRUE))[1] # returns x coordinate only
+  routes[row,"lagrangedistcircY"] <- (pol2cart(routes$lagrangedistcirc[row], routes$crtPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
 }
 
 plot6a <- ggplot(routes, aes(

@@ -14,6 +14,111 @@ Scrap from PCP_alphaWorkflow.Rmd
 #<<<<<<< HEAD
 #=======
 
+## 08: Limit Points
+##* Calculate the limit points in each direction
+
+# xlim(maxdist * -1,maxdist) + ylim(maxdist * -1,maxdist)
+
+# + scale_x_continuous(breaks = seq(-3500, 3500, by = 500)) + scale_y_continuous(breaks = seq(-3500, 3500, by = 500)) 
+# scale_x_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist)) + scale_y_continuous(breaks=c(-maxdist,-3000,-2000,-1000,0,1000,2000,3000,maxdist))
+# , size = routes$flightsDTW
+
+# geosphere::geodesic
+# calculate limit points in each direction
+
+latLon_S <- geodesic(ctrPt, 180, (maxdist*1000), f=1/298.257223563)
+
+latLon_N <- geodesic(ctrPt, 0, (maxdist*1000), f=1/298.257223563)
+
+latLon_E  <- geodesic(ctrPt, 90, (maxdist*1000), f=1/298.257223563)
+
+latLon_W  <- geodesic(ctrPt, 270, (maxdist*1000), f=1/298.257223563)
+
+limPts <- data.frame(longitude = double(), latitude = double(), azimuth = numeric())
+limPts <- rbind(latLon_N,latLon_S,latLon_E,latLon_W)
+limPts <- as.data.frame(limPts)
+
+# now we make a data.frame of all the geodesic results
+
+xlim1 <- limPts$longitude[limPts$longitude == min(limPts$longitude)]
+xlim2 <- limPts$longitude[limPts$longitude == max(limPts$longitude)]
+ylim1 <- limPts$latitude[limPts$latitude == min(limPts$latitude)]
+ylim2 <- limPts$latitude[limPts$latitude == max(limPts$latitude)]
+
+# some algebra to get xlim of long via km maxdistX in other position
+# ditto for ylim
+
+# take the maxdist
+earthrad <- 6371
+
+# radius of earth in km: 6,371 km
+
+pi2 <- 3.14159265358979323846
+ctrYrad <- ((ctrY * pi2) / 180)
+angdistY <- maxdist/earthrad # get angular distance in radians
+# rad2deg <- function(rad) {(rad * 180) / (pi)}
+# deg2rad <- function(deg) {(deg * pi) / (180)}
+
+latSrad <- asin((sin(ctrYrad)*cos(angdistY))
+             +(cos(ctrYrad)*sin(angdistY)*cos(180)))
+
+latSrad <- asin((sin(ctrY)*cos(maxdist/earthrad) + cos(ctrY)*sin(maxdist/earthrad)*cos(180)))
+
+latS <- ((latSrad * 180)/(pi2))
+
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
+geodist(ctrY, ctrX, latS, ctrX, units = "km")
+
+latN <- asin(sin(ctrY)*cos(maxdist/earthrad)+cos(ctrY)*sin(maxdist/earthrad))
+latN
+
+latNdist <- geodist(ctrY, ctrX, latN, ctrX, units = "km")
+latNdist
+maxdist
+
+
+# X AND Y STUFF WE DON'T NEED ANYMORE
+
+  # create a column in routes, fill with km east-west distances
+routes$distanceX <- geodist(ctrY, ctrX, ctrY, routes$long, units = "km")  
+  # create a column in routes, fill with km north-south distances
+routes$distanceY <- geodist(ctrY, ctrX, routes$lat, ctrX, units = "km")  
+
+routes$longDiff <- routes$long - ctrX # actual latitude difference, use for square plot later
+routes$longDiffSign <- ifelse(routes$long - ctrX < 0, -1, 1)
+
+routes$latDiff <- routes$lat - ctrY # actal longitude difference, use for square plot later
+routes$latDiffSign <- ifelse(routes$lat - ctrY < 0 , -1, 1)
+
+  maxdistX <- max(routes$distanceX) # longest east-west distance
+  maxdistY <- max(routes$distanceY) # longest north-south distance
+  maxdist <- max(routes$distanceX, routes$distanceY) # max between both axial distances
+  maxXcoord <- routes$lat[routes$distanceX == maxdistX]
+  maxYcoord <- routes$long[routes$distanceY == maxdistY]
+  
+  if (maxdistX > maxdistY) # figure out which direction the farthest point along
+    # either the east-west or north-south axis is, store its bearing in text and num
+    if (maxXcoord < ctrX)
+      {maxdistBearing <- 270; maxbearing <- "west"}
+    if (maxXcoord > ctrX)
+      {maxdistBearing <- 90; maxbearing <- "east"}
+  if (maxdistY > maxdistX)
+    if (maxYcoord < ctrY)
+      {maxdistBearing <- 180; maxbearing <- "south"}
+    if (maxYcoord > ctrY)
+      {maxdistBearing <- 0; maxbearing <- "north"}
+
+
+# CODE STASH FOR POLAR COORDINATES
+# for (row in 1:nrow(routes)) # USE TO RESET
+#   {routes[row,"crtPtMathbearing"] <- 0}
+# cart2pol(-2347.424429, -975.4223676, degrees = TRUE) # convert from cartesian coordinates to polar
+# p2 <- c(-112.0120, 33.43430) # PHX (long then lat) TEST POINT 2 (P1 STORED ALREADY)
+# bearing(ctrPt, p2, a=6378137, f=1/298.257223563) # great circle distance should be 2684
+pol2cart(routes$distance[2], routes$crtPtMathbearing[2], degrees = TRUE)
+
+pol2cart(2684, 202.5643, degrees = TRUE) # get from great circle distance and bearing back to cartesian coordinates
+
 # variation based on ed williams for less-than-half-the-earth-distances
 # ugh, I cleaned my environment and pi is still effed up. Here's a bunch of digits
 pi <- 3.141592653589793238462643383279502884197169399375105820974944592307816406286 
