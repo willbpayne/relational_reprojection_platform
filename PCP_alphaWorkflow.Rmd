@@ -200,9 +200,8 @@ plot06
 
 ```  
 
-## 07: Plot 3 - Log scale
-* Plot witn log scale
-  
+## 07: Plot on log scale
+
 ```{r} 
 # replot on log scale
 
@@ -239,9 +238,8 @@ plot07
 
 ```  
 
-## 08 Plot 4 - Square root scale
-* Plot witn square root scale
-  
+## 08 Plot on square root scale (with and without scale circles)
+
 ```{r} 
 routes$distancesqrt <- sqrt(routes$distance)
 
@@ -251,7 +249,7 @@ for (row in 1:nrow(routes)){
 }
 rm(row)
 
-plot08 <- ggplot(routes, aes(
+plot08A <- ggplot(routes, aes( # plot with scale circles
                 routes$sqrtcircX, 
                 routes$sqrtcircY, 
                 color = routes$distance)) +  
@@ -265,7 +263,20 @@ plot08 <- ggplot(routes, aes(
           theme(panel.background = element_blank(), axis.ticks = element_blank(),
                 axis.text.x = element_blank(),axis.text.y = element_blank())
 
-plot08
+plot08A
+
+plot08B <- ggplot(routes, aes( # plot without circles
+                routes$sqrtcircX, 
+                routes$sqrtcircY, 
+                color = routes$distance)) + 
+          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Distance in km", x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
+
+plot08B
 
 ```
 
@@ -289,7 +300,7 @@ curve(predict(lagrangepoly,x), from = 0, to = maxdist, n = 100)
 
 predict(lagrangepoly, 200) # print predicted value for geogdist of 200
 
-routes$lagrangedistcirc <- predict(lagrangepoly, routes$distance) # predict great circle distances
+routes$lagrangedistcirc <- predict(lagrangepoly, routes$distance) # set new lagrange great circle distances using new polynomial
 
 # function to make new circles with any lagrange polynomial set above
 lagrange_predict <- function(circlesdataframe) { 
@@ -304,32 +315,17 @@ lagrangecircles
 
 ```
 
-## 11A: Plot 1 with manual control points (square)
+## 10: Plot with manual control points (with or without scale circles)
 
 ```{r}
 
-routes$lagrangedistcircX <- NA
-routes$lagrangedistcircY <- NA
-
-for (row in 1:nrow(routes)){
+for (row in 1:nrow(routes)){ # calculate new coordinates using lagrange distances
   routes[row,"lagrangedistcircX"] <- (pol2cart(routes$lagrangedistcirc[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1] # returns x coordinate only
   routes[row,"lagrangedistcircY"] <- (pol2cart(routes$lagrangedistcirc[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
 }
+rm(row)
 
-plot6a <- ggplot(routes, aes(
-                lagrangedistcircX, 
-                lagrangedistcircY, 
-                color = routes$distance)) + 
-          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
-          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-          coord_fixed() + 
-          labs(color = "Great circle distance in km") + 
-          xlim(-1200,1200) + 
-          ylim(-1200,1200)
-
-plot6a
-
-plot6b <- ggplot(routes, aes(
+plot10A <- ggplot(routes, aes( # plot with 500-km circles
                 lagrangedistcircX, 
                 lagrangedistcircY, 
                 color = routes$distance)) +  
@@ -344,128 +340,26 @@ plot6b <- ggplot(routes, aes(
                 axis.ticks = element_blank(), 
                 axis.text.x = element_blank(),
                 axis.text.y = element_blank())
+plot10A
 
-plot6b
-
-
-plot7 <- ggplot(routes, aes(
+plot10B <- ggplot(routes, aes( # plot without circles, zoomed in on data (do we need x and y lims again to do this programmatically?)
                 lagrangedistcircX, 
                 lagrangedistcircY, 
                 color = routes$distance)) + 
           geom_point(stroke = 1, size = routes$DTWconnectivity) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
-          labs(color = "Great circle distance in km") + 
-          xlim(-1200,700) + 
-          ylim(-850,600)
-
-plot7
+          labs(color = "Distance in km", x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank())
+plot10B
 
 ```
 
-## 11A: Plot 1 with manual control points (square)
+# 11 Interpolation Experiments
 
-```{r}
-plot6 <- ggplot(routes, aes(
-                routes$lagrangedistX * longDiffSign, 
-                routes$lagrangedistY * latDiffSign, color = routes$distance)) +
-        geom_point(stroke = 1, size = routes$DTWconnectivity) + 
-        geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-        coord_fixed() + 
-        labs(color = "Great circle distance in km") + 
-        xlim(-1200,1200) + 
-        ylim(-1200,1200)
-
-plot6
-```
-
-## 11B: Plot 2 with manual control points (cropped)
-
-```{r}
-
-plot7 <- ggplot(routes, aes(
-                routes$lagrangedistX * longDiffSign, 
-                routes$lagrangedistY * latDiffSign, 
-                color = routes$distance)) + 
-          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
-          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-          coord_fixed() + 
-          labs(color = "Great circle distance in km") + 
-          xlim(-1200,700) + 
-          ylim(-850,600)
-
-plot7
-```
-
-## 12: Making maps, Breaking shit
-
-```{r}
-### STYLE TEST from plot7
-
-
-aesX <- routes$lagrangedistX * routes$longDiffSign
-aesY <- routes$lagrangedistY * routes$latDiffSign
-
-plot7a <- ggplot(routes, aes(aes(routes$lagrangedistX * longDiffSign, routes$lagrangedistY * latDiffSign, color = routes$distance))) +
-             # geom_tile(aes(fill = routes$flightsDTW)) +
-              #  + geom_point(stroke = 1, size = routes$DTWconnectivity)  %>%
-              geom_text(routes$airport) +
-               #stat_contour() +
-               #geom_contour(binwidth = 1) +
-               labs(x="long", y="lat") +
-               xlim(-1200,700) + ylim(-850,600) +
-            #scale_fill_continuous(name = "connectivity", low = "white", high = "blue" )
-plot7a
-
-# aes(routes$lagrangedistX * longDiffSign, 
-#                    routes$lagrangedistY * latDiffSign, 
-#                    color = routes$distance)
-
-
-plot7b <- ggplot(routes, aes(aesX, aesY, 
-                   color = routes$distance)) + 
-  geom_text(aes(label=routes$airport), size = 2, check_overlap = TRUE) + 
-  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-  coord_fixed() + 
-  labs(color = "Great circle distance in km") + 
-  xlim(-1200,700) + 
-  ylim(-850,600) +
-  theme_bw() +
-  theme(
-    axis.text.x = element_blank(),
-    axis.title.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.title.y = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank()
-  )
-
-plot7b
-
-
-plot1a <- ggplot(routes, 
-                aes(routes$long, routes$lat, 
-                    color = routes$distance)) + 
-  geom_text(aes(label=routes$airport), size = 2, family= "xkcd", check_overlap = TRUE) + 
-  geom_point(data = (as.data.frame(ctrPt)), 
-             aes(ctrPt[1], ctrPt[2]), color = "orange") +
-  xlim(xlim1,xlim2) +
-  ylim(ylim1,ylim2) +
-  labs(x="long", y="lat") +
-  labs(color = "distance") +
-  theme_xkcd() +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank()
-  )
-
-
-plot1a
-```
-
-interpolation experiments
 ```{r}
 
 flts <- NULL
@@ -510,7 +404,7 @@ ggplot(data = f_df, aes(x = X, y = Y, z = Z)) +
 
 ```
 
-# TEST FOR NEW LAGRANGE METHODS
+# 12 New Lagrange Methods Experiments
 
 ```{r} 
 
