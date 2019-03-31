@@ -515,6 +515,8 @@ plot12 <- ggplot(data = f_df, aes(x = f_df$f_x, y = flts$f_y)) +
 plot12
 
 #####
+# dataframe as manually flattened interpolation
+# doesn't currently work
 flts_df <- as.data.frame(flts)
 flts_df["Zgrid"] <- rowSums(flts_df[c("z.1","z.2","z.3","z.4","z.5",
                   "z.6","z.7","z.8","z.9","z.10",
@@ -526,14 +528,30 @@ flts_df["Zgrid"] <- rowSums(flts_df[c("z.1","z.2","z.3","z.4","z.5",
                   "z.36","z.37","z.38","z.39","z.40")],
                   na.rm = TRUE)
 plot14 <- ggplot(data = flts_df, aes(x=flts_df$x,
-                                     y=flts_df$y)) +
+                                     y=flts_df$y,
+                                     z=flts_df$Zgrid)) +
                   geom_tile(aes(fill = flts_df$Zgrid),
                             position = "identity") +
   scale_fill_gradient(low = "blue", high = "yellow")
 
 plot14
 
+##########
+# another shot at melt
+flts <- with(routes, interp(x = lagrangedistcircX, y = lagrangedistcircY, z = flightsDTW))
 
+flts_grid_df <- melt(flts$z, na.rm = TRUE)
+names(flts_grid_df) <- c("x", "y", "flights")
+flts_grid_df$ldcX <- flts$x[flts_grid_df$x]
+flts_grid_df$ldcY <- flts$y[flts_grid_df$y]
+
+plot15 <- ggplot(data = flts_grid_df, aes(x = ldcX, y = ldcY, z = flights)) +
+  geom_tile(aes(fill = flights)) +
+  stat_contour() +
+    scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+
+plot15
+  
 #####
 
 flts_df <- melt(flts_df, id=flts_df$x)
