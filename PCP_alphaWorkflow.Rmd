@@ -505,8 +505,45 @@ f_df <- data.frame(f_z = flts$z,
 
 f_df <- data.frame(flts$z, flts$x, flts$y)
 
-ggplot(data = f_df, aes(x = f_df$x, y = f_df$y, z = f_df$z)) +
-  stat_contour()
+
+
+plot12 <- ggplot(data = f_df, aes(x = f_df$f_x, y = flts$f_y)) +
+  geom_tile(aes(fill=flts$f_z)) +
+  ggtitle("test plot") +
+  scale_fill_continuous(name = "flights", low = "white", high = "blue")
+
+plot12
+
+#####
+flts_df <- as.data.frame(flts)
+flts_df["Zgrid"] <- rowSums(flts_df[c("z.1","z.2","z.3","z.4","z.5",
+                  "z.6","z.7","z.8","z.9","z.10",
+                  "z.11","z.12","z.13","z.14","z.15",
+                  "z.16","z.17","z.18","z.19","z.20",
+                  "z.21","z.22","z.23","z.24","z.25",
+                  "z.26","z.27","z.28","z.29","z.30",
+                  "z.31","z.32","z.33","z.34","z.35",
+                  "z.36","z.37","z.38","z.39","z.40")],
+                  na.rm = TRUE)
+plot14 <- ggplot(data = flts_df, aes(x=flts_df$x,
+                                     y=flts_df$y)) +
+                  geom_tile(aes(fill = flts_df$Zgrid),
+                            position = "identity") +
+  scale_fill_gradient(low = "blue", high = "yellow")
+
+plot14
+
+
+#####
+
+flts_df <- melt(flts_df, id=flts_df$x)
+plot13 <- ggplot(data = flts, aes(x = flts$x,
+               y = flts$y)) +
+  geom_tile(aes(fill=flts$z)) +
+  ggtitle("test plot") +
+  scale_fill_continuous(name = "flights", low = "white", high = "blue")
+
+plot13
 
 f_df <- melt(f_df, id = "f_z")
 
