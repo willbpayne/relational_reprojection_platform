@@ -398,24 +398,6 @@ plot11B
 ############################################
 
 # Integrated plots, incl sec 10
-# EM 3/31: currently not working
-
-plot10A <- ggplot(routes, aes( # plot with 500-km circles
-                lagrangedistcircX, 
-                lagrangedistcircY, 
-                color = routes$distance)) +  
-          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "orange", data = lagrange_predict(circles), 
-                      show.legend = NA, inherit.aes = FALSE) + 
-          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
-          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-          coord_fixed() + 
-          labs(color = "Distance in km", x = NULL, y = NULL) + 
-          theme(panel.background = element_blank(), 
-                axis.ticks = element_blank(), 
-                axis.text.x = element_blank(),
-                axis.text.y = element_blank())
-plot10A
 
 routesSub <- routes[!(routes$isDTW == TRUE), ]
 # holy moly this is a sloppy solution, but it will have to do for now
