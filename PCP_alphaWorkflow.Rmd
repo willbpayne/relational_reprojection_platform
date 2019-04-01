@@ -451,7 +451,8 @@ plot11C <- ggplot() +
           geom_text(data = routesSub,
                     aes(lagrangedistcircX,
                         lagrangedistcircY,
-                        label= routesSub$airport),
+                        label= routesSub$airport,
+                        color = routesSub$DTWconnectivity),
                     size = 2.5,
                     check_overlap = TRUE) +
           theme(panel.background = element_blank(), 
