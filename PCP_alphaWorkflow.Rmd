@@ -23,7 +23,7 @@ library(useful)
 library(MonoPoly)
 library(akima)
 library(polynom)
-#library(xkcd) # I don't know if it was my setup or a differnet problem, but had to reinstall ggplot and rlang a few times, so be wary--also, easy enough to just download the font separately
+library(xkcd) # I don't know if it was my setup or a differnet problem, but had to reinstall ggplot and rlang a few times, so be wary--also, easy enough to just download the font separately
 library(extrafont)
 library(reshape2)
 
@@ -400,19 +400,7 @@ plot11B
 # Integrated plots, incl sec 10
 # EM 3/31: currently not working
 
-plot11C <- ggplot(data = flts_grid_df, 
-                 aes(x = ldcX, 
-                     y = ldcY, 
-                     z = flts_grid_df$flights)) +
-          #geom_tile(aes(fill = flights)) +
-          stat_contour(bins = 15, color = "black", size = 0.1)# +
-         # geom_point(-83.3534,  42.2124, color = "orange")
-         # scale_fill_gradient(name = "flights", low = "yellow", high = "red") #+ 
-         #geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange")
-
-plot11C
-
-plot11C <- ggplot(routes, aes( # plot with 500-km circles
+plot10A <- ggplot(routes, aes( # plot with 500-km circles
                 lagrangedistcircX, 
                 lagrangedistcircY, 
                 color = routes$distance)) +  
@@ -427,26 +415,52 @@ plot11C <- ggplot(routes, aes( # plot with 500-km circles
                 axis.ticks = element_blank(), 
                 axis.text.x = element_blank(),
                 axis.text.y = element_blank())
+plot10A
+
+
+
+plot11C <- ggplot() +
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "#f7f7f7", 
+                      data = lagrange_predict(circles),
+                      size = 3,
+                      show.legend = NA, 
+                      inherit.aes = FALSE) +        
+          stat_contour(data = flts_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = flts_grid_df$flights),
+                 bins = 6, color = "black", size = 0.5) +
+          geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(ctrPt[1], ctrPt[2]), color = "orange") +
+          geom_point(data = routes, 
+                    aes(lagrangedistcircX, 
+                       lagrangedistcircY),
+                    color = "black") +
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank())
+          
+         # geom_point(-83.3534,  42.2124, color = "orange")
+         # scale_fill_gradient(name = "flights", low = "yellow", high = "red") #+ 
+         #geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange")
 
 plot11C
 
-plot11C1 <- ggplot(data = flts_grid_df, 
-                 aes(x = ldcX, 
-                     y = ldcY, 
-                     z = flights)) +
-          geom_tile(aes(fill = flights)) +
-          stat_contour(bins = 15, color = "black", size = 0.1) +
-          scale_fill_gradient(name = "flights", low = "yellow", high = "red")
 
-plot11C2 <- plot11C1 + geom_point(data =(as.data.frame(ctrPt)), aes(0, 0), size = 2.5, color = "orange")
+plot11D <- ggplot() +
+             geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "#f7f7f7", 
+                      data = lagrange_predict(circles),
+                      size = 3,
+                      show.legend = NA, 
+                      inherit.aes = FALSE) +
+            geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
 
-plot11C2
+plot11D
 
 
-geom_tile(data = flts_grid_df,
-                          aes(fill = flights)) +
-                stat_contour(bins = 15, color = "black", size = 0.1) +
-                scale_fill_gradient(name = "flights", low = "yellow", high = "red") +
 
 ```
 
