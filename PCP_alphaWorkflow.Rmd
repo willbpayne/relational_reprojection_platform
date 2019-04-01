@@ -23,7 +23,7 @@ library(useful)
 library(MonoPoly)
 library(akima)
 library(polynom)
-library(xkcd) # I don't know if it was my setup or a differnet problem, but had to reinstall ggplot and rlang a few times, so be wary--also, easy enough to just download the font separately
+#library(xkcd) # I don't know if it was my setup or a differnet problem, but had to reinstall ggplot and rlang a few times, so be wary--also, easy enough to just download the font separately
 library(extrafont)
 library(reshape2)
 
