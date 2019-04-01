@@ -426,40 +426,35 @@ plot11C <- ggplot() +
                       size = 3,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
-          stat_contour(data = flts_grid_df, 
+          geom_contour(data = flts_grid_df, 
                  aes(x = ldcX, 
                      y = ldcY, 
-                     z = flts_grid_df$flights),
-                 bins = 6, color = "black", size = 0.5) +
+                     z = flts_grid_df$flights,
+                     color = stat(level)),
+                 bins = 6,  
+                 size = 0.5) +
+          scale_colour_gradient(low = "cornflowerblue", high = "red") +
           geom_point(data = (as.data.frame(ctrPt)), 
                      aes(ctrPt[1], ctrPt[2]), color = "orange") +
-          geom_point(data = routes, 
-                    aes(lagrangedistcircX, 
-                       lagrangedistcircY),
-                    color = "black") +
+          # geom_point(data = routes, 
+          #           aes(lagrangedistcircX, 
+          #              lagrangedistcircY),
+          #           color = "black") +
+            geom_text(data = routes,
+                      aes(lagrangedistcircX, 
+                          lagrangedistcircY,
+                          label=routes$airport), 
+                      size = 2, 
+                      check_overlap = TRUE) +
           theme(panel.background = element_blank(), 
                 axis.ticks = element_blank(), 
                 axis.text.x = element_blank(),
-                axis.text.y = element_blank())
-          
-         # geom_point(-83.3534,  42.2124, color = "orange")
-         # scale_fill_gradient(name = "flights", low = "yellow", high = "red") #+ 
-         #geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange")
+                axis.text.y = element_blank(),
+                axis.title = element_blank(),
+                legend.position = 'none')
+         # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
 
 plot11C
-
-
-plot11D <- ggplot() +
-             geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "#f7f7f7", 
-                      data = lagrange_predict(circles),
-                      size = 3,
-                      show.legend = NA, 
-                      inherit.aes = FALSE) +
-            geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
-
-plot11D
-
 
 
 ```
