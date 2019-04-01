@@ -358,7 +358,7 @@ plot10B
 
 ```
 
-# 11 Interpolation Experiments
+# 11 Interpolation & Integrated plotting
 
 ```{r}
 
@@ -366,96 +366,87 @@ flts <- NULL
 flts <- with(routes, interp(x = lagrangedistcircX, y = lagrangedistcircY, z = flightsDTW))
 
 # Base R version
-contourEX <- filled.contour(x = flts$x,
+plot11A <- filled.contour(x = flts$x,
                y = flts$y,
                z = flts$z,
                color.palette = colorRampPalette(c("white", "blue")),
                main = "DTW Flights") +
                xlim(-2000,2000) + 
                ylim(-2000,2000)
-contourEX
+plot11A
 
 #########
-plot8 <- ggplot(flts)
 
-
-#################
-f_df <- data.frame(f_z = flts$z,
-                   f_x = flts$x,
-                   f_y = flts$y)
-        # f_df is very strange looking. Not sure what's going on there
-
-f_df <- data.frame(flts$z, flts$x, flts$y)
-
-
-
-plot12 <- ggplot(data = f_df, aes(x = f_df$f_x, y = flts$f_y)) +
-  geom_tile(aes(fill=flts$f_z)) +
-  ggtitle("test plot") +
-  scale_fill_continuous(name = "flights", low = "white", high = "blue")
-
-plot12
-
-#####
-# dataframe as manually flattened interpolation
-# doesn't currently work
-flts_df <- as.data.frame(flts)
-flts_df["Zgrid"] <- rowSums(flts_df[c("z.1","z.2","z.3","z.4","z.5",
-                  "z.6","z.7","z.8","z.9","z.10",
-                  "z.11","z.12","z.13","z.14","z.15",
-                  "z.16","z.17","z.18","z.19","z.20",
-                  "z.21","z.22","z.23","z.24","z.25",
-                  "z.26","z.27","z.28","z.29","z.30",
-                  "z.31","z.32","z.33","z.34","z.35",
-                  "z.36","z.37","z.38","z.39","z.40")],
-                  na.rm = TRUE)
-plot14 <- ggplot(data = flts_df, aes(x=flts_df$x,
-                                     y=flts_df$y,
-                                     z=flts_df$Zgrid)) +
-                  geom_tile(aes(fill = flts_df$Zgrid),
-                            position = "identity") +
-  scale_fill_gradient(low = "blue", high = "yellow")
-
-plot14
-
-##########
-# another shot at melt
-flts <- with(routes, interp(x = lagrangedistcircX, y = lagrangedistcircY, z = flightsDTW))
+# ggplot version
 
 flts_grid_df <- melt(flts$z, na.rm = TRUE)
 names(flts_grid_df) <- c("x", "y", "flights")
 flts_grid_df$ldcX <- flts$x[flts_grid_df$x]
 flts_grid_df$ldcY <- flts$y[flts_grid_df$y]
 
-plot15 <- ggplot(data = flts_grid_df, aes(x = ldcX, y = ldcY, z = flights)) +
-  geom_tile(aes(fill = flights)) +
-  stat_contour() +
-    scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+plot11B <- ggplot(data = flts_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = flights)) +
+          geom_tile(aes(fill = flights)) +
+          stat_contour(bins = 15, color = "black", size = 0.1) +
+          scale_fill_gradient(name = "flights", low = "yellow", high = "red")
 
-plot15
-  
-#####
+plot11B
 
-flts_df <- melt(flts_df, id=flts_df$x)
-plot13 <- ggplot(data = flts, aes(x = flts$x,
-               y = flts$y)) +
-  geom_tile(aes(fill=flts$z)) +
-  ggtitle("test plot") +
-  scale_fill_continuous(name = "flights", low = "white", high = "blue")
+############################################  
+############################################
 
-plot13
+# Integrated plots, incl sec 10
+# EM 3/31: currently not working
 
-f_df <- melt(f_df, id = "f_z")
+plot11C <- ggplot(data = flts_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = flts_grid_df$flights)) +
+          #geom_tile(aes(fill = flights)) +
+          stat_contour(bins = 15, color = "black", size = 0.1)# +
+         # geom_point(-83.3534,  42.2124, color = "orange")
+         # scale_fill_gradient(name = "flights", low = "yellow", high = "red") #+ 
+         #geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange")
 
-# GGPLOT2
-f_df <- melt(flts$z, na.rm = TRUE)
-names(df) <- c("x", "y", "z")
-f_df$X <- flts$x[flts$x]
-f_df$Y <- flts$y[flts$y]
+plot11C
 
-ggplot(data = f_df, aes(x = X, y = Y, z = Z)) +
-  geom_tile(aes(fill = flights)) +
-  stat_contour()
+plot11C <- ggplot(routes, aes( # plot with 500-km circles
+                lagrangedistcircX, 
+                lagrangedistcircY, 
+                color = routes$distance)) +  
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "orange", data = lagrange_predict(circles), 
+                      show.legend = NA, inherit.aes = FALSE) + 
+          geom_point(stroke = 1, size = routes$DTWconnectivity) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Distance in km", x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank())
+
+plot11C
+
+plot11C1 <- ggplot(data = flts_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = flights)) +
+          geom_tile(aes(fill = flights)) +
+          stat_contour(bins = 15, color = "black", size = 0.1) +
+          scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+
+plot11C2 <- plot11C1 + geom_point(data =(as.data.frame(ctrPt)), aes(0, 0), size = 2.5, color = "orange")
+
+plot11C2
+
+
+geom_tile(data = flts_grid_df,
+                          aes(fill = flights)) +
+                stat_contour(bins = 15, color = "black", size = 0.1) +
+                scale_fill_gradient(name = "flights", low = "yellow", high = "red") +
 
 ```
 
@@ -485,3 +476,11 @@ chartdist <- c(0, 600, 1200) # this just gets us equal intervals on the graph fo
 # abline(lm(chartdist~geogdist)) #EM 3/29: breaks for me, possibly due to line 450
 
 ```
+
+
+# 13 
+
+```{r}
+
+```
+
