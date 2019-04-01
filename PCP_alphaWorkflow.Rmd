@@ -389,8 +389,12 @@ plot11B <- ggplot(data = flts_grid_df,
                      y = ldcY, 
                      z = flights)) +
           geom_tile(aes(fill = flights)) +
-          stat_contour(bins = 15, color = "black", size = 0.1) +
-          scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+          stat_contour(bins = 15, 
+                       color = "black", 
+                       size = 0.1) +
+          scale_fill_gradient(name = "flights", 
+                              low = "yellow", 
+                              high = "red")
 
 plot11B
 
@@ -462,6 +466,50 @@ plot11C <- ggplot() +
 
 plot11C
 
+
+plot11D <- ggplot() +
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "#f7f7f7", 
+                      data = lagrange_predict(circles),
+                      size = 3,
+                      show.legend = NA, 
+                      inherit.aes = FALSE) +        
+          geom_contour(data = flts_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = flts_grid_df$flights,
+                     color = stat(level)),
+                 bins = 6,  
+                 size = 0.5) +
+          scale_colour_gradient(low = "cornflowerblue", high = "red") +
+          geom_point(data = routesSub,
+                aes(lagrangedistcircX,
+                    lagrangedistcircY,
+                    label= routesSub$airport,
+                    alpha = -(routesSub$lagrangedistcirc)),
+                size = .3,
+                color="gray50") +
+          geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(ctrPt[1], ctrPt[2]), 
+                     color = "orange", 
+                     shape = 8) +
+         geom_text(data = (as.data.frame(ctrPt)), 
+                   geom = "text", 
+                   x = ctrPt[1], y = ctrPt[2], 
+                   label = routes$airport[routes$isDTW == TRUE],
+                   color = "orange",
+                   size = 2,
+                   vjust = 1.25,
+                   hjust = -0.25) +
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank(),
+                axis.title = element_blank(),
+                legend.position = 'none')
+         # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+
+plot11D
 
 ```
 
