@@ -417,7 +417,8 @@ plot10A <- ggplot(routes, aes( # plot with 500-km circles
                 axis.text.y = element_blank())
 plot10A
 
-
+routesSub <- routes[!(routes$isDTW == TRUE), ]
+# holy moly this is a sloppy solution, but it will have to do for now
 
 plot11C <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
@@ -435,17 +436,24 @@ plot11C <- ggplot() +
                  size = 0.5) +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
           geom_point(data = (as.data.frame(ctrPt)), 
-                     aes(ctrPt[1], ctrPt[2]), color = "orange") +
-          # geom_point(data = routes, 
-          #           aes(lagrangedistcircX, 
-          #              lagrangedistcircY),
-          #           color = "black") +
-            geom_text(data = routes,
-                      aes(lagrangedistcircX, 
-                          lagrangedistcircY,
-                          label=routes$airport), 
-                      size = 2, 
-                      check_overlap = TRUE) +
+                     aes(ctrPt[1], ctrPt[2]), 
+                     color = "orange", 
+                     shape = 8) +
+         geom_text(data = (as.data.frame(ctrPt)), 
+                   geom = "text", 
+                   x = ctrPt[1], y = ctrPt[2], 
+                   label = routes$airport[routes$isDTW == TRUE],
+                   color = "orange",
+                   size = 2,
+                   vjust = 1.25,
+                   hjust = -0.25) +
+         # geom_text(data = subset(routes, DTWconnectivity > 3),
+          geom_text(data = routesSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= routesSub$airport),
+                    size = 2.5,
+                    check_overlap = TRUE) +
           theme(panel.background = element_blank(), 
                 axis.ticks = element_blank(), 
                 axis.text.x = element_blank(),
