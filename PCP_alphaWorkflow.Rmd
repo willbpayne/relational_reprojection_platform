@@ -488,7 +488,7 @@ plot11D <- ggplot() +
                     label= routesSub$airport,
                     alpha = -(routesSub$lagrangedistcirc)),
                 size = .3,
-                color="gray50") +
+                color="gray35") +
           geom_point(data = (as.data.frame(ctrPt)), 
                      aes(ctrPt[1], ctrPt[2]), 
                      color = "orange", 
