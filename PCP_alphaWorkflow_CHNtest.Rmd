@@ -190,7 +190,8 @@ plot06 <- ggplot(officials, aes(
           data = circles, 
           show.legend = NA, 
           inherit.aes = FALSE) +
-        geom_point(stroke = 1, size = officials$XJconnectivity) +
+        geom_point(stroke = 1, 
+                   size = 0.4*(officials$XJconnectivity)) +
         geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
         coord_fixed() + labs(color = "Distance in km", x = NULL, y = NULL) +
         guides(colour = "colorbar",size = "legend") +
@@ -228,7 +229,8 @@ plot07 <- ggplot(officials, aes(
   geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = logcircles, 
                       show.legend = NA, inherit.aes = FALSE) +
-  geom_point(stroke = 1, size = officials$XJconnectivity) + 
+  geom_point(stroke = 1, 
+             size = 0.4*(officials$XJconnectivity)) + 
   geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
   coord_fixed() + labs(color = "Great circle distance in km", x = NULL, y = NULL) +
   theme(panel.background = element_blank(), axis.ticks = element_blank(),
@@ -256,7 +258,8 @@ plot08A <- ggplot(officials, aes( # plot with scale circles
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = sqrt(circles), 
                       show.legend = NA, inherit.aes = FALSE) + 
-          geom_point(stroke = 1, size = officials$XJconnectivity) + 
+          geom_point(stroke = 1, 
+                     size = 0.3*(officials$XJconnectivity)) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
@@ -269,7 +272,8 @@ plot08B <- ggplot(officials, aes( # plot without circles
                 officials$sqrtcircX, 
                 officials$sqrtcircY, 
                 color = officials$distance)) + 
-          geom_point(stroke = 1, size = officials$XJconnectivity) + 
+          geom_point(stroke = 1, 
+                     size = 0.3*(officials$XJconnectivity)) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
@@ -332,7 +336,8 @@ plot10A <- ggplot(officials, aes( # plot with 500-km circles
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = lagrange_predict(circles), 
                       show.legend = NA, inherit.aes = FALSE) + 
-          geom_point(stroke = 1, size = officials$XJconnectivity) + 
+          geom_point(stroke = 1, 
+                     size = 0.3*(officials$XJconnectivity)) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
@@ -346,7 +351,8 @@ plot10B <- ggplot(officials, aes( # plot without circles, zoomed in on data (do 
                 lagrangedistcircX, 
                 lagrangedistcircY, 
                 color = officials$distance)) + 
-          geom_point(stroke = 1, size = officials$XJconnectivity) + 
+          geom_point(stroke = 1, 
+                     size = 0.3*(officials$XJconnectivity)) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
@@ -389,7 +395,7 @@ plot11B <- ggplot(data = ofls_grid_df,
                      y = ldcY, 
                      z = officials)) +
           geom_tile(aes(fill = officials)) +
-          stat_contour(bins = 7, color = "black", size = 0.1) +
+          stat_contour(bins = 15, color = "black", size = 0.1) +
           scale_fill_gradient(name = "officials", low = "yellow", high = "red")
 
 plot11B
@@ -397,56 +403,116 @@ plot11B
 ############################################  
 ############################################
 
-# Integrated plots, incl sec 10
-# EM 3/31: currently not working
 
-plot11C <- ggplot(data = ofls_grid_df, 
+# Integrated plots, incl sec 10
+
+officialsSub <- officials[!(officials$isCTR == TRUE), ]
+# holy moly this is a sloppy solution, but it will have to do for now
+
+plot11C <- ggplot() +
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "#f7f7f7", 
+                      data = lagrange_predict(circles),
+                      size = 3,
+                      show.legend = NA, 
+                      inherit.aes = FALSE) +        
+          geom_contour(data = ofls_grid_df, 
                  aes(x = ldcX, 
                      y = ldcY, 
-                     z = ofls_grid_df$officials)) +
-          #geom_tile(aes(fill = officials)) +
-          stat_contour(bins = 15, color = "black", size = 0.1)# +
-         # geom_point(-83.3534,  42.2124, color = "orange")
-         # scale_fill_gradient(name = "officials", low = "yellow", high = "red") #+ 
-         #geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange")
-
-plot11C
-
-plot11C <- ggplot(officials, aes( # plot with 500-km circles
-                lagrangedistcircX, 
-                lagrangedistcircY, 
-                color = officials$distance)) +  
-          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "orange", data = lagrange_predict(circles), 
-                      show.legend = NA, inherit.aes = FALSE) + 
-          geom_point(stroke = 1, size = officials$XJconnectivity) + 
-          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-          coord_fixed() + 
-          labs(color = "Distance in km", x = NULL, y = NULL) + 
+                     z = ofls_grid_df$officials,
+                     color = stat(level)),
+                 bins = 10,  
+                 size = 0.5) +
+          scale_colour_gradient(low = "cornflowerblue", high = "red") +
+  ### begin simulated drop shadow
+            geom_text(data = officialsSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= officialsSub$NAME_PY),
+                    size = 1.8,
+                    check_overlap = TRUE,
+                    color = "white") +
+            geom_text(data = officialsSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= officialsSub$NAME_PY),
+                    size = 2,
+                    check_overlap = TRUE,
+                    color = "white") +
+  ### end simulated drop shadow
+            geom_text(data = officialsSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= officialsSub$NAME_PY,
+                        color = officialsSub$XJconnectivity ),
+                    size = 1.5,
+                    check_overlap = TRUE) +
+            geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(ctrPt[1], ctrPt[2]), 
+                     color = "orange", 
+                     shape = 8) +
+             geom_text(data = (as.data.frame(ctrPt)), 
+                   geom = "text", 
+                   x = ctrPt[1], y = ctrPt[2], 
+                   label = officials$NAME_PY[officials$isCTR == TRUE],
+                   color = "orange",
+                   size = 2,
+                   vjust = 1.25,
+                   hjust = -0.25) +
           theme(panel.background = element_blank(), 
                 axis.ticks = element_blank(), 
                 axis.text.x = element_blank(),
-                axis.text.y = element_blank())
+                axis.text.y = element_blank(),
+                axis.title = element_blank(),
+                legend.position = 'none')
+         # scale_fill_gradient(name = "officials", low = "yellow", high = "red")
 
 plot11C
 
-plot11C1 <- ggplot(data = ofls_grid_df, 
+
+plot11D <- ggplot() +
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "#f7f7f7", 
+                      data = lagrange_predict(circles),
+                      size = 3,
+                      show.legend = NA, 
+                      inherit.aes = FALSE) +        
+          geom_contour(data = ofls_grid_df, 
                  aes(x = ldcX, 
                      y = ldcY, 
-                     z = officials)) +
-          geom_tile(aes(fill = officials)) +
-          stat_contour(bins = 15, color = "black", size = 0.1) +
-          scale_fill_gradient(name = "officials", low = "yellow", high = "red")
+                      z = ofls_grid_df$officials,
+                     color = stat(level)),
+                 bins = 15,  
+                 size = 0.5) +
+          scale_colour_gradient(low = "cornflowerblue", high = "red") +
+          geom_point(data = officialsSub,
+                aes(lagrangedistcircX,
+                    lagrangedistcircY,
+                    label= officialsSub$NAME_PY,
+                    alpha = -(officialsSub$lagrangedistcirc)),
+                size = .3,
+                color="gray35") +
+          geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(ctrPt[1], ctrPt[2]), 
+                     color = "orange", 
+                     shape = 8) +
+         geom_text(data = (as.data.frame(ctrPt)), 
+                   geom = "text", 
+                   x = ctrPt[1], y = ctrPt[2], 
+                   label = officials$NAME_PY[officials$isCTR == TRUE],
+                   color = "orange",
+                   size = 2,
+                   vjust = 1.25,
+                   hjust = -0.25) +
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank(),
+                axis.title = element_blank(),
+                legend.position = 'none')
+         
 
-plot11C2 <- plot11C1 + geom_point(data =(as.data.frame(ctrPt)), aes(0, 0), size = 2.5, color = "orange")
-
-plot11C2
-
-
-geom_tile(data = ofls_grid_df,
-                          aes(fill = officials)) +
-                stat_contour(bins = 15, color = "black", size = 0.1) +
-                scale_fill_gradient(name = "officials", low = "yellow", high = "red") +
+plot11D
 
 ```
 

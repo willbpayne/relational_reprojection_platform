@@ -300,7 +300,7 @@ plot08B
 # polynom::poly
 # code to find a Lagrange interpolation polynomial for our control points. for now I'm just defining some, later we should explore the user input and/or data-driven methods.
 
-geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 2000km is far
+geogdist <- c(0, 4000, 8000, maxdist) # let's say under 500 km is close, over 2000km is far
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
 dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
@@ -461,13 +461,13 @@ plot11C <- ggplot() +
                     check_overlap = TRUE) +
             geom_point(data = (as.data.frame(ctrPt)), 
                      aes(ctrPt[1], ctrPt[2]), 
-                     color = "orange", 
+                     color = "black", 
                      shape = 8) +
          geom_text(data = (as.data.frame(ctrPt)), 
                    geom = "text", 
                    x = ctrPt[1], y = ctrPt[2], 
                    label = remits$name[remits$isCTR == TRUE],
-                   color = "orange",
+                   color = "black",
                    size = 2,
                    vjust = 1.25,
                    hjust = -0.25) +
