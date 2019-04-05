@@ -412,31 +412,19 @@ plot11C <- ggplot() +
                  bins = 6,  
                  size = 0.5) +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
-          geom_point(data = (as.data.frame(ctrPt)), 
-                     aes(ctrPt[1], ctrPt[2]), 
-                     color = "orange", 
-                     shape = 8) +
-         geom_text(data = (as.data.frame(ctrPt)), 
-                   geom = "text", 
-                   x = ctrPt[1], y = ctrPt[2], 
-                   label = routes$airport[routes$isORD == TRUE],
-                   color = "orange",
-                   size = 2,
-                   vjust = 1.25,
-                   hjust = -0.25) +
   ### begin simulated drop shadow
             geom_text(data = routesSub,
                     aes(lagrangedistcircX,
                         lagrangedistcircY,
                         label= routesSub$airport),
-                    size = 2.8,
+                    size = 1.8,
                     check_overlap = TRUE,
                     color = "white") +
             geom_text(data = routesSub,
                     aes(lagrangedistcircX,
                         lagrangedistcircY,
                         label= routesSub$airport),
-                    size = 3,
+                    size = 2,
                     check_overlap = TRUE,
                     color = "white") +
   ### end simulated drop shadow
@@ -445,8 +433,20 @@ plot11C <- ggplot() +
                         lagrangedistcircY,
                         label= routesSub$airport,
                         color = routesSub$ORDconnectivity),
-                    size = 2.5,
+                    size = 1.5,
                     check_overlap = TRUE) +
+            geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(ctrPt[1], ctrPt[2]), 
+                     color = "orange", 
+                     shape = 8) +
+             geom_text(data = (as.data.frame(ctrPt)), 
+                   geom = "text", 
+                   x = ctrPt[1], y = ctrPt[2], 
+                   label = routes$airport[routes$isORD == TRUE],
+                   color = "orange",
+                   size = 2,
+                   vjust = 1.25,
+                   hjust = -0.25) +
           theme(panel.background = element_blank(), 
                 axis.ticks = element_blank(), 
                 axis.text.x = element_blank(),
