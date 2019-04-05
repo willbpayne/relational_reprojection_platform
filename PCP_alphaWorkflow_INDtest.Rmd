@@ -172,7 +172,7 @@ rm(row)
 circles <- data.frame(
   x0 = 0,
   y0 = 0,
-  r = seq(500, 3500, length.out = 7)
+  r = seq(1500, 15000, length.out = 7)
 )
 
 # Use coord_fixed to ensure true circularity
@@ -189,9 +189,14 @@ plot06 <- ggplot(remits, aes(
           data = circles, 
           show.legend = NA, 
           inherit.aes = FALSE) +
-        geom_point(stroke = 1, size = remits$cashInput) +
-        geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-        coord_fixed() + labs(color = "Distance in km", x = NULL, y = NULL) +
+        geom_point(stroke = 1, 
+                   size = 0.002*(remits$cashInput)
+                   ) +
+        geom_point(data = (as.data.frame(ctrPt)), 
+                   aes(0, 0), 
+                   color = "orange") +
+        coord_fixed() + 
+        labs(color = "Distance in km", x = NULL, y = NULL) +
         guides(colour = "colorbar",size = "legend") +
         theme(panel.background = element_blank())
 
@@ -227,11 +232,17 @@ plot07 <- ggplot(remits, aes(
   geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = logcircles, 
                       show.legend = NA, inherit.aes = FALSE) +
-  geom_point(stroke = 1, size = remits$cashInput) + 
-  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-  coord_fixed() + labs(color = "Great circle distance in km", x = NULL, y = NULL) +
-  theme(panel.background = element_blank(), axis.ticks = element_blank(),
-                axis.text.x = element_blank(),axis.text.y = element_blank())
+  geom_point(stroke = 1, 
+             size = 0.002*(remits$cashInput)) + 
+  geom_point(data = (as.data.frame(ctrPt)), 
+             aes(0, 0), 
+             color = "orange") +
+  coord_fixed() + 
+  labs(color = "Great circle distance in km", x = NULL, y = NULL) +
+  theme(panel.background = element_blank(), 
+        axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank())
 
 plot07
 
@@ -255,7 +266,8 @@ plot08A <- ggplot(remits, aes( # plot with scale circles
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = sqrt(circles), 
                       show.legend = NA, inherit.aes = FALSE) + 
-          geom_point(stroke = 1, size = remits$cashInput) + 
+          geom_point(stroke = 1, 
+                     size = 0.002*(remits$cashInput)) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
@@ -268,8 +280,10 @@ plot08B <- ggplot(remits, aes( # plot without circles
                 remits$sqrtcircX, 
                 remits$sqrtcircY, 
                 color = remits$distance)) + 
-          geom_point(stroke = 1, size = remits$cashInput) + 
-          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          geom_point(stroke = 1, 
+                     size = 0.002*(remits$cashInput)) + 
+          geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
           theme(panel.background = element_blank(), axis.ticks = element_blank(),
@@ -331,7 +345,8 @@ plot10A <- ggplot(remits, aes( # plot with 500-km circles
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = lagrange_predict(circles), 
                       show.legend = NA, inherit.aes = FALSE) + 
-          geom_point(stroke = 1, size = remits$cashInput) + 
+          geom_point(stroke = 1, 
+                     size = 0.002*(remits$cashInput)) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
@@ -345,7 +360,8 @@ plot10B <- ggplot(remits, aes( # plot without circles, zoomed in on data (do we 
                 lagrangedistcircX, 
                 lagrangedistcircY, 
                 color = remits$distance)) + 
-          geom_point(stroke = 1, size = remits$cashInput) + 
+          geom_point(stroke = 1, 
+                     size = 0.002*(remits$cashInput)) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
           coord_fixed() + 
           labs(color = "Distance in km", x = NULL, y = NULL) + 
@@ -417,10 +433,33 @@ plot11C <- ggplot() +
                      y = ldcY, 
                      z = csh_grid_df$cash,
                      color = stat(level)),
-                 bins = 6,  
+                 bins = 15,  
                  size = 0.5) +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
-          geom_point(data = (as.data.frame(ctrPt)), 
+  ### begin simulated drop shadow
+            geom_text(data = remitsSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= remitsSub$name),
+                    size = 1.8,
+                    check_overlap = TRUE,
+                    color = "white") +
+            geom_text(data = remitsSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= remitsSub$name),
+                    size = 2,
+                    check_overlap = TRUE,
+                    color = "white") +
+  ### end simulated drop shadow
+            geom_text(data = remitsSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= remitsSub$name,
+                        color = remitsSub$cashInput),
+                    size = 1.5,
+                    check_overlap = TRUE) +
+            geom_point(data = (as.data.frame(ctrPt)), 
                      aes(ctrPt[1], ctrPt[2]), 
                      color = "orange", 
                      shape = 8) +
@@ -432,29 +471,6 @@ plot11C <- ggplot() +
                    size = 2,
                    vjust = 1.25,
                    hjust = -0.25) +
-  ### begin simulated drop shadow
-            geom_text(data = remitsSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= remitsSub$name),
-                    size = 2.8,
-                    check_overlap = TRUE,
-                    color = "white") +
-            geom_text(data = remitsSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= remitsSub$name),
-                    size = 3,
-                    check_overlap = TRUE,
-                    color = "white") +
-  ### end simulated drop shadow
-            geom_text(data = remitsSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= remitsSub$name,
-                        color = remitsSub$cashInput),
-                    size = 2.5,
-                    check_overlap = TRUE) +
           theme(panel.background = element_blank(), 
                 axis.ticks = element_blank(), 
                 axis.text.x = element_blank(),
@@ -478,7 +494,7 @@ plot11D <- ggplot() +
                      y = ldcY, 
                      z = csh_grid_df$cash,
                      color = stat(level)),
-                 bins = 6,  
+                 bins = 15,  
                  size = 0.5) +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
           geom_point(data = remitsSub,
