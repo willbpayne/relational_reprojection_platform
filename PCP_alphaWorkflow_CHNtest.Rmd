@@ -291,8 +291,8 @@ plot08B
 # polynom::poly
 # code to find a Lagrange interpolation polynomial for our control points. for now I'm just defining some, later we should explore the user input and/or data-driven methods.
 
-geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 2000km is far
-chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+geogdist <- c(0, 1000, 2000, maxdist) # let's say under 500 km is close, over 2000km is far
+chartdist <- c(0, 300, 600, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
 dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
 ggplot(dat, aes(x=geogdist, y=chartdist)) + geom_point(size=5, col='blue') 
@@ -421,7 +421,7 @@ plot11C <- ggplot() +
                      y = ldcY, 
                      z = ofls_grid_df$officials,
                      color = stat(level)),
-                 bins = 10,  
+                 bins = 12,  
                  size = 0.5) +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
   ### begin simulated drop shadow

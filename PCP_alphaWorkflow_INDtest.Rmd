@@ -423,9 +423,9 @@ remitsSub <- remits[!(remits$isCTR == TRUE), ]
 
 plot11C <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "#f7f7f7", 
+                      colour = "#eeeeee", 
                       data = lagrange_predict(circles),
-                      size = 3,
+                      size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
           geom_contour(data = csh_grid_df, 
@@ -435,7 +435,7 @@ plot11C <- ggplot() +
                      color = stat(level)),
                  bins = 15,  
                  size = 0.5) +
-          scale_colour_gradient(low = "cornflowerblue", high = "red") +
+         scale_colour_gradient(low = "cornflowerblue", high = "red") +
   ### begin simulated drop shadow
             geom_text(data = remitsSub,
                     aes(lagrangedistcircX,
@@ -443,22 +443,23 @@ plot11C <- ggplot() +
                         label= remitsSub$name),
                     size = 1.8,
                     check_overlap = TRUE,
-                    color = "white") +
-            geom_text(data = remitsSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= remitsSub$name),
-                    size = 2,
-                    check_overlap = TRUE,
-                    color = "white") +
+                    color = "#cccccc") +
+            # geom_text(data = remitsSub,
+            #         aes(lagrangedistcircX,
+            #             lagrangedistcircY,
+            #             label= remitsSub$name),
+            #         size = 2,
+            #         check_overlap = TRUE,
+            #         color = "white") +
   ### end simulated drop shadow
-            geom_text(data = remitsSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= remitsSub$name,
-                        color = remitsSub$cashInput),
-                    size = 1.5,
-                    check_overlap = TRUE) +
+            # geom_text(data = remitsSub,
+            #         aes(lagrangedistcircX,
+            #             lagrangedistcircY,
+            #             label= remitsSub$name,
+            #             #color = remitsSub$cashInput),
+            #             color = "#7f7f7f"),
+            #         size = 1.5,
+            #         check_overlap = TRUE) +
             geom_point(data = (as.data.frame(ctrPt)), 
                      aes(ctrPt[1], ctrPt[2]), 
                      color = "black", 
@@ -484,9 +485,9 @@ plot11C
 
 plot11D <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "#f7f7f7", 
+                      colour = "#eeeeee", 
                       data = lagrange_predict(circles),
-                      size = 3,
+                      size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
           geom_contour(data = csh_grid_df, 

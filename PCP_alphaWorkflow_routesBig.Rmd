@@ -399,9 +399,9 @@ routesSub <- routes[!(routes$isORD == TRUE), ]
 
 plot11C <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "#f7f7f7", 
+                      colour = "#eeeeee", 
                       data = lagrange_predict(circles),
-                      size = 3,
+                      size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
           geom_contour(data = flts_grid_df, 
@@ -460,9 +460,9 @@ plot11C
 
 plot11D <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "#f7f7f7", 
+                      colour = "#eeeeee", 
                       data = lagrange_predict(circles),
-                      size = 3,
+                      size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
           geom_contour(data = flts_grid_df, 
