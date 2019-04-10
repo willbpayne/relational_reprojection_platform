@@ -411,16 +411,17 @@ officialsSub <- officials[!(officials$isCTR == TRUE), ]
 
 plot11C <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "#f7f7f7", 
+                      colour = "#eeeeee", 
                       data = lagrange_predict(circles),
-                      size = 3,
+                      size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
           geom_contour(data = ofls_grid_df, 
                  aes(x = ldcX, 
                      y = ldcY, 
                      z = ofls_grid_df$officials,
-                     color = stat(level)),
+                     color = stat(level),
+                     alpha = 0.5),
                  bins = 12,  
                  size = 0.5) +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
@@ -431,22 +432,22 @@ plot11C <- ggplot() +
                         label= officialsSub$NAME_PY),
                     size = 1.8,
                     check_overlap = TRUE,
-                    color = "white") +
-            geom_text(data = officialsSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= officialsSub$NAME_PY),
-                    size = 2,
-                    check_overlap = TRUE,
-                    color = "white") +
+                    color = "black") +
+            # geom_text(data = officialsSub,
+            #         aes(lagrangedistcircX,
+            #             lagrangedistcircY,
+            #             label= officialsSub$NAME_PY),
+            #         size = 2,
+            #         check_overlap = TRUE,
+            #         color = "white") +
   ### end simulated drop shadow
-            geom_text(data = officialsSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= officialsSub$NAME_PY,
-                        color = officialsSub$XJconnectivity ),
-                    size = 1.5,
-                    check_overlap = TRUE) +
+            # geom_text(data = officialsSub,
+            #         aes(lagrangedistcircX,
+            #             lagrangedistcircY,
+            #             label= officialsSub$NAME_PY,
+            #             color = officialsSub$XJconnectivity),
+            #         size = 1.5,
+            #         check_overlap = TRUE) +
             geom_point(data = (as.data.frame(ctrPt)), 
                      aes(ctrPt[1], ctrPt[2]), 
                      color = "orange", 
@@ -472,9 +473,9 @@ plot11C
 
 plot11D <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "#f7f7f7", 
+                      colour = "#eeeeee", 
                       data = lagrange_predict(circles),
-                      size = 3,
+                      size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
           geom_contour(data = ofls_grid_df, 
