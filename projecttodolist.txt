@@ -12,7 +12,12 @@ To-Do List
 * Find a better Lagrange function: All monotonic, all the time (stepwise)
 * Figure out Jenks for distance
 * Port to JavaScript?
-* Control contours at all (move out of GGplot into sp?) Do it all at the end?
+* Control contours at all (move out of GGplot into sp?) Do it all at the end? Smoothing functions with existing approach?
 * Accept that the center might also carry value (null or not?)
 * TIN/Delauney Triangles
 * A sweet paper so we both get a publication out of it. Targets include Cartogaphic Perspectives (unclear word limit), Cartographica, Journal of Maps (2000-4000 words, 10 images), Geoforum (9000 words), EPA (normal article or featured graphic), EPB: Urban Analytics, The Canadian Geographer?
+
+Things to talk about in paper
+---------
+
+Montonicity problems: https://en.wikipedia.org/wiki/Runge%27s_phenomenon
