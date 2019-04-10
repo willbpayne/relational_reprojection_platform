@@ -290,6 +290,12 @@ plot08B
 geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 2000km is far
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
+a <- function(x){ # here is some example code for the piecewise funciton
+  ifelse(( x < 1),x^2-1,ifelse((1<x & x<2),x^3-5, ifelse((x>2.1),5 - 2*x, NA))) 
+} 
+plot(a,xlim=c(-3,5), ylim = c(-4, 7), col = "red") 
+abline(v = 0, h = 0)
+
 dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
 ggplot(dat, aes(x=geogdist, y=chartdist)) + geom_point(size=5, col='blue') 
 

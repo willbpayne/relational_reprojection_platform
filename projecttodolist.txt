@@ -9,7 +9,7 @@ To-Do List
 * Code refactoring: functionizing, making generic (data variable/value, get rid of center column and hardcode), etc.
 * Add support for doing things with two values/centers at the same time
 * Design a user interface and build it out
-* Find a better Lagrange function: All monotonic, all the time
+* Find a better Lagrange function: All monotonic, all the time (stepwise)
 * Figure out Jenks for distance
 * Port to JavaScript?
 * Control contours at all (move out of GGplot into sp?) Do it all at the end?
