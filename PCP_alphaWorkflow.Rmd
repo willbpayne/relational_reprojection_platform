@@ -173,7 +173,7 @@ rm(row)
 circles <- data.frame(
   x0 = 0,
   y0 = 0,
-  r = seq(500, 3500, length.out = 7)
+  r = seq(0, maxdist,length.out = 10)
 )
 
 # Use coord_fixed to ensure true circularity
@@ -290,10 +290,13 @@ plot08B
 geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 2000km is far
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
+neardist <- 1038
+fardist <- 2520
+
 a <- function(x){ # here is some example code for the piecewise funciton
-  ifelse(( x < 1),x^2-1,ifelse((1<x & x<2),x^3-5, ifelse((x>2.1),5 - 2*x, NA))) 
+  ifelse(( x > 0 & x < neardist),(x * 400/neardist),ifelse((neardist <= x & x < fardist),((x * 400)/(fardist - neardist) + (400-((400)/(fardist - neardist)*neardist))), ifelse((fardist <= x & x <= maxdist),((x * 400)/(maxdist - fardist) + (800-((400)/(maxdist - fardist)*fardist))), NA))) 
 } 
-plot(a,xlim=c(-3,5), ylim = c(-4, 7), col = "red") 
+plot(a,xlim=c(0,maxdist), ylim = c(0, 1200), col = "red") 
 abline(v = 0, h = 0)
 
 dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
@@ -306,6 +309,11 @@ curve(predict(lagrangepoly,x), from = 0, to = maxdist, n = 100)
 
 predict(lagrangepoly, 200) # print predicted value for geogdist of 200
 
+a(maxdist) # print predicted value for geogdist of 200
+
+
+routes$lagrangedistcircstep <- a(routes$distance) # set new lagrange great circle distances using new stepwise function
+
 routes$lagrangedistcirc <- predict(lagrangepoly, routes$distance) # set new lagrange great circle distances using new polynomial
 
 # function to make new circles with any lagrange polynomial set above
@@ -316,8 +324,16 @@ lagrange_predict <- function(circlesdataframe) {
   return(lagrangecirclesdataframe)
 }
 
-lagrangecircles <- lagrange_predict(circles) # check if it worked
-lagrangecircles
+lagrange_predictstep <- function(circlesdataframe) { 
+  lagrangecirclesdataframe <- circlesdataframe
+  for (row in 1:nrow(circlesdataframe)){
+    lagrangecirclesdataframe[row,"r"]<- a(circlesdataframe[row,"r"])}
+  return(lagrangecirclesdataframe)
+}
+
+lagrangecircles <- lagrange_predictstep(circles) # check if it worked
+
+# lagrangecircles
 
 ```
 
@@ -326,17 +342,19 @@ lagrangecircles
 ```{r}
 
 for (row in 1:nrow(routes)){ # calculate new coordinates using lagrange distances
-  routes[row,"lagrangedistcircX"] <- (pol2cart(routes$lagrangedistcirc[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1] # returns x coordinate only
-  routes[row,"lagrangedistcircY"] <- (pol2cart(routes$lagrangedistcirc[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
+  routes[row,"lagrangedistcircX"] <- (pol2cart(routes$lagrangedistcircstep[row], routes$ctrPtMathbearing[row], degrees = TRUE))[1] # returns x coordinate only
+  routes[row,"lagrangedistcircY"] <- (pol2cart(routes$lagrangedistcircstep[row], routes$ctrPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
 }
 rm(row)
 
-plot10A <- ggplot(routes, aes( # plot with 500-km circles
+# NEED TO PROJECT CIRCLES TOO!
+
+plot10A <- ggplot(routes, aes( # plot with maxdist/10 circles
                 lagrangedistcircX, 
                 lagrangedistcircY, 
                 color = routes$distance)) +  
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "orange", data = lagrange_predict(circles), 
+                      colour = "orange", data = lagrange_predictstep(circles), 
                       show.legend = NA, inherit.aes = FALSE) + 
           geom_point(stroke = 1, size = routes$DTWconnectivity) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 

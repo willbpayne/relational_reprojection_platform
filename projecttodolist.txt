@@ -1,21 +1,33 @@
 To-Do List
 ----------
 
-* Better test cases (different data): Remittances to India, airline routes in the United States (DTW, ORD; add Toronto? Winnipeg?), officials from Xinjiang in Qing Dynasty, trampoline park data from NH/MA, other historian friends 
+Short-term:
 * Recenter existing test cases to do side by side analysis, small multiples
-* Accepting JSON/GeoJSON instead of just CSV input
-* Adding centroids to polygons in input data (use the NH case?)
 * Documentation: more of it
 * Code refactoring: functionizing, making generic (data variable/value, get rid of center column and hardcode), etc.
-* Add support for doing things with two values/centers at the same time
 * Design a user interface and build it out
 * Find a better Lagrange function: All monotonic, all the time (stepwise)
+  1-2 hours to build stepwise function
 * Figure out Jenks for distance
-* Port to JavaScript?
-* Control contours at all (move out of GGplot into sp?) Do it all at the end? Smoothing functions with existing approach?
+  ? hours best one-dimensional clustering algorithm in R?
+
+Mid-term:
+* Better test cases (different data): Remittances to India, airline routes in the United States (DTW, ORD; add Toronto? Winnipeg?), officials from Xinjiang in Qing Dynasty, trampoline park data from NH/MA, other historian friends 
+  Getting NH data next
+* Accepting JSON/GeoJSON instead of just CSV input
+  Research soon but do later
+* Adding centroids to polygons in input data (use the NH case?)
 * Accept that the center might also carry value (null or not?)
+  Add a question: should the center point have null value or a numeric value?
 * TIN/Delauney Triangles
+* Control contours at all (move out of GGplot into sp?) Do it all at the end? Smoothing functions with existing approach?
+  Eve to look into more seriously
+
+Long-term:
 * A sweet paper so we both get a publication out of it. Targets include Cartogaphic Perspectives (unclear word limit), Cartographica, Journal of Maps (2000-4000 words, 10 images), Geoforum (9000 words), EPA (normal article or featured graphic), EPB: Urban Analytics, The Canadian Geographer?
+* Add support for doing things with two values/centers at the same time
+* Port to JavaScript?
+  LAAAAATER once it all works (Shiny app as intermediate? Esquisse?)
 
 Things to talk about in paper
 ---------
