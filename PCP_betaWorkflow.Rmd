@@ -82,3 +82,84 @@ typeof(routes$isDTW)
 
 ```
 
+
+
+## 02: Plot test
+
+```{r}
+
+# test plot
+plot(df$long, df$lat)
+
+#temp
+ctrX <- df$long[df$isCTR == TRUE]
+ctrY <- df$lat[df$isCTR == TRUE]
+
+#real
+# ctrX <- df$long[df$ctrBin == TRUE]
+# ctrY <- df$lat[df$ctrBin == TRUE]
+ctrPt <- c(ctrX,ctrY)
+cat("Your center point has the following coordinates:", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
+```
+
+
+
+
+## 04: Calculate all great circle distances and bearings to center point
+
+* __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
+    + example data max is 7,241 km
+
+```{r}
+# create a column in df, fill with km distances
+  df$distance <- geodist(ctrY, ctrX, df$lat, df$long, units = "km")  
+  maxdist <- max(df$distance) # max great circle distance
+
+  print( # print out both the longest axial and great circle distances
+    paste0("The longest great circle distance between your center point, ",
+           df$valName[df$ctrBin == TRUE], ", and farthest point, ",
+           df$valName[df$distance == max(df$distance)], ", is ",
+           round(max(df$distance), 0), " km.")
+    )
+  
+for (row in 1:nrow(df)){ # convert to polar coordinates
+  valNamelong <- df[row,"long"]
+  valNamelat <- df[row,"lat"]
+  valNamelonglat <- c(valNamelong, valNamelat)
+  df[row,"ctrPtGeobearing"] <- bearing(ctrPt, valNamelonglat, a=6378137, f=1/298.257223563)
+}
+  rm(valNamelat,valNamelong,valNamelonglat,row)
+  
+for (row in 1:nrow(df)) # convert from geographic bearings to polar coordinates
+  {if(df$ctrPtGeobearing[row] <= 0)
+  # if geobearing is 0 or negative, mathbearing is 90 plus bearing
+  df$ctrPtMathbearing[row] <- abs(df$ctrPtGeobearing[row]) + 90
+  if(df$ctrPtGeobearing[row] > 0 & df$ctrPtGeobearing[row] < 90)
+  # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
+  df$ctrPtMathbearing[row] <- (90 - df$ctrPtGeobearing[row])
+  if(df$ctrPtGeobearing[row] >= 90 & df$ctrPtGeobearing[row] <= 180)
+  # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+  df$ctrPtMathbearing[row] <- 360 - (df$ctrPtGeobearing[row] - 90)}
+  rm(row)
+
+  df <- select(df,-starts_with("ctrPtGeo"))
+  # later we use the ctrPtMathbearing and the transformed distances to get back to cartesian coordinates
+
+```
+
+## 05: Initial plot
+* GGplot of the lat and long with low-res world background
+
+```{r}
+# first plot with ctrPt and data visualized, still using lat/long
+plot05 <- ggplot(df, 
+       aes(df$long, 
+           df$lat, 
+           color = df$distance)) + 
+           geom_point() + 
+           geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+
+plot05
+
+```  
+
