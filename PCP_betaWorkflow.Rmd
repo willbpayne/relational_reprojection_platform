@@ -45,69 +45,60 @@ class(df) # test to make sure it's a data frame
 # STORE COL NAMES FOR LATER
 
 colListOrig <- colnames(df)
-latNames <- list("lat", "latitude", "y")
-lonNames <- list("lon", "long", "longitude", "x")
+latNames <- list("lat","Lat","LAT", "latitude", "y","Y") # add as they come up
+lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "x","X")
 
 # STARTING TO INCLUDE FORCED GENERIC COLUMN HEADINGS
 
-df2 <- df
+df2 <- df # need to clean up df2 later, or initialize as an empty dataframe?
 
-columnstovalidate <- ncol(df)
+latflag <- 0 # need these here for the 
+lonflag <- 0
+ctrBinflag <- 0
 
-print(typeof(df))
-#for loop
-  for (col in 1:columnstovalidate){ 
-      print("Hello!")
-      print(col)
-      print(typeof(df[[col]]))
-      if(typeof(df[[col]]) == "double")
-        print(max(as.numeric(df[[col]])))
-      if(typeof(df[[col]]) == "integer")
-        # print("It's an integer!")
-        print(max(as.numeric(df[[col]])))
-        #print(max(df[[col]]))
+for (col in 1:ncol(df)) {
+  if (typeof(df[[col]]) == "double"
+  && latflag == 0
+  && max(as.numeric(df[[col]]), na.rm = T) <= 90.0
+  && min(as.numeric(df[[col]]), na.rm = T) >= -90.0
+  && names(df)[[col]] %in% latNames) # lat
+  { print(paste("Found a lat column: ", names(df)[[col]]))
+    df2$lat <- df[[col]]
+    latflag <- 1}
+  else{
+    if (typeof(df[[col]]) == "double"
+    && lonflag == 0
+    && max(as.numeric(df[[col]]), na.rm = T) <= 180.0
+    && min(as.numeric(df[[col]]), na.rm = T) >= -180.0
+    && names(df)[col] %in% lonNames) # lon
+    { print(paste("Found a lon column: ", names(df)[[col]]))
+      df2$lon <- df[[col]]
+      lonflag <- 1}
+    else{
+      if (typeof(df[[col]]) != "character"
+      && min(as.numeric(df[[col]]), na.rm = T) == 0
+      && max(as.numeric(df[[col]]), na.rm = T) == 1
+      && sum(as.numeric(df[[col]]), na.rm = T) == 1) # ctrBin
+      { df2$ctrBin <- as.logical(df[[col]])
+        print(paste("Found a ctrBin column: ", names(df)[[col]]))
+        ctrBinflag <- 1}
+        else{
+          if (typeof(df[[col]]) == "character" # catches name and name_long
+          || is.factor(df[[col]]) == T) # valName
+          { df2$valName <- as.character(df[[col]])
+            print(paste("Found a valName column: ", names(df)[[col]]))}
+          else{
+          if (typeof(df[[col]]) == "integer" || typeof(df[[col]]) == "double" # val
+          && !(names(df)[col] %in% lonNames)
+          && !(names(df)[col] %in% latNames))
+          { df2$val <- as.double(df[[col]])
+            print(paste("Found a val column: ", names(df)[[col]]))}
+          }
+        }
+    }
   }
-# *** currently reads char as int
-
-    for (col in 1:ncol(df)){ 
-      if(max(df[[col]],na.rm=T) <= 90.0 
-         && min(df[[col]],na.rm=T) >= -90.0 
-         && names(df)[[col]] %in% latNames) # lat
-          df2$lat <- df$col
-      if(max(df$col <= 180.0) 
-         && min(df$col >= -180.0)
-         && names(df)[col] %in% lonNames) # long
-          df2$lon <- df$col
-    }
-      
-      if(min(df$col == 0) # ctrBin
-        && max(df$col == 1)
-        && sum(df$col == 1)
-          df$ctrBin <- df$col
-      if(typeof(df$col) == "logical") #ctrBin
-        df$ctrBin <- df$col
-      if(typeof(df$col) == "character") # valName
-        df$valName <- df$col
-      if(typeof(df$col) == "integer" || "double") #val
-        df$val <- df$col
-    }
-
-typeof(routes$isDTW)
-
-     # obnoxiously explicit validation
-
-if (typeof(routes$airport) != "character")
-  routes$airport <- as.character(routes$airport)
-if (typeof(routes$isDTW) != "logical")
-  routes$isDTW <- as.logical(routes$isDTW)
-if (typeof(routes$lat) != "double")
-  routes$isDTW <- as.double(routes$lat)
-if (typeof(routes$long) != "double")
-  routes$isDTW <- as.double(routes$long)
-if (typeof(routes$flightsDTW) != "integer" && typeof(routes$flightsDTW) != "double" )
-  routes$flightsDTW <- as.double(routes$flightsDTW)
-
-typeof(routes$isDTW)
+}
+>>>>>>> 59a2d6351c03445ba3903c31b8cd727f7cbef090
 
 ```
 
