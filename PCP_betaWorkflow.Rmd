@@ -163,3 +163,131 @@ plot05
 
 ```  
 
+## 06: Plot 2 - val center connectivity
+* Plot connectivity
+  
+```{r} 
+#temp
+df$valTrans <- (df$IND_remit * 1) + .5 
+#real
+#df$valTrans <- (df$val * 1) + .5 
+
+for (row in 1:nrow(df)){
+  df[row,"circdistancex"] <- (pol2cart(df$distance[row], df$ctrPtMathbearing[row], degrees = TRUE))[1]
+  df[row,"circdistancey"] <- (pol2cart(df$distance[row], df$ctrPtMathbearing[row], degrees = TRUE))[2]
+}
+rm(row)
+
+# Lets make some circles
+circles <- data.frame(
+  x0 = 0,
+  y0 = 0,
+  r = seq(0, maxdist,length.out = 10)
+)
+
+# Use coord_fixed to ensure true circularity
+ggplot() +
+  geom_circle(aes(x0 = x0, y0 = y0, r = r), colour = "orange", data = circles, show.legend = NA, inherit.aes = FALSE) +
+  coord_fixed()
+
+plot06 <- ggplot(df, aes(
+                df$circdistancex, 
+                df$circdistancey, 
+                color = df$distance)) +
+        geom_circle(aes(x0 = x0, y0 = y0, r = r),
+          colour = "orange", 
+          data = circles, 
+          show.legend = NA, 
+          inherit.aes = FALSE) +
+        geom_point(stroke = 1, size = df$valTrans) +
+        geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+        coord_fixed() + labs(color = "Distance in km", x = NULL, y = NULL) +
+        guides(colour = "colorbar",size = "legend") +
+        theme(panel.background = element_blank())
+
+plot06
+
+```  
+
+## 07: Plot on log scale
+an option we can give our users later
+```{r} 
+# replot on log scale
+
+df$distancelog <- log(df$distance)
+
+for (row in 1:nrow(df)){
+  df[row,"distancelogcircx"] <- (pol2cart(df$distancelog[row], df$ctrPtMathbearing[row], degrees = TRUE))[1]
+  df[row,"distancelogcircy"] <- (pol2cart(df$distancelog[row], df$ctrPtMathbearing[row], degrees = TRUE))[2]
+}
+
+logcircles <- data.frame()
+
+for (row in 1:nrow(circles)){
+  logcircles[row,"r"] <- log(circles[row,"r"])
+  logcircles[row,"x0"] <- circles[row,"x0"]
+  logcircles[row,"y0"] <- circles[row,"y0"]
+}
+rm(row)
+
+plot07 <- ggplot(df, aes(
+                df$distancelogcircx, 
+                df$distancelogcircy, 
+                color = df$distance)) + 
+  geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "orange", data = logcircles, 
+                      show.legend = NA, inherit.aes = FALSE) +
+  geom_point(stroke = 1, size = df$valTrans) + 
+  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+  coord_fixed() + labs(color = "Great circle distance in km", x = NULL, y = NULL) +
+  theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
+
+plot07
+
+```  
+
+## 08 Plot on square root scale (with and without scale circles)
+
+```{r} 
+df$distancesqrt <- sqrt(df$distance)
+
+## *** GENERALIZE pol2cart function so can run on X rows and don't have to re-deploy every time 
+for (row in 1:nrow(df)){ 
+  df[row,"sqrtcircX"] <- (pol2cart(df$distancesqrt[row], df$ctrPtMathbearing[row], degrees = TRUE))[1]
+  df[row,"sqrtcircY"] <- (pol2cart(df$distancesqrt[row], df$ctrPtMathbearing[row], degrees = TRUE))[2]
+}
+rm(row)
+
+plot08A <- ggplot(df, aes( # plot with scale circles
+                df$sqrtcircX, 
+                df$sqrtcircY, 
+                color = df$distance)) +  
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "orange", data = sqrt(circles), 
+                      show.legend = NA, inherit.aes = FALSE) + 
+          geom_point(stroke = 1, size = df$valTrans) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Distance in km", x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
+
+plot08A
+
+plot08B <- ggplot(df, aes( # plot without circles
+                df$sqrtcircX, 
+                df$sqrtcircY, 
+                color = df$distance)) + 
+          geom_point(stroke = 1, size = df$valTrans) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = "Distance in km", x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
+
+plot08B
+
+```
+
+
