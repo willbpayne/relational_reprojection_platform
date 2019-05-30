@@ -66,7 +66,8 @@ print(typeof(df))
         # print("It's an integer!")
         print(max(as.numeric(df[[col]])))
         #print(max(df[[col]]))
-    }
+  }
+# *** currently reads char as int
 
     for (col in 1:ncol(df)){ 
       if(max(df[[col]],na.rm=T) <= 90.0 
