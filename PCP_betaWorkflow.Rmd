@@ -31,13 +31,31 @@ library(reshape2) # for contor/grid
 * Read and give headers and datatypes for each (eventually do more sophisticated validation/type detection)
 
 ```{r}
-routes <- read.csv(file = "testData/routes_bare_sm.csv")
+# TEST DATA: only one at a time
+dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
+# dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
+# dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
+# dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
 
-routes <- routes[!(routes$lat>50 | routes$long < -125),]
-summary(routes)
-class(routes) # test to make sure it's a data frame
+df <- read.csv(file = dataFile)
 
-# at some point, we need to enforce generic column headers
+summary(df)
+class(df) # test to make sure it's a data frame
+
+# STARTING TO INCLUDE FORCED GENERIC COLUMN HEADINGS
+
+#for loop
+df[col]
+# lat
+(max(routes$lat <= 90.0) || min(routes$lat >= -90.0)
+# long
+max(routes$long <= 180.0) || min(routes$long >= -180.0)
+# ctrBin
+(min = 0 && max = 1 && sum = 1) or typeof == "logical"
+# valName
+typeof == "character"
+# val
+typeof == "integer" || "double"
 
 typeof(routes$isDTW)
 
