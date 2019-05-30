@@ -9,22 +9,52 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## 00: R Setup
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+library(sp)
+library(ggplot2)
+library(ggforce) # to plot circles
+library(dplyr)
+library(tidyverse)
+library(geosphere) # for geodist
+library(useful) # for cartesian conversions
+library(akima) # for irregular grid
+library(reshape2) # for contor/grid
 
-```{r cars}
-summary(cars)
+
 ```
 
-## Including Plots
+## 01: Input CSV into R
+* Read and give headers and datatypes for each (eventually do more sophisticated validation/type detection)
 
-You can also embed plots, for example:
+```{r}
+routes <- read.csv(file = "testData/routes_bare_sm.csv")
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+routes <- routes[!(routes$lat>50 | routes$long < -125),]
+summary(routes)
+class(routes) # test to make sure it's a data frame
+
+# at some point, we need to enforce generic column headers
+
+typeof(routes$isDTW)
+
+     # obnoxiously explicit validation
+
+if (typeof(routes$airport) != "character")
+  routes$airport <- as.character(routes$airport)
+if (typeof(routes$isDTW) != "logical")
+  routes$isDTW <- as.logical(routes$isDTW)
+if (typeof(routes$lat) != "double")
+  routes$isDTW <- as.double(routes$lat)
+if (typeof(routes$long) != "double")
+  routes$isDTW <- as.double(routes$long)
+if (typeof(routes$flightsDTW) != "integer" && typeof(routes$flightsDTW) != "double" )
+  routes$flightsDTW <- as.double(routes$flightsDTW)
+
+typeof(routes$isDTW)
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
