@@ -50,18 +50,46 @@ lonNames <- list("lon", "long", "longitude", "x")
 
 # STARTING TO INCLUDE FORCED GENERIC COLUMN HEADINGS
 
+df2 <- df
+
+columnstovalidate <- ncol(df)
+
+print(typeof(df))
 #for loop
+  for (col in 1:columnstovalidate){ 
+      print("Hello!")
+      print(col)
+      print(typeof(df[[col]]))
+      if(typeof(df[[col]]) == "double")
+        print(max(as.numeric(df[[col]])))
+      if(typeof(df[[col]]) == "integer")
+        # print("It's an integer!")
+        print(max(as.numeric(df[[col]])))
+        #print(max(df[[col]]))
+    }
+
     for (col in 1:ncol(df)){ 
-    # lat
-    (max(routes$lat <= 90.0) || min(routes$lat >= -90.0)
-    # long
-    max(routes$long <= 180.0) || min(routes$long >= -180.0)
-    # ctrBin
-    (min = 0 && max = 1 && sum = 1) or typeof == "logical"
-    # valName
-    typeof == "character"
-    # val
-    typeof == "integer" || "double"
+      if(max(df[[col]],na.rm=T) <= 90.0 
+         && min(df[[col]],na.rm=T) >= -90.0 
+         && names(df)[[col]] %in% latNames) # lat
+          df2$lat <- df$col
+      if(max(df$col <= 180.0) 
+         && min(df$col >= -180.0)
+         && names(df)[col] %in% lonNames) # long
+          df2$lon <- df$col
+    }
+      
+      if(min(df$col == 0) # ctrBin
+        && max(df$col == 1)
+        && sum(df$col == 1)
+          df$ctrBin <- df$col
+      if(typeof(df$col) == "logical") #ctrBin
+        df$ctrBin <- df$col
+      if(typeof(df$col) == "character") # valName
+        df$valName <- df$col
+      if(typeof(df$col) == "integer" || "double") #val
+        df$val <- df$col
+    }
 
 typeof(routes$isDTW)
 
