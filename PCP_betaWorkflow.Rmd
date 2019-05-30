@@ -42,20 +42,26 @@ df <- read.csv(file = dataFile)
 summary(df)
 class(df) # test to make sure it's a data frame
 
+# STORE COL NAMES FOR LATER
+
+colListOrig <- colnames(df)
+latNames <- list("lat", "latitude", "y")
+lonNames <- list("lon", "long", "longitude", "x")
+
 # STARTING TO INCLUDE FORCED GENERIC COLUMN HEADINGS
 
 #for loop
-df[col]
-# lat
-(max(routes$lat <= 90.0) || min(routes$lat >= -90.0)
-# long
-max(routes$long <= 180.0) || min(routes$long >= -180.0)
-# ctrBin
-(min = 0 && max = 1 && sum = 1) or typeof == "logical"
-# valName
-typeof == "character"
-# val
-typeof == "integer" || "double"
+    for (col in 1:ncol(df)){ 
+    # lat
+    (max(routes$lat <= 90.0) || min(routes$lat >= -90.0)
+    # long
+    max(routes$long <= 180.0) || min(routes$long >= -180.0)
+    # ctrBin
+    (min = 0 && max = 1 && sum = 1) or typeof == "logical"
+    # valName
+    typeof == "character"
+    # val
+    typeof == "integer" || "double"
 
 typeof(routes$isDTW)
 
