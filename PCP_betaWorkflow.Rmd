@@ -98,7 +98,8 @@ for (col in 1:ncol(df)) {
     }
   }
 }
->>>>>>> 59a2d6351c03445ba3903c31b8cd727f7cbef090
+
+df2 <- select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
 
 ```
 
