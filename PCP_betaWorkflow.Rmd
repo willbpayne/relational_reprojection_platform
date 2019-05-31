@@ -246,7 +246,7 @@ plot06
 
 ```  
 
-## 06: Plot on log scale
+## 06: Plot on Log Scale
 An option we can give our users later
 ```{r} 
 # replot on log scale
@@ -284,7 +284,7 @@ plot07
 
 ```  
 
-## 07 Plot on square root scale (with and without scale circles)
+## 07 Plot on Square Root Scale
 
 ```{r} 
 df2$distancesqrt <- sqrt(df2$distance)
@@ -328,59 +328,82 @@ plot08B
 ```
 
 
-## 08: Manual Control Points
-* Define a decay function using manual control points
+## 08: Custom Control Points
+* Define a decay function using data-defined or user-specified control points
 
 ```{r}
 # polynom::poly
-# code to find a Lagrange interpolation polynomial for our control points. for now I'm just defining some, later we should explore the user input and/or data-driven methods.
+# code to find a stepwise function using our control points.
 
-geogdist <- c(0, 500, 2000, maxdist) # let's say under 500 km is close, over 2000km is far
+# Automated route (could also just have user specify neardist and fardist)
+hist(df2$distance)
+distancemedian <-median(df2$distance)
+geogdist <- c(0, .5 * distancemedian, ((distancemedian + maxdist)/2), maxdist) # let's say under 500 km is close, over 2000km is far
+neardist <- geogdist[2] # these two are the output of geogdist above
+fardist <- geogdist[3]
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
-
-neardist <- 500
-fardist <- 2500
 
 a <- function(x){ # here is some example code for the piecewise funciton
   ifelse(( x > 0 & x < neardist),(x * 400/neardist),ifelse((neardist <= x & x < fardist),((x * 400)/(fardist - neardist) + (400-((400)/(fardist - neardist)*neardist))), ifelse((fardist <= x & x <= maxdist),((x * 400)/(maxdist - fardist) + (800-((400)/(maxdist - fardist)*fardist))), NA))) 
 } 
 plot(a,xlim=c(0,maxdist), ylim = c(0, 1200), col = "red") 
-abline(v = 0, h = 0)
 
-dat <- data.frame(cbind(geogdist, chartdist)) # chart points to check intervals
-ggplot(dat, aes(x=geogdist, y=chartdist)) + geom_point(size=5, col='blue') 
+df2$lagrangedistcircstep <- a(df2$distance) # set new lagrange great circle distances using new stepwise function
 
-lagrangepoly <- poly.calc(geogdist, chartdist) # calculate polynomial from control points
-lagrangepoly # print polynomial 
-
-curve(predict(lagrangepoly,x), from = 0, to = maxdist, n = 100)
-
-predict(lagrangepoly, 200) # print predicted value for geogdist of 200
-
-a(maxdist) # print predicted value for geogdist of 200
-
-
-df$lagrangedistcircstep <- a(df$distance) # set new lagrange great circle distances using new stepwise function
-
-df$lagrangedistcirc <- predict(lagrangepoly, df$distance) # set new lagrange great circle distances using new polynomial
-
-# function to make new circles with any lagrange polynomial set above
-lagrange_predict <- function(circlesdataframe) { 
-  lagrangecirclesdataframe <- circlesdataframe
-  for (row in 1:nrow(circlesdataframe)){
-    lagrangecirclesdataframe[row,"r"]<- predict(lagrangepoly, circlesdataframe[row,"r"])}
-  return(lagrangecirclesdataframe)
-}
-
+# function to make new circles with any stepwise function set above
 lagrange_predictstep <- function(circlesdataframe) { 
   lagrangecirclesdataframe <- circlesdataframe
   for (row in 1:nrow(circlesdataframe)){
     lagrangecirclesdataframe[row,"r"]<- a(circlesdataframe[row,"r"])}
   return(lagrangecirclesdataframe)
 }
+lagrangecircles <- lagrange_predictstep(circles) # this projects the circles
 
-lagrangecircles <- lagrange_predictstep(circles) # check if it worked
+```
 
-# lagrangecircles
+## 9: Plot with Custom Control Points
+
+```{r}
+
+for (row in 1:nrow(df2)){ # calculate new coordinates using lagrange distances
+  df2[row,"lagrangedistcircX"] <- (pol2cart(df2$lagrangedistcircstep[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1] # returns x coordinate only
+  df2[row,"lagrangedistcircY"] <- (pol2cart(df2$lagrangedistcircstep[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
+}
+rm(row)
+
+# WE SHOULD REALLY SEE ABOUT MAKING A SEPARATE CODE SNIPPET THAT HANDLES ALL OF THE AESTHETICS AT ONCE AND PLUG IN EVERYWHERE
+
+# NEED TO STREAMLINE PLOT NAMES TOO
+
+plot10A <- ggplot(df2, aes( # plot with maxdist/10 circles
+                lagrangedistcircX, 
+                lagrangedistcircY, 
+                color = df2$distance)) +  
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "orange", data = lagrangecircles, 
+                      show.legend = NA, inherit.aes = FALSE) + 
+          geom_point(stroke = 1, size = df2$valTrans) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank())
+plot10A
+
+plot10B <- ggplot(df2, aes( # plot without circles, zoomed in on data (do we need x and y lims again to do this programmatically?)
+                lagrangedistcircX, 
+                lagrangedistcircY, 
+                color = df2$distance)) + 
+          geom_point(stroke = 1, size = df2$valTrans) + 
+          geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
+          coord_fixed() + 
+          labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) + 
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank())
+plot10B
 
 ```
