@@ -19,10 +19,12 @@ library(ggplot2)
 library(ggforce) # to plot circles
 library(dplyr)
 library(tidyverse)
-library(geosphere) # for geodist
+library(geosphere) # NEED TO CHECK (i was wrong when I said geodist was here)
+library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
 library(akima) # for irregular grid
 library(reshape2) # for contor/grid
+library(contoureR) # for contours w/o grid
 
 
 ```
@@ -406,4 +408,10 @@ plot10B <- ggplot(df2, aes( # plot without circles, zoomed in on data (do we nee
                 axis.text.y = element_blank())
 plot10B
 
+```
+
+# 11 Interpolation & Integrated plotting
+```{r}
+#getContourLines(d$lagrangedistcircX, routes$lagrangedistcircY,routes$c)
+getContourLines(df2$lagrangedistcircX, df2$lagrangedistcircY, df2$val)
 ```
