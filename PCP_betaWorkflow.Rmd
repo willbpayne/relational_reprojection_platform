@@ -25,6 +25,7 @@ library(useful) # for cartesian conversions
 library(akima) # for irregular grid
 library(reshape2) # for contor/grid
 library(contoureR) # for contours w/o grid
+library(deldir) # CHECK: trying for TIN generation, see sec. 11
 
 
 ```
@@ -410,8 +411,30 @@ plot10B
 
 ```
 
-# 11 Interpolation & Integrated plotting
+# 11a contour test!
 ```{r}
-#getContourLines(d$lagrangedistcircX, routes$lagrangedistcircY,routes$c)
-getContourLines(df2$lagrangedistcircX, df2$lagrangedistcircY, df2$val)
+getContourLines(df2$lagrangedistcircX, df2$lagrangedistcircY, df2$valTrans, nlevels=5, criticalRatio = 5)
+contoureR::contourLinesR(x = df2$lagrangedistcircX, y = df2$lagrangedistcircY, z = df2$valTrans, nlevels = 10)
+# WHAT DOES THIS ERROR MEAN!?
+  # Error: Values in 'dm' would result in out of bounds errors in xyz.
+
+getContourLines(df2$lon, df2$lat, df2$val, nlevels=5, criticalRatio = 5)
+
+deldir(x, y, dpl=NULL, rw=NULL, eps=1e-09, sort=TRUE, plotit=FALSE,
+       digits=6, z=NULL, zdum=NULL, suppressMsge=FALSE, ...)
+
+deldirX <- df2$lagrangedistcircX
+deldirY <- df2$lagrangedistcircY
+dxy1 <- deldir(deldirX,deldirY)
+dxy3 <- deldir(deldirX,deldirY, dpl = list(ndx=2, ndy=2), 
+               rw = c(min(deldirX),
+                      max(deldirX),
+                      min(deldirY),
+                      max(deldirY)))
+deldir()
+ # rw = c(min(df2$lagrangedistcircX), 
+                   #        max(df2$lagrangedistcircX), 
+                   #        min(df2$lagrangedistcircY), 
+                   #        max(df2$lagrangedistcircY))#,
+                   #z = df2$valTrans
 ```
