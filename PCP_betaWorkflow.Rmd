@@ -129,22 +129,24 @@ cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and",
 
 ## 03: Calculate all great circle distances and bearings to center point
 
-* __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
-    + example data max is 7,241 km
-
 ```{r}
 # create a column in df, fill with km distances
   df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")  
   maxdist <- max(df2$distance) # max great circle distance
   
   print( # print out both the longest axial and great circle distances
-    paste0("The longest great circle distance between your center point, ",
-           df2$valName[df2$ctrBin == TRUE], ", and farthest point, ",
+    paste0("The great circle distance between your center point, ",
+           ctrPtName, ", and farthest point, ",
            df2$valName[df2$distance == max(df2$distance)], ", is ",
-           round(max(df2$distance), 0), " km.")
+           round(maxdist, 0), " km.")
     )
+  if(maxdist > 20000){
+    print("Your maximum distance is more than half of the Earth's circumference; things might get a little squirrely!")
+    } else {
+    print("Your maximum distance is less than half of the Earth's circumference! Nice!")
+    }
   
-  df2 <- df2 %>% mutate(ctrPtGeobearing = bearing(ctrPt, cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center point
+  df2 <- df2 %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center 
 
   # THIS NEXT PART SHOULD BE A FUNCTION TOO
   
@@ -175,7 +177,7 @@ plot05 <- ggplot(df2,
            df2$lat, 
            color = df2$distance)) + 
            geom_point() + 
-           geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[1], ctrPt[2]), color = "orange")
+           geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = "orange")
 
 plot05
 
@@ -186,7 +188,7 @@ plot05
   
 ```{r} 
 #temp ***
-df2$valTrans <- (df2$val / 500) + 1 # manual one I did now to see what we're looking for
+df2$valTrans <- (df2$val / 500) + 1 # manual one I did for India data to see what we're looking for
 
 hist(df2$val, breaks = 20) # just for giggles
 hist(sqrt(df2$val), breaks = 20)
@@ -198,19 +200,19 @@ print(min(df2$val, na.rm = T)) # find lowest non-zero value (that will be radius
 print(max(df2$val, na.rm = T)) # find highest non-zero value (that will be radius X)
 print(median(df2$val, na.rm = T)) # find median value (that could be radius 1 + X / 2)
 
-min(my_data_frame[my_data_frame$my_column_number>0,my_column_number])
+#min(my_data_frame[my_data_frame$my_column_number>0,my_column_number])
 
-#real
 # *** NEED DATA DRIVEN TRANSFORMATION, not best guess from old test data
-#df$valTrans <- (df$val * 1) + .5 
+# df2$valTrans <- (df2$val * 1) + .5 # MANUAL FOR AIRPORT DATA
 
-# SHOULD THIS BE A FUNCTION TOO?
+# Run polar to cartesian conversion on x and y axes
+df2 <- df2 %>% mutate(circdistancex =  (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[1]]))
+df2 <- df2 %>% mutate(circdistancey = (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[2]]))
 
-for (row in 1:nrow(df2)){
-  df2[row,"circdistancex"] <- (pol2cart(df2$distance[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1]
-  df2[row,"circdistancey"] <- (pol2cart(df2$distance[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2]
-}
-rm(row)
+# Combine x and y into a matrix, add as a column, remove x and y columns
+df2$circcoords <- cbind(df2$circdistancex,df2$circdistancey)
+df2 <- select(df2,-starts_with("circdistance"))
+class(df2$circcoords)
 
 # Lets make some circles starting at the center point going to maxdist
 circles <- data.frame(
@@ -225,8 +227,8 @@ ggplot() +
   coord_fixed()
 
 plot06 <- ggplot(df2, aes(
-                df2$circdistancex, 
-                df2$circdistancey, 
+                df2$circcoords[,1], 
+                df2$circcoords[,2], 
                 color = df2$distance)) +
         geom_circle(aes(x0 = x0, y0 = y0, r = r),
           colour = "orange", 
@@ -251,8 +253,8 @@ An option we can give our users later
 df2$distancelog <- log(df2$distance)
 
 for (row in 1:nrow(df2)){
-  df2[row,"distancelogcircx"] <- (pol2cart(df2$distancelog[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1]
-  df2[row,"distancelogcircy"] <- (pol2cart(df2$distancelog[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2]
+  df2[row,"distancelogcircx"] <- (useful::pol2cart(df2$distancelog[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1]
+  df2[row,"distancelogcircy"] <- (useful::pol2cart(df2$distancelog[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2]
 }
 
 logcircles <- data.frame()
@@ -288,8 +290,8 @@ df2$distancesqrt <- sqrt(df2$distance)
 
 ## *** GENERALIZE pol2cart function so can run on X rows and don't have to re-deploy every time 
 for (row in 1:nrow(df2)){ 
-  df2[row,"sqrtcircX"] <- (pol2cart(df2$distancesqrt[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1]
-  df2[row,"sqrtcircY"] <- (pol2cart(df2$distancesqrt[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2]
+  df2[row,"sqrtcircX"] <- (useful::pol2cart(df2$distancesqrt[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1]
+  df2[row,"sqrtcircY"] <- (useful::pol2cart(df2$distancesqrt[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2]
 }
 rm(row)
 
