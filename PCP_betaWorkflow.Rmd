@@ -33,7 +33,7 @@ source("PCP_functions/convertToPolar.R")
 
 ```{r}
 # TEST DATA: only one at a time
-dataFile <- "testData/IND_remittances.csv" # remittances to India in USD in 201X
+ dataFile <- "testData/IND_remittances.csv" # remittances to India in USD in 201X
 # dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
 # dataFile <- "testData/routes_sm.csv" # flights to DTW with ORD and MSP options
 # dataFile <- "testData/china1911_XJofficials.csv" # officials from Xinjiang in 1911
@@ -43,19 +43,17 @@ df <- read.csv(file = dataFile)
 summary(df)
 class(df) # test to make sure it's a data frame
 
-# STORE COL NAMES FOR LATER
-
-colListOrig <- colnames(df)
+colListOrig <- colnames(df) # store column names for later
 latNames <- list("lat","Lat","LAT", "latitude", "y","Y") # add as they come up
 lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "x","X")
 
-# STARTING TO INCLUDE FORCED GENERIC COLUMN HEADINGS
+df2 <- df # cloning df for non-destructive editing
 
-df2 <- df # need to clean up df2 later, or initialize as an empty dataframe?
-
-latflag <- 0 # need these here for the 
+latflag <- 0 # need these here for the column detection
 lonflag <- 0
 ctrBinflag <- 0
+valNameflag <- 0
+valflag <- 0
 
 for (col in 1:ncol(df)) {
   if (typeof(df[[col]]) == "double"
@@ -83,19 +81,31 @@ for (col in 1:ncol(df)) {
       { df2$ctrBin <- as.logical(df[[col]])
         print(paste("Found a ctrBin column: ", names(df)[[col]]))
         ctrBinflag <- 1}
+      else{
+        if (typeof(df[[col]]) == "character" # catches name and name_long
+        || is.factor(df[[col]]) == T) # valName
+        { if (valNameflag == 0)
+            {df2$valName <- as.character(df[[col]])
+            print(paste("Found a valName column: ", names(df)[[col]]))
+            valNameflag <- 1}
+            else{
+              print(paste("Found an alternate valName column: ", names(df)[[col]]))}
+              # NOTE this isn't storing anywhere yet, might need to later for input
+          }
         else{
-          if (typeof(df[[col]]) == "character" # catches name and name_long
-          || is.factor(df[[col]]) == T) # valName
-          { df2$valName <- as.character(df[[col]])
-            print(paste("Found a valName column: ", names(df)[[col]]))}
-          else{
           if (typeof(df[[col]]) == "integer" || typeof(df[[col]]) == "double" # val
           && !(names(df)[col] %in% lonNames)
           && !(names(df)[col] %in% latNames))
-          { df2$val <- as.double(df[[col]])
-            print(paste("Found a val column: ", names(df)[[col]]))}
+          { if (valflag == 0)
+            {df2$val <- as.double(df[[col]])
+            print(paste("Found a val column: ", names(df)[[col]]))
+            valflag <- 1}
+            else{
+              print(paste("Found an alternate val column: ", names(df)[[col]]))}
+              # NOTE this isn't storing anywhere yet, might need to later for input
           }
         }
+      }
     }
   }
 }
@@ -111,16 +121,10 @@ df2 <- select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
 # test plot
 plot(df2$lon, df2$lat)
 
-#temp ***
-ctrX <- df2$lon[df2$ctrBin == TRUE]
-ctrY <- df2$lat[df2$ctrBin == TRUE]
+# store and print center point
 ctrPtName <- df2$valName[df2$ctrBin == TRUE]
-
-#real
-# ctrX <- df$long[df$ctrBin == TRUE]
-# ctrY <- df$lat[df$ctrBin == TRUE]
-ctrPt <- c(ctrX,ctrY)
-cat("Your center point has the following coordinates:", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
+ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
+cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 ```
 
 ## 03: Calculate all great circle distances and bearings to center point
@@ -130,9 +134,9 @@ cat("Your center point has the following coordinates:", ctrPt[1],"longitude and"
 
 ```{r}
 # create a column in df, fill with km distances
-  df2$distance <- geodist(ctrY, ctrX, df2$lat, df2$lon, units = "km")  
+  df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")  
   maxdist <- max(df2$distance) # max great circle distance
-
+  
   print( # print out both the longest axial and great circle distances
     paste0("The longest great circle distance between your center point, ",
            df2$valName[df2$ctrBin == TRUE], ", and farthest point, ",
@@ -140,25 +144,8 @@ cat("Your center point has the following coordinates:", ctrPt[1],"longitude and"
            round(max(df2$distance), 0), " km.")
     )
   
-  # THIS SHOULD BE A FUNCTION
-convertToPolar <- function(dataFrame, centerPoint,latCol,lonCol){
-   # valNamelonglat <- c(lonCol, latCol)
-    # dataFrame$ctrPtGeobearing <- geosphere::bearing(centerPoint, valNamelonglat, a=6378137, f=1/298.257223563)
-  #rm(valNamelat,valNamelong,valNamelonglat,row)
-    df2 = mutate(dataFrame, emptyCol=NA)
-  return(df2)
-}
-convertToPolar(df2, ctrPt, df2$lat, df2$lon)
-convertToPolar(df2,ctrPt)
+  df2 <- df2 %>% mutate(ctrPtGeobearing = bearing(ctrPt, cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center point
 
-# for (row in 1:nrow(df2)){ # convert to polar coordinates
-#   valNamelong <- df2[row,"lon"]
-#   valNamelat <- df2[row,"lat"]
-#   valNamelonglat <- c(valNamelong, valNamelat)
-#   df2[row,"ctrPtGeobearing"] <- bearing(ctrPt, valNamelonglat, a=6378137, f=1/298.257223563)
-# }
-#   rm(valNamelat,valNamelong,valNamelonglat,row)
-  
   # THIS NEXT PART SHOULD BE A FUNCTION TOO
   
 for (row in 1:nrow(df2)) # convert from geographic bearings to polar coordinates
