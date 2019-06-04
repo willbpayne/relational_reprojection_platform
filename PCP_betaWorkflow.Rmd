@@ -31,9 +31,9 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 
 ```{r}
 # TEST DATA: only one at a time
-# dataFile <- "testData/IND_remittances.csv" # remittances to India in USD in 201X
+ dataFile <- "testData/IND_remittances.csv" # remittances to India in USD in 201X
 # dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
- dataFile <- "testData/routes_sm.csv" # flights to DTW with ORD and MSP options
+# dataFile <- "testData/routes_sm.csv" # flights to DTW with ORD and MSP options
 # dataFile <- "testData/china1911_XJofficials.csv" # officials from Xinjiang in 1911
 
 df <- read.csv(file = dataFile)
@@ -119,16 +119,10 @@ df2 <- select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
 # test plot
 plot(df2$lon, df2$lat)
 
-#temp ***
-ctrX <- df2$lon[df2$ctrBin == TRUE]
-ctrY <- df2$lat[df2$ctrBin == TRUE]
+# store and print center point
 ctrPtName <- df2$valName[df2$ctrBin == TRUE]
-
-#real
-# ctrX <- df$long[df$ctrBin == TRUE]
-# ctrY <- df$lat[df$ctrBin == TRUE]
-ctrPt <- c(ctrX,ctrY)
-cat("Your center point has the following coordinates:", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
+ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
+cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 ```
 
 ## 03: Calculate all great circle distances and bearings to center point
