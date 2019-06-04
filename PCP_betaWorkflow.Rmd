@@ -132,9 +132,9 @@ cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and",
 
 ```{r}
 # create a column in df, fill with km distances
-  df2$distance <- geodist(ctrY, ctrX, df2$lat, df2$lon, units = "km")  
+  df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")  
   maxdist <- max(df2$distance) # max great circle distance
-
+  
   print( # print out both the longest axial and great circle distances
     paste0("The longest great circle distance between your center point, ",
            df2$valName[df2$ctrBin == TRUE], ", and farthest point, ",
@@ -142,16 +142,8 @@ cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and",
            round(max(df2$distance), 0), " km.")
     )
   
-  # THIS SHOULD BE A FUNCTION
-  
-for (row in 1:nrow(df2)){ # convert to polar coordinates
-  valNamelong <- df2[row,"lon"]
-  valNamelat <- df2[row,"lat"]
-  valNamelonglat <- c(valNamelong, valNamelat)
-  df2[row,"ctrPtGeobearing"] <- bearing(ctrPt, valNamelonglat, a=6378137, f=1/298.257223563)
-}
-  rm(valNamelat,valNamelong,valNamelonglat,row)
-  
+  df2 <- df2 %>% mutate(ctrPtGeobearing = bearing(ctrPt, cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center point
+
   # THIS NEXT PART SHOULD BE A FUNCTION TOO
   
 for (row in 1:nrow(df2)) # convert from geographic bearings to polar coordinates
