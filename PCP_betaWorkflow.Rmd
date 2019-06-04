@@ -14,7 +14,7 @@ library(ggplot2)
 library(ggforce) # to plot circles
 library(dplyr)
 library(tidyverse)
-library(geosphere) # NEED TO CHECK (i was wrong when I said geodist was here)
+library(geosphere) # where we get bearing
 library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
 library(akima) # for irregular grid
@@ -23,6 +23,8 @@ library(contoureR) # for contours w/o grid
 library(deldir) # CHECK: trying for TIN generation, see sec. 11
 library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 
+# FUNCTIONS WE'RE USING
+source("PCP_functions/convertToPolar.R")
 
 ```
 
@@ -139,14 +141,23 @@ cat("Your center point has the following coordinates:", ctrPt[1],"longitude and"
     )
   
   # THIS SHOULD BE A FUNCTION
-  
-for (row in 1:nrow(df2)){ # convert to polar coordinates
-  valNamelong <- df2[row,"lon"]
-  valNamelat <- df2[row,"lat"]
-  valNamelonglat <- c(valNamelong, valNamelat)
-  df2[row,"ctrPtGeobearing"] <- bearing(ctrPt, valNamelonglat, a=6378137, f=1/298.257223563)
+convertToPolar <- function(dataFrame, centerPoint,latCol,lonCol){
+   # valNamelonglat <- c(lonCol, latCol)
+    # dataFrame$ctrPtGeobearing <- geosphere::bearing(centerPoint, valNamelonglat, a=6378137, f=1/298.257223563)
+  #rm(valNamelat,valNamelong,valNamelonglat,row)
+    df2 = mutate(dataFrame, emptyCol=NA)
+  return(df2)
 }
-  rm(valNamelat,valNamelong,valNamelonglat,row)
+convertToPolar(df2, ctrPt, df2$lat, df2$lon)
+convertToPolar(df2,ctrPt)
+
+# for (row in 1:nrow(df2)){ # convert to polar coordinates
+#   valNamelong <- df2[row,"lon"]
+#   valNamelat <- df2[row,"lat"]
+#   valNamelonglat <- c(valNamelong, valNamelat)
+#   df2[row,"ctrPtGeobearing"] <- bearing(ctrPt, valNamelonglat, a=6378137, f=1/298.257223563)
+# }
+#   rm(valNamelat,valNamelong,valNamelonglat,row)
   
   # THIS NEXT PART SHOULD BE A FUNCTION TOO
   
