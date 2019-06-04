@@ -127,22 +127,24 @@ cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and",
 
 ## 03: Calculate all great circle distances and bearings to center point
 
-* __NB:__ half of circumference of earth is ~20,000 km, which might be half of the max dist we should allow
-    + example data max is 7,241 km
-
 ```{r}
 # create a column in df, fill with km distances
   df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")  
   maxdist <- max(df2$distance) # max great circle distance
   
   print( # print out both the longest axial and great circle distances
-    paste0("The longest great circle distance between your center point, ",
-           df2$valName[df2$ctrBin == TRUE], ", and farthest point, ",
+    paste0("The great circle distance between your center point, ",
+           ctrPtName, ", and farthest point, ",
            df2$valName[df2$distance == max(df2$distance)], ", is ",
-           round(max(df2$distance), 0), " km.")
+           round(maxdist, 0), " km.")
     )
+  if(maxdist > 20000){
+    print("Your maximum distance is more than half of the Earth's circumference; things might get a little squirrely!")
+    } else {
+    print("Your maximum distance is less than half of the Earth's circumference! Nice!")
+    }
   
-  df2 <- df2 %>% mutate(ctrPtGeobearing = bearing(ctrPt, cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center point
+  df2 <- df2 %>% mutate(ctrPtGeobearing = bearing(ctrPt, cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center 
 
   # THIS NEXT PART SHOULD BE A FUNCTION TOO
   
