@@ -5,12 +5,7 @@ date: "5/30/2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## 00: R Setup
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -26,6 +21,7 @@ library(akima) # for irregular grid
 library(reshape2) # for contor/grid
 library(contoureR) # for contours w/o grid
 library(deldir) # CHECK: trying for TIN generation, see sec. 11
+library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 
 
 ```
@@ -413,6 +409,17 @@ plot10B
 
 # 11a contour test!
 ```{r}
+#LAWN test (wrapper for turfjs, which we should loot at some day)
+# points from scratch
+Lcoords <- cbind(X = df2$lagrangedistcircX, Y = df2$lagrangedistcircY)
+sp <- SpatialPoints(Lcoords)
+
+lawnPts <- c(df2$lagrangedistcircXdf2$lagrangedistcircY)
+lawn_tin()
+
+
+
+# HUBRIS
 getContourLines(df2$lagrangedistcircX, df2$lagrangedistcircY, df2$valTrans, nlevels=5, criticalRatio = 5)
 contoureR::contourLinesR(x = df2$lagrangedistcircX, y = df2$lagrangedistcircY, z = df2$valTrans, nlevels = 10)
 # WHAT DOES THIS ERROR MEAN!?
