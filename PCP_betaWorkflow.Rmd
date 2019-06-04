@@ -112,17 +112,18 @@ df2 <- select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
 
 ```
 
-## 02: Plot test
+## 02: Plot Test
 
 ```{r}
 
-# test plot
+# Test plot
 plot(df2$lon, df2$lat)
 
-# store and print center point
+# Store and print center point
 ctrPtName <- df2$valName[df2$ctrBin == TRUE]
 ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
 cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
+
 ```
 
 ## 03: Calculate all great circle distances and bearings to center point
@@ -166,7 +167,7 @@ for (row in 1:nrow(df2)) # convert from geographic bearings to polar coordinates
 ```
 
 ## 04: Initial plot
-* GGplot of the lat and long with low-res world background (WHERE IS THE BACKGROUND?)
+* GGplot of the lat and long with low-res world background (NOTE WHERE IS THE BACKGROUND?)
 
 ```{r}
 # first plot with ctrPt and data visualized, still using lat/long
@@ -181,9 +182,8 @@ plot05
 
 ```  
 
-## 05: Plot 2 - val center connectivity
-* Plot connectivity THIS IS NOT BEING PLOTTED HERE YET
-  
+## 05: Transform data values for effective visualization later
+
 ```{r} 
 #temp ***
 df2$valTrans <- (df2$val / 500) + 1 # manual one I did for India data to see what we're looking for
@@ -203,6 +203,12 @@ print(median(df2$val, na.rm = T)) # find median value (that could be radius 1 + 
 # *** NEED DATA DRIVEN TRANSFORMATION, not best guess from old test data
 # df2$valTrans <- (df2$val * 1) + .5 # MANUAL FOR AIRPORT DATA
 
+```  
+
+## 06: Plot Great Circle Distances
+
+```{r} 
+
 # Run polar to cartesian conversion on x and y axes
 df2 <- df2 %>% mutate(circdistancex =  (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[1]]))
 df2 <- df2 %>% mutate(circdistancey = (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[2]]))
@@ -210,19 +216,16 @@ df2 <- df2 %>% mutate(circdistancey = (useful::pol2cart(distance,ctrPtMathbearin
 # Combine x and y into a matrix, add as a column, remove x and y columns
 df2$circcoords <- cbind(df2$circdistancex,df2$circdistancey)
 df2 <- select(df2,-starts_with("circdistance"))
-class(df2$circcoords)
 
 # Lets make some circles starting at the center point going to maxdist
 circles <- data.frame(
   x0 = 0,
   y0 = 0,
-  r = seq(0, maxdist,length.out = 10)
+  r = seq(0, maxdist,length.out = 11)
 )
+circles <- circles[-1,] # remove zero-radius circle to help with log transformation
 
 # Use coord_fixed to ensure true circularity
-ggplot() +
-  geom_circle(aes(x0 = x0, y0 = y0, r = r), colour = "orange", data = circles, show.legend = NA, inherit.aes = FALSE) +
-  coord_fixed()
 
 plot06 <- ggplot(df2, aes(
                 df2$circcoords[,1], 
@@ -243,33 +246,28 @@ plot06
 
 ```  
 
-## 06: Plot on Log Scale
+## 07: Plot on Log Scale
 An option we can give our users later
+
 ```{r} 
-# replot on log scale
+# Replot coordinates on log distance scale
+df2 <- df2 %>% mutate(
+  logdistancex =  (useful::pol2cart(log(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+  logdistancey = (useful::pol2cart(log(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
+  )
 
-df2$distancelog <- log(df2$distance)
+# Combine x and y into a matrix, add as a column, remove x and y columns
+df2$logcoords <- cbind(df2$logdistancex,df2$logdistancey)
+df2 <- select(df2,-starts_with("logdistance"))
 
-for (row in 1:nrow(df2)){
-  df2[row,"distancelogcircx"] <- (useful::pol2cart(df2$distancelog[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1]
-  df2[row,"distancelogcircy"] <- (useful::pol2cart(df2$distancelog[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2]
-}
-
-logcircles <- data.frame()
-
-for (row in 1:nrow(circles)){
-  logcircles[row,"r"] <- log(circles[row,"r"])
-  logcircles[row,"x0"] <- circles[row,"x0"]
-  logcircles[row,"y0"] <- circles[row,"y0"]
-}
-rm(row)
+# Plot it
 
 plot07 <- ggplot(df2, aes(
-                df2$distancelogcircx, 
-                df2$distancelogcircy, 
+                df2$logcoords[,1], 
+                df2$logcoords[,2], 
                 color = df2$distance)) + 
-  geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                      colour = "orange", data = logcircles, 
+  geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
+                      colour = "orange", data = circles, 
                       show.legend = NA, inherit.aes = FALSE) +
   geom_point(stroke = 1, size = df2$valTrans) + 
   geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
@@ -281,21 +279,23 @@ plot07
 
 ```  
 
-## 07 Plot on Square Root Scale
+## 08 Plot on Square Root Scale
 
 ```{r} 
-df2$distancesqrt <- sqrt(df2$distance)
 
-## *** GENERALIZE pol2cart function so can run on X rows and don't have to re-deploy every time 
-for (row in 1:nrow(df2)){ 
-  df2[row,"sqrtcircX"] <- (useful::pol2cart(df2$distancesqrt[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1]
-  df2[row,"sqrtcircY"] <- (useful::pol2cart(df2$distancesqrt[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2]
-}
-rm(row)
+# Replot coordinates on square root distance scale
+df2 <- df2 %>% mutate(
+  sqrtdistancex =  (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+  sqrtdistancey = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
+  )
+
+# Combine x and y into a matrix, add as a column, remove x and y columns
+df2$sqrtcoords <- cbind(df2$sqrtdistancex,df2$sqrtdistancey)
+df2 <- select(df2,-starts_with("sqrtdistance"))
 
 plot08A <- ggplot(df2, aes( # plot with scale circles
-                df2$sqrtcircX, 
-                df2$sqrtcircY, 
+                df2$sqrtcoords[,1], 
+                df2$sqrtcoords[,2], 
                 color = df2$distance)) +  
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = sqrt(circles), 
@@ -310,8 +310,8 @@ plot08A <- ggplot(df2, aes( # plot with scale circles
 plot08A
 
 plot08B <- ggplot(df2, aes( # plot without circles
-                df2$sqrtcircX, 
-                df2$sqrtcircY, 
+                df2$sqrtcoords[,1], 
+                df2$sqrtcoords[,2], 
                 color = df2$distance)) + 
           geom_point(stroke = 1, size = df2$valTrans) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
@@ -324,9 +324,8 @@ plot08B
 
 ```
 
-
-## 08: Custom Control Points
-* Define a decay function using data-defined or user-specified control points
+## 09: Come up with Custom Control Points
+* Define a distance decay function using data-defined or user-specified control points
 
 ```{r}
 # polynom::poly
@@ -358,7 +357,7 @@ lagrangecircles <- lagrange_predictstep(circles) # this projects the circles
 
 ```
 
-## 9: Plot with Custom Control Points
+## 10: Plot with Custom Control Points
 
 ```{r}
 
@@ -406,6 +405,7 @@ plot10B
 ```
 
 # 11a contour test!
+
 ```{r}
 #LAWN test (wrapper for turfjs, which we should loot at some day)
 # points from scratch
