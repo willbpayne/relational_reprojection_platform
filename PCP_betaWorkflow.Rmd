@@ -361,19 +361,23 @@ lagrangecircles <- lagrange_predictstep(circles) # this projects the circles
 
 ```{r}
 
-for (row in 1:nrow(df2)){ # calculate new coordinates using lagrange distances
-  df2[row,"lagrangedistcircX"] <- (pol2cart(df2$lagrangedistcircstep[row], df2$ctrPtMathbearing[row], degrees = TRUE))[1] # returns x coordinate only
-  df2[row,"lagrangedistcircY"] <- (pol2cart(df2$lagrangedistcircstep[row], df2$ctrPtMathbearing[row], degrees = TRUE))[2] # returns y coordinate only
-}
-rm(row)
+# Replot coordinates on custom distance scale using piecewise function
+df2 <- df2 %>% mutate(
+  customdistancex =  (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+  customdistancey = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
+  )
+
+# Combine x and y into a matrix, add as a column, remove x and y columns
+df2$customcoords <- cbind(df2$customdistancex,df2$customdistancey)
+df2 <- select(df2,-starts_with("customdistance"))
 
 # WE SHOULD REALLY SEE ABOUT MAKING A SEPARATE CODE SNIPPET THAT HANDLES ALL OF THE AESTHETICS AT ONCE AND PLUG IN EVERYWHERE
 
 # NEED TO STREAMLINE PLOT NAMES TOO
 
 plot10A <- ggplot(df2, aes( # plot with maxdist/10 circles
-                lagrangedistcircX, 
-                lagrangedistcircY, 
+                customcoords[,1], 
+                customcoords[,2], 
                 color = df2$distance)) +  
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "orange", data = lagrangecircles, 
@@ -389,8 +393,8 @@ plot10A <- ggplot(df2, aes( # plot with maxdist/10 circles
 plot10A
 
 plot10B <- ggplot(df2, aes( # plot without circles, zoomed in on data (do we need x and y lims again to do this programmatically?)
-                lagrangedistcircX, 
-                lagrangedistcircY, 
+                customcoords[,1], 
+                customcoords[,2], 
                 color = df2$distance)) + 
           geom_point(stroke = 1, size = df2$valTrans) + 
           geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
