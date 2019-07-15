@@ -23,6 +23,7 @@ library(contoureR) # for contours w/o grid
 library(deldir) # CHECK: trying for TIN generation, see sec. 11
 library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 
+
 # FUNCTIONS WE'RE USING
 source("PCP_functions/convertToPolar.R")
 
@@ -113,7 +114,7 @@ for (col in 1:ncol(df)) {
   }
 }
 
-df2 <- select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
+df2 <- dplyr::select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
 
 ```
 
@@ -166,7 +167,7 @@ for (row in 1:nrow(df2)) # convert from geographic bearings to polar coordinates
   df2$ctrPtMathbearing[row] <- 360 - (df2$ctrPtGeobearing[row] - 90)}
   rm(row)
 
-  df2 <- select(df2,-starts_with("ctrPtGeo"))
+  df2 <- dplyr::select(df2,-starts_with("ctrPtGeo"))
   # later we use the ctrPtMathbearing and the transformed distances to get back to cartesian coordinates
 
 ```
@@ -191,7 +192,7 @@ plot05
 
 ```{r} 
 #temp ***
-df2$valTrans <- (df2$val / 500) + 1 # manual one I did for India data to see what we're looking for
+df2$valTrans <- (df2$val / 800)^1.5 # manual one I did for NH data to see what we're looking for
 
 hist(df2$val, breaks = 20) # just for giggles
 hist(sqrt(df2$val), breaks = 20)
@@ -220,7 +221,7 @@ df2 <- df2 %>% mutate(circdistancey = (useful::pol2cart(distance,ctrPtMathbearin
 
 # Combine x and y into a matrix, add as a column, remove x and y columns
 df2$circcoords <- cbind(df2$circdistancex,df2$circdistancey)
-df2 <- select(df2,-starts_with("circdistance"))
+df2 <- dplyr::select(df2,-starts_with("circdistance"))
 
 # Lets make some circles starting at the center point going to maxdist
 circles <- data.frame(
@@ -314,22 +315,39 @@ plot07A
 plot07B <- ggplot(df2, aes(
                 df2$logcoords[,1], 
                 df2$logcoords[,2], 
-                color = df2$distance)) + 
+                color = df2$val),
+                arrange(df2, desc(val))) + 
   geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
-                      colour = "#eeeeee", data = circles, 
+                      colour = "grey65", data = circles, 
                       show.legend = NA, inherit.aes = FALSE) +
   geom_point(stroke = 1, size = df2$valTrans) + 
   geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+  # ### begin simulated drop shadow
+  #           geom_text(data = df2,
+  #                   aes(df2$logcoords[,1], 
+  #               df2$logcoords[,2],
+  #                       label= df2$valName),
+  #                   size = 2.1,
+  #                   check_overlap = TRUE,
+  #                   color = "white") +
+  #           geom_text(data = df2,
+  #                   aes(df2$logcoords[,1], 
+  #               df2$logcoords[,2],
+  #                       label= df2$valName),
+  #                   size = 2.3,
+  #                   check_overlap = TRUE,
+  #                   color = "white") +
+  # ### end simulated drop shadow
   geom_text(data = df2,
                     aes(df2$logcoords[,1],
                         df2$logcoords[,2],
                         label= df2$valName),
-                    size = 1.8,
+                    size = 3,
                     check_overlap = TRUE,
-                    color = "Black") +
-  coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
-  theme(panel.background = element_blank(), axis.ticks = element_blank(),
-                axis.text.x = element_blank(),axis.text.y = element_blank())
+                    color = "White") +
+  coord_fixed() + labs(color = paste0("Visits to ",ctrPtName), x = NULL, y = NULL) +
+  theme(panel.background = element_rect(fill = "grey50", linetype = "blank"), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank(), panel.grid = element_blank())
 
 plot07B
 
