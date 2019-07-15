@@ -89,5 +89,10 @@ trampolineCities <- trampolineCities %>%
 
 names(trampolineCities)[names(trampolineCities) == 'x'] <- 'visits'
 
+
+#SAVE AS CSVs
+write_csv(trampolineZips, "trampZips.csv")
+write_csv(trampolineCities, "trampCities.csv")
+
 ```
 

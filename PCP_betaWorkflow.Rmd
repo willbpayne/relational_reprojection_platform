@@ -33,10 +33,13 @@ source("PCP_functions/convertToPolar.R")
 
 ```{r}
 # TEST DATA: only one at a time
- dataFile <- "testData/IND_remittances.csv" # remittances to India in USD in 201X
+# dataFile <- "testData/IND_remittances.csv" # remittances to India in USD in 201X
+ dataFile <- "testData/trampCities.csv" # trampoline city data
+# dataFile <- "testData/trampZips.csv" # trampoline zipcode data
 # dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
 # dataFile <- "testData/routes_sm.csv" # flights to DTW with ORD and MSP options
 # dataFile <- "testData/china1911_XJofficials.csv" # officials from Xinjiang in 1911
+
 
 df <- read.csv(file = dataFile)
 
