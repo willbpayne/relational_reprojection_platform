@@ -8,7 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-dataFile <- "trampoliners_merrimackNH.csv" # remittances to India in USD in 201X
+dataFile <- "trampoliners_merrimackNH.csv" # trampoliner attendance
 
 trampoliners <- read.csv(file = dataFile)
 
