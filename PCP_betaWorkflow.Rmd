@@ -192,7 +192,7 @@ hist(df2$val, breaks = 20) # just for giggles
 hist(sqrt(df2$val), breaks = 20)
 hist(log(df2$val), breaks = 20)
 
-df2$val[df2$val == 0] <- NA # turn zeros to NAs for our purposes
+#df2$val[df2$val == 0] <- NA # turn zeros to NAs for our purposes
 
 print(min(df2$val, na.rm = T)) # find lowest non-zero value (that will be radius 1)
 print(max(df2$val, na.rm = T)) # find highest non-zero value (that will be radius X)
@@ -201,7 +201,7 @@ print(median(df2$val, na.rm = T)) # find median value (that could be radius 1 + 
 #min(my_data_frame[my_data_frame$my_column_number>0,my_column_number])
 
 # *** NEED DATA DRIVEN TRANSFORMATION, not best guess from old test data
-# df2$valTrans <- (df2$val * 1) + .5 # MANUAL FOR AIRPORT DATA
+#df2$valTrans <- (df2$val * 1) + .5 # MANUAL FOR AIRPORT DATA
 
 ```  
 
