@@ -48,6 +48,7 @@ trampolineZips <- inner_join(zipcode, trampolineZips, by = "zip")
 trampolineZips <- trampolineZips %>%
   add_column(isCTR = FALSE) %>%
   add_row(latitude=42.848935, longitude = -71.494521, city = "Merrimack Altitude", isCTR = TRUE)
+names(trampolineZips)[names(trampolineZips) == 'x'] <- 'visits'
 
 ## aggregate to city
 
@@ -82,9 +83,11 @@ nominatim_osm <- function(address = NULL)
  }
 
 
+trampolineCities <- trampolineCities %>%
+  add_column(isCTR = FALSE) %>%
+  add_row(lat=42.848935, lon = -71.494521, cityState = "Merrimack Altitude", isCTR = TRUE)
 
-trampolineCities$latlon = geocode(trampolineCities$cityState, output = "latlon")
-
+names(trampolineCities)[names(trampolineCities) == 'x'] <- 'visits'
 
 ```
 
