@@ -38,15 +38,18 @@ trampolinersCleaner <- filter(trampolinersClean, trampolinersClean$Number.Of.Vis
 trampolineZips <- inner_join(zipcode, trampolinersCleaner, by = c("zip" = "Primary.Address.Zip"))
   # merge(zipcode, trampolinersClean, by.x = zipcode$zip, by.y = trampolinersClean$Primary.Address.Zip)
 
-trampolineZips <- trampolineZips %>%
-  add_column(isCTR = FALSE) %>%
-  add_row(latitude=42.848935, longitude = -71.494521, city = "Merrimack", isCTR = TRUE)
-
 trampolineZips$cityState = paste(sep="", trampolineZips$city,", ", trampolineZips$state)
 
 plot(trampolineZips$longitude, trampolineZips$latitude)
 
-## aggregate
+trampolineZips <- aggregate(trampolineZips$Number.Of.Visits, by=list(zip=trampolineZips$zip), FUN=sum)
+trampolineZips <- inner_join(zipcode, trampolineZips, by = "zip")
+
+trampolineZips <- trampolineZips %>%
+  add_column(isCTR = FALSE) %>%
+  add_row(latitude=42.848935, longitude = -71.494521, city = "Merrimack Altitude", isCTR = TRUE)
+
+## aggregate to city
 
 trampolineCities <- aggregate(trampolineZips$Number.Of.Visits, by=list(cityState=trampolineZips$cityState), FUN=sum)
                               
