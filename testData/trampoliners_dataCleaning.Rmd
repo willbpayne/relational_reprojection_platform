@@ -36,23 +36,20 @@ plot(aggtrampolinersClean$Category, aggtrampolinersClean$x)
 trampolinersCleaner <- filter(trampolinersClean, trampolinersClean$Number.Of.Visits>1)
 
 trampolineZips <- inner_join(zipcode, trampolinersCleaner, by = c("zip" = "Primary.Address.Zip"))
-  # merge(zipcode, trampolinersClean, by.x = zipcode$zip, by.y = trampolinersClean$Primary.Address.Zip)
-
-trampolineZips$cityState = paste(sep="", trampolineZips$city,", ", trampolineZips$state)
+trampolineZips <- filter(trampolineZips, !is.na(trampolineZips$longitude))
 
 plot(trampolineZips$longitude, trampolineZips$latitude)
 
 trampolineZips <- aggregate(trampolineZips$Number.Of.Visits, by=list(zip=trampolineZips$zip), FUN=sum)
 trampolineZips <- inner_join(zipcode, trampolineZips, by = "zip")
 
-trampolineZips <- trampolineZips %>%
-  add_column(isCTR = FALSE) %>%
-  add_row(latitude=42.848935, longitude = -71.494521, city = "Merrimack Altitude", isCTR = TRUE)
 names(trampolineZips)[names(trampolineZips) == 'x'] <- 'visits'
+
+trampolineZips$cityState = paste(sep="", trampolineZips$city,", ", trampolineZips$state)
 
 ## aggregate to city
 
-trampolineCities <- aggregate(trampolineZips$Number.Of.Visits, by=list(cityState=trampolineZips$cityState), FUN=sum)
+trampolineCities <- aggregate(trampolineZips$visits, by=list(cityState=trampolineZips$cityState), FUN=sum)
                               
 
 ## geocode
@@ -77,11 +74,14 @@ nominatim_osm <- function(address = NULL)
 
  for (row in 1:nrow(trampolineCities)){
    geocode <- nominatim_osm(trampolineCities[row,"cityState"])
-   trampolineCities[row, "lat"] <- geocode[1]
-   trampolineCities[row, "lon"] <- geocode[2]
+   trampolineCities[row, "lat"] <- geocode[2]
+   trampolineCities[row, "lon"] <- geocode[1]
    print(trampolineCities[row, "cityState"])
  }
 
+trampolineZips <- trampolineZips %>%
+  add_column(isCTR = FALSE) %>%
+  add_row(latitude=42.848935, longitude = -71.494521, city = "Merrimack Altitude", isCTR = TRUE)
 
 trampolineCities <- trampolineCities %>%
   add_column(isCTR = FALSE) %>%

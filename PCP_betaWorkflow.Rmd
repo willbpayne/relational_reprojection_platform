@@ -47,8 +47,8 @@ summary(df)
 class(df) # test to make sure it's a data frame
 
 colListOrig <- colnames(df) # store column names for later
-latNames <- list("lat","Lat","LAT", "latitude", "y","Y") # add as they come up
-lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "x","X")
+latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y") # add as they come up
+lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X")
 
 df2 <- df # cloning df for non-destructive editing
 
@@ -281,6 +281,133 @@ plot07 <- ggplot(df2, aes(
                 axis.text.x = element_blank(),axis.text.y = element_blank())
 
 plot07
+
+
+plot07A <- ggplot(df2, aes(
+                df2$logcoords[,1], 
+                df2$logcoords[,2]),
+                 color = df2$distance) +  
+  geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
+                      colour = "#eeeeee", data = circles, 
+                      show.legend = NA, inherit.aes = FALSE) +
+  geom_point(stroke = 1, size = df2$valTrans, color = df2$distance) + 
+  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+  geom_text(data = df2,
+              aes(
+                  df2$logcoords[,1], 
+                df2$logcoords[,2], 
+                color = "red",
+                label = df2$valName),
+               size = 2.5,
+              check_overlap = TRUE
+              ) +
+  coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
+  theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
+
+
+
+plot07A
+
+
+
+plot07B <- ggplot(df2, aes(
+                df2$logcoords[,1], 
+                df2$logcoords[,2], 
+                color = df2$distance)) + 
+  geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
+                      colour = "#eeeeee", data = circles, 
+                      show.legend = NA, inherit.aes = FALSE) +
+  geom_point(stroke = 1, size = df2$valTrans) + 
+  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+  geom_text(data = df2,
+                    aes(df2$logcoords[,1],
+                        df2$logcoords[,2],
+                        label= df2$valName),
+                    size = 1.8,
+                    check_overlap = TRUE,
+                    color = "Black") +
+  coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
+  theme(panel.background = element_blank(), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank())
+
+plot07B
+
+
+
+ geom_text(data = routesSub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= routesSub$airport,
+                        color = routesSub$DTWconnectivity),
+                    size = 1.5,
+                    check_overlap = TRUE) +
+
+
+
+# plot11C <- ggplot() +
+#           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+#                       colour = "#eeeeee", 
+#                       data = lagrange_predict(circles),
+#                       size = 0.5,
+#                       show.legend = NA, 
+#                       inherit.aes = FALSE) +        
+#           geom_contour(data = flts_grid_df, 
+#                  aes(x = ldcX, 
+#                      y = ldcY, 
+#                      z = flts_grid_df$flights,
+#                      color = stat(level)),
+#                  bins = 6,  
+#                  size = 0.5) +
+#           scale_colour_gradient(low = "cornflowerblue", high = "red") +
+#   ### begin simulated drop shadow
+#             geom_text(data = routesSub,
+#                     aes(lagrangedistcircX,
+#                         lagrangedistcircY,
+#                         label= routesSub$airport),
+#                     size = 1.8,
+#                     check_overlap = TRUE,
+#                     color = "white") +
+#             geom_text(data = routesSub,
+#                     aes(lagrangedistcircX,
+#                         lagrangedistcircY,
+#                         label= routesSub$airport),
+#                     size = 2,
+#                     check_overlap = TRUE,
+#                     color = "white") +
+#   ### end simulated drop shadow
+#             geom_text(data = routesSub,
+#                     aes(lagrangedistcircX,
+#                         lagrangedistcircY,
+#                         label= routesSub$airport,
+#                         color = routesSub$DTWconnectivity),
+#                     size = 1.5,
+#                     check_overlap = TRUE) +
+#             geom_point(data = (as.data.frame(ctrPt)), 
+#                      aes(ctrPt[1], ctrPt[2]), 
+#                      color = "orange", 
+#                      shape = 8) +
+#              geom_text(data = (as.data.frame(ctrPt)), 
+#                    geom = "text", 
+#                    x = ctrPt[1], y = ctrPt[2], 
+#                    label = routes$airport[routes$isDTW == TRUE],
+#                    color = "orange",
+#                    size = 2,
+#                    vjust = 1.25,
+#                    hjust = -0.25) +
+#           theme(panel.background = element_blank(), 
+#                 axis.ticks = element_blank(), 
+#                 axis.text.x = element_blank(),
+#                 axis.text.y = element_blank(),
+#                 axis.title = element_blank(),
+#                 legend.position = 'none')
+#          # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+# 
+# plot11C
+
+
+
+
 
 ```  
 
