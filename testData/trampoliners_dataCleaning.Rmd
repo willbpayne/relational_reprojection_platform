@@ -9,6 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(zipcode)
+library(tidyverse)
+library(ggmap)
+library(jsonlite)
 
 dataFile <- "trampoliners_merrimackNH.csv" # trampoliner attendance
 
@@ -35,7 +38,50 @@ trampolinersCleaner <- filter(trampolinersClean, trampolinersClean$Number.Of.Vis
 trampolineZips <- inner_join(zipcode, trampolinersCleaner, by = c("zip" = "Primary.Address.Zip"))
   # merge(zipcode, trampolinersClean, by.x = zipcode$zip, by.y = trampolinersClean$Primary.Address.Zip)
 
+trampolineZips <- trampolineZips %>%
+  add_column(isCTR = FALSE) %>%
+  add_row(latitude=42.848935, longitude = -71.494521, city = "Merrimack", isCTR = TRUE)
+
+trampolineZips$cityState = paste(sep="", trampolineZips$city,", ", trampolineZips$state)
+
 plot(trampolineZips$longitude, trampolineZips$latitude)
+
+## aggregate
+
+trampolineCities <- aggregate(trampolineZips$Number.Of.Visits, by=list(cityState=trampolineZips$cityState), FUN=sum)
+                              
+
+## geocode
+
+## geocoding function using OSM Nominatim API
+## details: http://wiki.openstreetmap.org/wiki/Nominatim
+## made by: D.Kisler 
+
+nominatim_osm <- function(address = NULL)
+{
+  if(suppressWarnings(is.null(address)))
+    return(data.frame())
+  tryCatch(
+    d <- jsonlite::fromJSON( 
+      gsub('\\@addr\\@', gsub('\\s+', '\\%20', address), 
+           'http://nominatim.openstreetmap.org/search/@addr@?format=json&addressdetails=0&limit=1')
+    ), error = function(c) return(data.frame())
+  )
+  if(length(d) == 0) return(data.frame())
+  return(data.frame(lon = as.numeric(d$lon), lat = as.numeric(d$lat)))
+}
+
+ for (row in 1:nrow(trampolineCities)){
+   geocode <- nominatim_osm(trampolineCities[row,"cityState"])
+   trampolineCities[row, "lat"] <- geocode[1]
+   trampolineCities[row, "lon"] <- geocode[2]
+   print(trampolineCities[row, "cityState"])
+ }
+
+
+
+trampolineCities$latlon = geocode(trampolineCities$cityState, output = "latlon")
+
 
 ```
 
