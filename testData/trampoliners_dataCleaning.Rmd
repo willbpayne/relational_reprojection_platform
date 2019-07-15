@@ -27,11 +27,15 @@ plot(aggtrampolinersClean$Category, aggtrampolinersClean$x)
 
 # Zipcode join
 ```{r}
+# clean trampolines
+  # remove 5+ digit zips (CAN fine bc innerjoin)
+  # remove single visit
+trampolinersCleaner <- filter(trampolinersClean, trampolinersClean$Number.Of.Visits>1)
 
-trampolineZips <- inner_join(zipcode, trampolinersClean, by = c("zip" = "Primary.Address.Zip"))
+trampolineZips <- inner_join(zipcode, trampolinersCleaner, by = c("zip" = "Primary.Address.Zip"))
   # merge(zipcode, trampolinersClean, by.x = zipcode$zip, by.y = trampolinersClean$Primary.Address.Zip)
 
-trampolineZips
+plot(trampolineZips$longitude, trampolineZips$latitude)
 
 ```
 
