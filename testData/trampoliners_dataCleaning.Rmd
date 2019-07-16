@@ -14,6 +14,7 @@ library(ggmap)
 library(jsonlite)
 
 dataFile <- "trampoliners_merrimackNH.csv" # trampoliner attendance
+data(zipcode) # call this to make things easier below
 
 trampoliners <- read.csv(file = dataFile)
 
