@@ -579,16 +579,18 @@ deldir()
 
 df3 <- NULL
 df2Sub <- df2[!(df2$ctrBin == TRUE), ]
+  #^ for removing nulls
 df3 <- with(df2Sub, akima::interp(x = df2Sub$customcoords[,1], y = df2Sub$customcoords[,2], z = val))
+
 
 # Base R version
 plot11A <- filled.contour(x = df3$x,
                y = df3$y,
                z = df3$z,
                color.palette = colorRampPalette(c("white", "blue")),
-               main = "value") +
-               xlim(-2000,2000) + 
-               ylim(-2000,2000)
+               main = "value") #+
+             #  xlim(-2000,2000) + 
+              # ylim(-2000,2000)
 plot11A
 
 #########
@@ -619,11 +621,10 @@ plot11B
 
 # Integrated plots, incl sec 10
 
-### NB: Broken. Need to replace lagrange parameters
 plot11C <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "#eeeeee", 
-                      data = lagrange_predict(circles),
+                      data = lagrangecircles,
                       size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
@@ -637,25 +638,25 @@ plot11C <- ggplot() +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
   ### begin simulated drop shadow
             geom_text(data = df2Sub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
+                    aes(customcoords[,1],
+                         customcoords[,2],
                         label= df2Sub$valName),
                     size = 1.8,
                     check_overlap = TRUE,
                     color = "white") +
             geom_text(data = df2Sub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
+                    aes(customcoords[,1],
+                         customcoords[,2],
                         label= df2Sub$valName),
                     size = 2,
                     check_overlap = TRUE,
                     color = "white") +
   ### end simulated drop shadow
             geom_text(data = df2Sub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
+                    aes(customcoords[,1],
+                         customcoords[,2],
                         label= df2Sub$valName,
-                        color = df2Sub$DTWconnectivity),
+                        color = df2Sub$valTrans),
                     size = 1.5,
                     check_overlap = TRUE) +
             geom_point(data = (as.data.frame(ctrPt)), 
@@ -684,7 +685,7 @@ plot11C
 plot11D <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "#eeeeee", 
-                      data = lagrange_predict(circles),
+                      data = lagrangecircles,
                       size = 0.5,
                       show.legend = NA, 
                       inherit.aes = FALSE) +        
@@ -697,8 +698,8 @@ plot11D <- ggplot() +
                  size = 0.5) +
           scale_colour_gradient(low = "cornflowerblue", high = "red") +
           geom_point(data = df2Sub,
-                aes(lagrangedistcircX,
-                    lagrangedistcircY,
+                aes(customcoords[,1],
+                    customcoords[,2],
                     label= df2Sub$valName,
                     alpha = -(df2Sub$lagrangedistcirc)),
                 size = .3,
