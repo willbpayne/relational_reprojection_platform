@@ -336,16 +336,6 @@ plot07B
 
 
 
- geom_text(data = routesSub,
-                    aes(lagrangedistcircX,
-                        lagrangedistcircY,
-                        label= routesSub$airport,
-                        color = routesSub$DTWconnectivity),
-                    size = 1.5,
-                    check_overlap = TRUE) +
-
-
-
 # plot11C <- ggplot() +
 #           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
 #                       colour = "#eeeeee", 
@@ -501,12 +491,13 @@ df2 <- df2 %>% mutate(
   )
 
 # Combine x and y into a matrix, add as a column, remove x and y columns
+# NB: THIS CURRENTLY DOESN"T WORK ***
 df2$customcoords <- cbind(df2$customdistancex,df2$customdistancey)
 df2 <- select(df2,-starts_with("customdistance"))
 
-# WE SHOULD REALLY SEE ABOUT MAKING A SEPARATE CODE SNIPPET THAT HANDLES ALL OF THE AESTHETICS AT ONCE AND PLUG IN EVERYWHERE
+# NB: WE SHOULD REALLY SEE ABOUT MAKING A SEPARATE CODE SNIPPET THAT HANDLES ALL OF THE AESTHETICS AT ONCE AND PLUG IN EVERYWHERE
 
-# NEED TO STREAMLINE PLOT NAMES TOO
+# NB: NEED TO STREAMLINE PLOT NAMES TOO
 
 plot10A <- ggplot(df2, aes( # plot with maxdist/10 circles
                 customcoords[,1], 
@@ -579,4 +570,160 @@ deldir()
                    #        min(df2$lagrangedistcircY), 
                    #        max(df2$lagrangedistcircY))#,
                    #z = df2$valTrans
+```
+
+
+# 11 Interpolation & Integrated plotting
+
+```{r}
+
+df3 <- NULL
+df3 <- with(df2, akima::interp(x = customdistancex, y = customdistancey, z = val))
+
+# Base R version
+plot11A <- filled.contour(x = df3$x,
+               y = df3$y,
+               z = df3$z,
+               color.palette = colorRampPalette(c("white", "blue")),
+               main = "value") +
+               xlim(-2000,2000) + 
+               ylim(-2000,2000)
+plot11A
+
+#########
+
+# ggplot version
+
+df3_grid_df <- melt(df3$z, na.rm = TRUE)
+names(df3_grid_df) <- c("x", "y", "flights")
+df3_grid_df$ldcX <- df3$x[df3_grid_df$x]
+df3_grid_df$ldcY <- df3$y[df3_grid_df$y]
+
+plot11B <- ggplot(data = df3_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = val)) +
+          geom_tile(aes(fill = val)) +
+          stat_contour(bins = 15, 
+                       color = "black", 
+                       size = 0.1) +
+          scale_fill_gradient(name = "val", 
+                              low = "yellow", 
+                              high = "red")
+
+plot11B
+
+############################################  
+############################################
+
+# Integrated plots, incl sec 10
+
+df2Sub <- df2[!(df2$ctrBin == TRUE), ]
+# holy moly this is a sloppy solution, but it will have to do for now
+
+plot11C <- ggplot() +
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "#eeeeee", 
+                      data = lagrange_predict(circles),
+                      size = 0.5,
+                      show.legend = NA, 
+                      inherit.aes = FALSE) +        
+          geom_contour(data = df3_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = df3_grid_df$flights,
+                     color = stat(level)),
+                 bins = 6,  
+                 size = 0.5) +
+          scale_colour_gradient(low = "cornflowerblue", high = "red") +
+  ### begin simulated drop shadow
+            geom_text(data = df2Sub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= df2Sub$valName),
+                    size = 1.8,
+                    check_overlap = TRUE,
+                    color = "white") +
+            geom_text(data = df2Sub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= df2Sub$valName),
+                    size = 2,
+                    check_overlap = TRUE,
+                    color = "white") +
+  ### end simulated drop shadow
+            geom_text(data = df2Sub,
+                    aes(lagrangedistcircX,
+                        lagrangedistcircY,
+                        label= df2Sub$valName,
+                        color = df2Sub$DTWconnectivity),
+                    size = 1.5,
+                    check_overlap = TRUE) +
+            geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(ctrPt[1], ctrPt[2]), 
+                     color = "orange", 
+                     shape = 8) +
+             geom_text(data = (as.data.frame(ctrPt)), 
+                   geom = "text", 
+                   x = ctrPt[1], y = ctrPt[2], 
+                   label = df2$valName[df2$ctrBin == TRUE],
+                   color = "orange",
+                   size = 2,
+                   vjust = 1.25,
+                   hjust = -0.25) +
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank(),
+                axis.title = element_blank(),
+                legend.position = 'none')
+         # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+
+plot11C
+
+
+plot11D <- ggplot() +
+          geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "#eeeeee", 
+                      data = lagrange_predict(circles),
+                      size = 0.5,
+                      show.legend = NA, 
+                      inherit.aes = FALSE) +        
+          geom_contour(data = df3_grid_df, 
+                 aes(x = ldcX, 
+                     y = ldcY, 
+                     z = df3_grid_df$flights,
+                     color = stat(level)),
+                 bins = 6,  
+                 size = 0.5) +
+          scale_colour_gradient(low = "cornflowerblue", high = "red") +
+          geom_point(data = df2Sub,
+                aes(lagrangedistcircX,
+                    lagrangedistcircY,
+                    label= df2Sub$valName,
+                    alpha = -(df2Sub$lagrangedistcirc)),
+                size = .3,
+                color="gray35") +
+          geom_point(data = (as.data.frame(ctrPt)), 
+                     aes(ctrPt[1], ctrPt[2]), 
+                     color = "orange", 
+                     shape = 8) +
+         geom_text(data = (as.data.frame(ctrPt)), 
+                   geom = "text", 
+                   x = ctrPt[1], y = ctrPt[2], 
+                   label = df2$valName[df2$ctrBin == TRUE],
+                   color = "orange",
+                   size = 2,
+                   vjust = 1.25,
+                   hjust = -0.25) +
+          theme(panel.background = element_blank(), 
+                axis.ticks = element_blank(), 
+                axis.text.x = element_blank(),
+                axis.text.y = element_blank(),
+                axis.title = element_blank(),
+                legend.position = 'none')
+         # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+
+plot11D
+
 ```
