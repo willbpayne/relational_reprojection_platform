@@ -264,7 +264,7 @@ df2 <- df2 %>% mutate(
 
 # Combine x and y into a matrix, add as a column, remove x and y columns
 df2$logcoords <- cbind(df2$logdistancex,df2$logdistancey)
-df2 <- select(df2,-starts_with("logdistance"))
+df2 <- dplyr::select(df2,-starts_with("logdistance"))
 
 # Plot it
 
@@ -284,44 +284,27 @@ plot07 <- ggplot(df2, aes(
 plot07
 
 
-plot07A <- ggplot(df2, aes(
-                df2$logcoords[,1], 
-                df2$logcoords[,2]),
-                 color = df2$distance) +  
-  geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
-                      colour = "#eeeeee", data = circles, 
-                      show.legend = NA, inherit.aes = FALSE) +
-  geom_point(stroke = 1, size = df2$valTrans, color = df2$distance) + 
-  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-  geom_text(data = df2,
-              aes(
-                  df2$logcoords[,1], 
-                df2$logcoords[,2], 
-                color = "red",
-                label = df2$valName),
-               size = 2.5,
-              check_overlap = TRUE
-              ) +
-  coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
-  theme(panel.background = element_blank(), axis.ticks = element_blank(),
-                axis.text.x = element_blank(),axis.text.y = element_blank())
+
+  
+
+df2 <- dplyr::arrange(df2, -val)
+df2$num <- ave(df2$val, FUN = seq_along)
 
 
 
-plot07A
 
-
-
-plot07B <- ggplot(df2, aes(
+plot07B <-  ggplot(df2 %>%
+                     arrange(desc(val)),
+                     aes(
                 df2$logcoords[,1], 
                 df2$logcoords[,2], 
-                color = df2$val),
-                arrange(df2, desc(val))) + 
+                color = df2$val,
+                order=df2$num)) + 
   geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
                       colour = "grey65", data = circles, 
                       show.legend = NA, inherit.aes = FALSE) +
   geom_point(stroke = 1, size = df2$valTrans) + 
-  geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+  # geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
   # ### begin simulated drop shadow
   #           geom_text(data = df2,
   #                   aes(df2$logcoords[,1], 
