@@ -578,7 +578,8 @@ deldir()
 ```{r}
 
 df3 <- NULL
-df3 <- with(df2, akima::interp(x = customdistancex, y = customdistancey, z = val))
+df2Sub <- df2[!(df2$ctrBin == TRUE), ]
+df3 <- with(df2Sub, akima::interp(x = df2Sub$customcoords[,1], y = df2Sub$customcoords[,2], z = val))
 
 # Base R version
 plot11A <- filled.contour(x = df3$x,
@@ -595,7 +596,7 @@ plot11A
 # ggplot version
 
 df3_grid_df <- melt(df3$z, na.rm = TRUE)
-names(df3_grid_df) <- c("x", "y", "flights")
+names(df3_grid_df) <- c("x", "y", "val")
 df3_grid_df$ldcX <- df3$x[df3_grid_df$x]
 df3_grid_df$ldcY <- df3$y[df3_grid_df$y]
 
@@ -618,9 +619,7 @@ plot11B
 
 # Integrated plots, incl sec 10
 
-df2Sub <- df2[!(df2$ctrBin == TRUE), ]
-# holy moly this is a sloppy solution, but it will have to do for now
-
+### NB: Broken. Need to replace lagrange parameters
 plot11C <- ggplot() +
           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
                       colour = "#eeeeee", 
@@ -631,7 +630,7 @@ plot11C <- ggplot() +
           geom_contour(data = df3_grid_df, 
                  aes(x = ldcX, 
                      y = ldcY, 
-                     z = df3_grid_df$flights,
+                     z = df3_grid_df$val,
                      color = stat(level)),
                  bins = 6,  
                  size = 0.5) +
@@ -677,7 +676,7 @@ plot11C <- ggplot() +
                 axis.text.y = element_blank(),
                 axis.title = element_blank(),
                 legend.position = 'none')
-         # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+         # scale_fill_gradient(name = "val", low = "yellow", high = "red")
 
 plot11C
 
@@ -692,7 +691,7 @@ plot11D <- ggplot() +
           geom_contour(data = df3_grid_df, 
                  aes(x = ldcX, 
                      y = ldcY, 
-                     z = df3_grid_df$flights,
+                     z = df3_grid_df$val,
                      color = stat(level)),
                  bins = 6,  
                  size = 0.5) +
@@ -722,7 +721,7 @@ plot11D <- ggplot() +
                 axis.text.y = element_blank(),
                 axis.title = element_blank(),
                 legend.position = 'none')
-         # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
+         # scale_fill_gradient(name = "val", low = "yellow", high = "red")
 
 plot11D
 
