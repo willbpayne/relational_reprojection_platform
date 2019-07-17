@@ -413,10 +413,18 @@ plot08C
 # Automated route (could also just have user specify neardist and fardist)
 hist(df2$distance)
 distancemedian <-median(df2$distance)
-geogdist <- c(0, .5 * distancemedian, ((distancemedian + maxdist)/2), maxdist) # let's say under 500 km is close, over 2000km is far
+geogdist <- c(0, distancemedian, ((distancemedian + distancemedian + maxdist)/3), maxdist) # let's say under 500 km is close, over 2000km is far
 neardist <- geogdist[2] # these two are the output of geogdist above
 fardist <- geogdist[3]
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+
+# Simpler Automated route (just median)
+hist(df2$distance)
+distancemedian <-median(df2$distance)
+geogdist <- c(0, distancemedian, maxdist) # let's say under 500 km is close, over 2000km is far
+neardist <- geogdist[2] # these two are the output of geogdist above
+fardist <- geogdist[3]
+chartdist <- c(0, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
 plot(geogdist, chartdist)
 
