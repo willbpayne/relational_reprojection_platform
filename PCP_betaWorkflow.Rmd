@@ -14,9 +14,14 @@ library(ggplot2)
 library(ggforce) # to plot circles
 library(dplyr)
 library(tidyverse)
+library(tools) #to learn file extension
+library(jsonlite) # for loading in json files
+# 
 library(geosphere) # where we get bearing
 library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
+
+# NB: to check later as we re-visit new contours
 library(akima) # for irregular grid
 library(reshape2) # for contor/grid
 library(contoureR) # for contours w/o grid
@@ -42,7 +47,27 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 # dataFile <- "testData/china1911_XJofficials.csv" # officials from Xinjiang in 1911
 
 
-df <- read.csv(file = dataFile)
+
+# Decide file type
+df_ext <- file_ext(dataFile)
+
+if(df_ext == "csv"){
+  df <- read.csv(file = dataFile)
+  print("hooray, a CSV!")
+} else {
+  if(df_ext == "json"){
+    df <- read_json(file = dataFile)
+    print(paste("this is a json, right?"))
+  } else {
+    if(df_ext == "geojson"){
+      print("this is a geojson! yeah!")
+    } else {
+      print("what kind of file even is this?")
+    }
+  }
+}
+   
+  
 
 summary(df)
 class(df) # test to make sure it's a data frame
