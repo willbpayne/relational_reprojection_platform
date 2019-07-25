@@ -593,13 +593,14 @@ deldir()
 
 ```{r}
 
-df3 <- 0
+df3 <- NULL
 df2Sub <- df2
   #^ for removing nulls
-df3 <- with(df2Sub, akima::interp(x = df2Sub$sqrtcoords[,1], y = df2Sub$sqrtcoords[,2], z = val, duplicate = "strip"))
+# df3 <- with(df2Sub, akima::interp(x = df2Sub$sqrtcoords[,1], y = df2Sub$sqrtcoords[,2], z = val, duplicate = "strip"))
+df3 <- with(df2Sub, interp(x = lon, y = lat, z = val, extrap = FALSE))
 
-
-# Base R version
+            
+            # Base R version
 plot11A <- filled.contour(x = df3$x,
                y = df3$y,
                z = df3$z,
