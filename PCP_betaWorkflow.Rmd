@@ -586,6 +586,13 @@ deldir()
                    #        min(df2$lagrangedistcircY), 
                    #        max(df2$lagrangedistcircY))#,
                    #z = df2$valTrans
+
+
+
+#LAWN Test 1million
+cntrlPts <- df2Sub$customcoords
+lawnTest <- lawn_idw(cntrlPts, 'val', 2, 1, units = "kilometers")
+#broken
 ```
 
 
@@ -594,15 +601,14 @@ deldir()
 ```{r}
 
 df3 <- NULL
-df2Sub <- df2
-  #^ for removing nulls
-max(df2Sub$val)
 
-test <- 
-  df2Sub %>% 
-  filter(is.na(val))
+max(df2$val)
 
-df3 <- with(df2Sub, akima::interp(x = df2Sub$sqrtcoords[,1], y = df2Sub$sqrtcoords[,2], z = val, duplicate = "strip"))
+df2Sub <- 
+  df2 %>% 
+  filter(!is.na(val))
+
+df3 <- with(df2Sub, akima::interp(x = df2Sub$lon, y = df2Sub$lat, z = val, duplicate = "strip"))
 
             
             # Base R version
@@ -623,15 +629,15 @@ plot11A
 
 df3_grid_df <- melt(df3$z, na.rm = TRUE)
 names(df3_grid_df) <- c("x", "y", "val")
-df3_grid_df$ldcX <- df3$x[df3_grid_df$x]
-df3_grid_df$ldcY <- df3$y[df3_grid_df$y]
+df3_grid_df$lon <- df3$x[df3_grid_df$x]
+df3_grid_df$lat <- df3$y[df3_grid_df$y]
 
 plot11B <- ggplot(data = df3_grid_df, 
-                 aes(x = ldcX, 
-                     y = ldcY, 
+                 aes(x = lon, 
+                     y = lat, 
                      z = val)) +
           geom_tile(aes(fill = val)) +
-          stat_contour(bins = 15, 
+          stat_contour(bins = 5, 
                        color = "black", 
                        size = 0.1) +
           scale_fill_gradient(name = "val", 
