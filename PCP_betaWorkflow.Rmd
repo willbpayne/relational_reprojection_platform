@@ -16,6 +16,7 @@ library(dplyr)
 library(tidyverse)
 library(tools) #to learn file extension
 library(jsonlite) # for loading in json files
+library(geojsonio) # for loading geojson
 # 
 library(geosphere) # where we get bearing
 library(gmt) # actually for geodist
@@ -40,12 +41,12 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 ```{r}
 # TEST DATA: only one at a time
 # dataFile <- "testData/IND_remittances.csv" # remittances to India in USD in 201X
- dataFile <- "testData/trampCities.csv" # trampoline city data
+# dataFile <- "testData/trampCities.csv" # trampoline city data
 # dataFile <- "testData/trampZips.csv" # trampoline zipcode data
 # dataFile <- "testData/routes_bare_sm.csv" # flights to DTW
 # dataFile <- "testData/routes_sm.csv" # flights to DTW with ORD and MSP options
 # dataFile <- "testData/china1911_XJofficials.csv" # officials from Xinjiang in 1911
-
+dataFile <- "testData/Zagat1991Geocoded.geojson" # Will's geocoded Zagat data--mostly just for geojson testing
 
 
 # Decide file type
@@ -56,10 +57,13 @@ if(df_ext == "csv"){
   print("hooray, a CSV!")
 } else {
   if(df_ext == "json"){
-    df <- read_json(file = dataFile)
+    df <- as.data.frame(read_json(dataFile, simplifyVector = TRUE))
     print(paste("this is a json, right?"))
+    # NB: we may need to do more to this
+    # strip features.properties from each column heading
   } else {
     if(df_ext == "geojson"){
+      df <- geojson_read(dataFile, method = "local", parse = TRUE, what = "sp")
       print("this is a geojson! yeah!")
     } else {
       print("what kind of file even is this?")
@@ -73,8 +77,10 @@ summary(df)
 class(df) # test to make sure it's a data frame
 
 colListOrig <- colnames(df) # store column names for later
-latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y") # add as they come up
-lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X")
+latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
+lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
+valNameChoices <- list()
+valChoices <- list()
 
 df2 <- df # cloning df for non-destructive editing
 
@@ -118,7 +124,8 @@ for (col in 1:ncol(df)) {
             print(paste("Found a valName column: ", names(df)[[col]]))
             valNameflag <- 1}
             else{
-              print(paste("Found an alternate valName column: ", names(df)[[col]]))}
+              print(paste("Found an alternate valName column: ", names(df)[[col]]))
+              valNameChoices <- c(valNameChoices, names(df)[[col]])}
               # NOTE this isn't storing anywhere yet, might need to later for input
           }
         else{
@@ -130,8 +137,9 @@ for (col in 1:ncol(df)) {
             print(paste("Found a val column: ", names(df)[[col]]))
             valflag <- 1}
             else{
-              print(paste("Found an alternate val column: ", names(df)[[col]]))}
-              # NOTE this isn't storing anywhere yet, might need to later for input
+              print(paste("Found an alternate val column: ", names(df)[[col]]))
+              valChoices <- c(valChoices, names(df)[[col]])}
+              # NB: NOTE this isn't storing anywhere yet, might need to later for input
           }
         }
       }
