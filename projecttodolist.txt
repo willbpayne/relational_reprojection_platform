@@ -5,18 +5,17 @@ Short-term:
 * Recenter existing test cases to do side by side analysis, small multiples
 * Documentation: more of it
 * Code refactoring: functionizing, making generic (data variable/value, get rid of center column and hardcode), etc.
-* Design a user interface and build it out
-* Find a better Lagrange function: All monotonic, all the time (stepwise)
-  1-2 hours to build stepwise function
-* Figure out Jenks for distance
+* Design a user interface and build it out with a JavaScript wrapper on our code
+* Figure out Jenks for distance (more exploded than on a line due to circle)
   ? hours best one-dimensional clustering algorithm in R?
 
 Mid-term:
-* Better test cases (different data): Remittances to India, airline routes in the United States (DTW, ORD; add Toronto? Winnipeg?), officials from Xinjiang in Qing Dynasty, trampoline park data from NH/MA, other historian friends 
-  Getting NH data next
-* Accepting JSON/GeoJSON instead of just CSV input
+
+* Accepting JSON/GeoJSON/Shapefile instead of just CSV input
   Research soon but do later
+* Add Universal Location Finder 3000 function (first look for lat/long, then look for polygons you can centroid, then look for location-esque string fields that you can geocode, in the order Census Block/Tract, ZIP, Town/City/etc., County, State, Country?) 
 * Adding centroids to polygons in input data (use the NH case?)
+* Add value trim step ("Below what value do you not care about observations?" Subset the data and plot)
 * Accept that the center might also carry value (null or not?)
   Add a question: should the center point have null value or a numeric value?
 * TIN/Delauney Triangles
@@ -33,3 +32,8 @@ Things to talk about in paper
 ---------
 
 Montonicity problems: https://en.wikipedia.org/wiki/Runge%27s_phenomenon
+
+DONE:
+* Find a better Lagrange function: All monotonic, all the time (stepwise)
+* Better test cases (different data): Remittances to India, airline routes in the United States (DTW, ORD; add Toronto? Winnipeg?), officials from Xinjiang in Qing Dynasty, trampoline park data from NH/MA, other historian friends 
+  Getting NH data next
