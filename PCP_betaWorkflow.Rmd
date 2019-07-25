@@ -17,6 +17,7 @@ library(dplyr)
 library(tidyverse)
 library(tools) #to learn file extension
 library(jsonlite) # for loading in json files
+library(geojson) # for loading geojson (need this for geojsonio to work)
 library(geojsonio) # for loading geojson
 # 
 library(geosphere) # where we get bearing
