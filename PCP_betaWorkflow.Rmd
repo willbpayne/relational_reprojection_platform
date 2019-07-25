@@ -596,6 +596,13 @@ deldir()
 df3 <- 0
 df2Sub <- df2
   #^ for removing nulls
+
+max(df2Sub$val)
+
+test <- 
+  df2Sub %>% 
+  filter(is.na(val))
+
 df3 <- with(df2Sub, akima::interp(x = df2Sub$sqrtcoords[,1], y = df2Sub$sqrtcoords[,2], z = val, duplicate = "strip"))
 
 
