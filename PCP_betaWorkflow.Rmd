@@ -152,16 +152,21 @@ for (col in 1:ncol(df)) {
 }
 
 if("ctrBin" %in% names(df)[col]) {
+  ctrPtName <- df2$valName[df2$ctrBin == TRUE]
+ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
   print("you prepared your data soooooo well!")
 } else {
-  df2$ctrBin <- FALSE
+  ctrPtName <- "Default Center"
+  ctrPt <- c(median(df2$lat), median(df2$lon))
 }
+cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
+
 
 if(df_ext == "csv"){
-  df2 <- dplyr::select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
+  df2 <- dplyr::select(df2, valName, val, lat, lon) # just the fields we want
 } else {
   if(df_ext == "geojson"){
-    df2 <- dplyr::select(df2, valName, val, lat, lon, ctrBin) #something else 
+    df2 <- dplyr::select(df2, valName, val, lat, lon) #something else 
   } else {
     print(paste("what even is this?"))
   }
@@ -177,11 +182,6 @@ if(df_ext == "csv"){
 
 # Test plot
 plot(df2$lon, df2$lat)
-
-# Store and print center point
-ctrPtName <- df2$valName[df2$ctrBin == TRUE]
-ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
-cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 
 ```
 
@@ -445,6 +445,7 @@ plot08C <-  ggplot(df2 %>%
                     check_overlap = FALSE,
                     color = "White") +
   coord_fixed() + 
+  # NB: need to make labs a user input
   labs(color = paste0("Visits/1000 residents"), size = "Size", x = NULL, y = NULL) +
   guides(colour = guide_colourbar(order = 1),
          size = guide_legend(order = 2)) +
@@ -597,7 +598,7 @@ deldir()
 
 ```{r}
 
-df3 <- NULL
+df3 <- 0
 df2Sub <- df2[!(df2$ctrBin == TRUE), ]
   #^ for removing nulls
 df3 <- with(df2Sub, akima::interp(x = df2Sub$customcoords[,1], y = df2Sub$customcoords[,2], z = val))
