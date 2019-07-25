@@ -25,7 +25,7 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 
 
 # FUNCTIONS WE'RE USING
-source("PCP_functions/convertToPolar.R")
+#source("PCP_functions/convertToPolar.R")
 
 ```
 
@@ -177,6 +177,10 @@ for (row in 1:nrow(df2)) # convert from geographic bearings to polar coordinates
 
 ```{r}
 # first plot with ctrPt and data visualized, still using lat/long
+
+# df2 <- subset(df2,df2$val > 49) # FOR TESTING try again with a subset
+maxdist <- max(df2$distance) # max great circle distance
+
 plot05 <- ggplot(df2, 
        aes(df2$lon, 
            df2$lat, 
@@ -192,7 +196,8 @@ plot05
 
 ```{r} 
 #temp ***
-df2$valTrans <- (df2$val / 800)^1.5 # manual one I did for NH data to see what we're looking for
+df2$valTrans <- log(df2$val) + 1 # manual one I did for NH data to see what we're looking for
+#df2$valTrans <- (df2$val / 400)^1.5 # manual one I did for NH data to see what we're looking for
 
 hist(df2$val, breaks = 20) # just for giggles
 hist(sqrt(df2$val), breaks = 20)
@@ -266,6 +271,8 @@ df2 <- df2 %>% mutate(
 df2$logcoords <- cbind(df2$logdistancex,df2$logdistancey)
 df2 <- dplyr::select(df2,-starts_with("logdistance"))
 
+# NEED TO OVERRIDE CENTER POINT INFINITE VALUES WITH 0,0
+
 # Plot it
 
 plot07 <- ggplot(df2, aes(
@@ -283,15 +290,8 @@ plot07 <- ggplot(df2, aes(
 
 plot07
 
-
-
-  
-
-df2 <- dplyr::arrange(df2, -val)
-df2$num <- ave(df2$val, FUN = seq_along)
-
-
-
+df2 <- dplyr::arrange(df2, -val) # sorting for draw order below
+df2$num <- ave(df2$val, FUN = seq_along) # also sorting?
 
 plot07B <-  ggplot(df2 %>%
                      arrange(desc(val)),
@@ -304,23 +304,6 @@ plot07B <-  ggplot(df2 %>%
                       colour = "grey65", data = circles, 
                       show.legend = NA, inherit.aes = FALSE) +
   geom_point(stroke = 1, size = df2$valTrans) + 
-  # geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-  # ### begin simulated drop shadow
-  #           geom_text(data = df2,
-  #                   aes(df2$logcoords[,1], 
-  #               df2$logcoords[,2],
-  #                       label= df2$valName),
-  #                   size = 2.1,
-  #                   check_overlap = TRUE,
-  #                   color = "white") +
-  #           geom_text(data = df2,
-  #                   aes(df2$logcoords[,1], 
-  #               df2$logcoords[,2],
-  #                       label= df2$valName),
-  #                   size = 2.3,
-  #                   check_overlap = TRUE,
-  #                   color = "white") +
-  # ### end simulated drop shadow
   geom_text(data = df2,
                     aes(df2$logcoords[,1],
                         df2$logcoords[,2],
@@ -333,69 +316,6 @@ plot07B <-  ggplot(df2 %>%
                 axis.text.x = element_blank(),axis.text.y = element_blank(), panel.grid = element_blank())
 
 plot07B
-
-
-
-# plot11C <- ggplot() +
-#           geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-#                       colour = "#eeeeee", 
-#                       data = lagrange_predict(circles),
-#                       size = 0.5,
-#                       show.legend = NA, 
-#                       inherit.aes = FALSE) +        
-#           geom_contour(data = flts_grid_df, 
-#                  aes(x = ldcX, 
-#                      y = ldcY, 
-#                      z = flts_grid_df$flights,
-#                      color = stat(level)),
-#                  bins = 6,  
-#                  size = 0.5) +
-#           scale_colour_gradient(low = "cornflowerblue", high = "red") +
-#   ### begin simulated drop shadow
-#             geom_text(data = routesSub,
-#                     aes(lagrangedistcircX,
-#                         lagrangedistcircY,
-#                         label= routesSub$airport),
-#                     size = 1.8,
-#                     check_overlap = TRUE,
-#                     color = "white") +
-#             geom_text(data = routesSub,
-#                     aes(lagrangedistcircX,
-#                         lagrangedistcircY,
-#                         label= routesSub$airport),
-#                     size = 2,
-#                     check_overlap = TRUE,
-#                     color = "white") +
-#   ### end simulated drop shadow
-#             geom_text(data = routesSub,
-#                     aes(lagrangedistcircX,
-#                         lagrangedistcircY,
-#                         label= routesSub$airport,
-#                         color = routesSub$DTWconnectivity),
-#                     size = 1.5,
-#                     check_overlap = TRUE) +
-#             geom_point(data = (as.data.frame(ctrPt)), 
-#                      aes(ctrPt[1], ctrPt[2]), 
-#                      color = "orange", 
-#                      shape = 8) +
-#              geom_text(data = (as.data.frame(ctrPt)), 
-#                    geom = "text", 
-#                    x = ctrPt[1], y = ctrPt[2], 
-#                    label = routes$airport[routes$isDTW == TRUE],
-#                    color = "orange",
-#                    size = 2,
-#                    vjust = 1.25,
-#                    hjust = -0.25) +
-#           theme(panel.background = element_blank(), 
-#                 axis.ticks = element_blank(), 
-#                 axis.text.x = element_blank(),
-#                 axis.text.y = element_blank(),
-#                 axis.title = element_blank(),
-#                 legend.position = 'none')
-#          # scale_fill_gradient(name = "flights", low = "yellow", high = "red")
-# 
-# plot11C
-
 
 
 
@@ -415,6 +335,8 @@ df2 <- df2 %>% mutate(
 # Combine x and y into a matrix, add as a column, remove x and y columns
 df2$sqrtcoords <- cbind(df2$sqrtdistancex,df2$sqrtdistancey)
 df2 <- select(df2,-starts_with("sqrtdistance"))
+
+df2$sqrtcoords
 
 plot08A <- ggplot(df2, aes( # plot with scale circles
                 df2$sqrtcoords[,1], 
@@ -445,6 +367,41 @@ plot08B <- ggplot(df2, aes( # plot without circles
 
 plot08B
 
+df2 <- dplyr::arrange(df2, -val)
+df2$num <- ave(df2$val, FUN = seq_along)
+
+
+# df2 <- read.csv(file = "tramp50PlusCities.csv") # TEST with additional variables (have to change things above to to get the circles and other constants right, so this is kind of a mess, don't recommend this way)
+
+plot08C <-  ggplot(df2 %>%
+                     arrange(desc(val)),
+                     aes(
+                df2$sqrtcoords[,1], 
+                df2$sqrtcoords[,2], 
+                color = df2$valTrans,
+                order=df2$num)) + 
+  geom_circle(aes(x0 = x0, y0 = y0, r = r), 
+                      colour = "grey65", data = sqrt(circles), 
+                      show.legend = NA, inherit.aes = FALSE) +
+  geom_point(stroke = 1, size = (df2$valTrans^2)/2.5) + 
+  geom_text(data = df2,
+                    aes(df2$sqrtcoords[,1],
+                        df2$sqrtcoords[,2],
+                        label= df2$valName),
+                    size = 3,
+                    check_overlap = FALSE,
+                    color = "White") +
+  coord_fixed() + 
+  labs(color = paste0("Visits/1000 residents"), size = "Size", x = NULL, y = NULL) +
+  guides(colour = guide_colourbar(order = 1),
+         size = guide_legend(order = 2)) +
+  theme(panel.background = element_rect(fill = "grey50", linetype = "blank"), axis.ticks = element_blank(),
+                axis.text.x = element_blank(),axis.text.y = element_blank(), panel.grid = element_blank())
+
+plot08C
+
+#write_csv(df2, "tramp50PlusCities.csv")
+
 ```
 
 ## 09: Come up with Custom Control Points
@@ -457,13 +414,23 @@ plot08B
 # Automated route (could also just have user specify neardist and fardist)
 hist(df2$distance)
 distancemedian <-median(df2$distance)
-geogdist <- c(0, .5 * distancemedian, ((distancemedian + maxdist)/2), maxdist) # let's say under 500 km is close, over 2000km is far
+geogdist <- c(0, distancemedian, ((distancemedian + distancemedian + maxdist)/3), maxdist) # let's say under 500 km is close, over 2000km is far
 neardist <- geogdist[2] # these two are the output of geogdist above
 fardist <- geogdist[3]
 chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
 
+# Simpler Automated route (just median)
+hist(df2$distance)
+distancemedian <-median(df2$distance)
+geogdist <- c(0, distancemedian, maxdist) # let's say under 500 km is close, over 2000km is far
+neardist <- geogdist[2] # these two are the output of geogdist above
+fardist <- geogdist[3]
+chartdist <- c(0, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+
+plot(geogdist, chartdist)
+
 a <- function(x){ # here is some example code for the piecewise funciton
-  ifelse(( x > 0 & x < neardist),(x * 400/neardist),ifelse((neardist <= x & x < fardist),((x * 400)/(fardist - neardist) + (400-((400)/(fardist - neardist)*neardist))), ifelse((fardist <= x & x <= maxdist),((x * 400)/(maxdist - fardist) + (800-((400)/(maxdist - fardist)*fardist))), NA))) 
+  ifelse(( x >= 0 & x < neardist),(x * 400/neardist),ifelse((neardist <= x & x < fardist),((x * 400)/(fardist - neardist) + (400-((400)/(fardist - neardist)*neardist))), ifelse((fardist <= x & x <= maxdist),((x * 400)/(maxdist - fardist) + (800-((400)/(maxdist - fardist)*fardist))), NA))) 
 } 
 plot(a,xlim=c(0,maxdist), ylim = c(0, 1200), col = "red") 
 
