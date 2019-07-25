@@ -137,8 +137,7 @@ for (col in 1:ncol(df)) {
           && !(names(df)[col] %in% latNames)
           && names(df[col]) != "geometry")
           { if (valflag == 0)
-            {print(paste("Think it's a val!"))
-            df2$val <- as.double(df[[col]])
+            {df2$val <- as.double(df[[col]])
             print(paste("Found a val column: ", names(df)[[col]]))
             valflag <- 1}
             else{
@@ -153,7 +152,7 @@ for (col in 1:ncol(df)) {
 }
 
 if("ctrBin" %in% names(df)[col]) {
-  print("you prepared your data soooooo well!")
+  print("You prepared your data soooooo well!")
 } else {
   df2$ctrBin <- FALSE
 }
@@ -164,12 +163,9 @@ if(df_ext == "csv"){
   if(df_ext == "geojson"){
     df2 <- dplyr::select(df2, valName, val, lat, lon, ctrBin) #something else 
   } else {
-    print(paste("what even is this?"))
+    print(paste("What even is this?"))
   }
 }
-
-
-
 ```
 
 ## 02: Plot Test
@@ -370,9 +366,6 @@ plot07B <-  ggplot(df2 %>%
                 axis.text.x = element_blank(),axis.text.y = element_blank(), panel.grid = element_blank())
 
 plot07B
-
-
-
 
 ```  
 
