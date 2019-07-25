@@ -9,7 +9,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(sp)
+library(sf)
+library(sp) # might not need
 library(ggplot2)
 library(ggforce) # to plot circles
 library(dplyr)
@@ -63,7 +64,7 @@ if(df_ext == "csv"){
     # strip features.properties from each column heading
   } else {
     if(df_ext == "geojson"){
-      df <- geojson_read(dataFile, method = "local", parse = TRUE, what = "sp")
+      df <- st_as_sf(geojson_read(dataFile, method = "local", parse = TRUE, what = "sp"))
       print("this is a geojson! yeah!")
     } else {
       print("what kind of file even is this?")
@@ -74,7 +75,7 @@ if(df_ext == "csv"){
   
 
 summary(df)
-class(df) # test to make sure it's a data frame
+class(df[["geometry"]]) # test to make sure it's a data frame
 
 colListOrig <- colnames(df) # store column names for later
 latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
@@ -110,6 +111,7 @@ for (col in 1:ncol(df)) {
       lonflag <- 1}
     else{
       if (typeof(df[[col]]) != "character"
+      && typeof(df[[col]]) != "list"
       && min(as.numeric(df[[col]]), na.rm = T) == 0
       && max(as.numeric(df[[col]]), na.rm = T) == 1
       && sum(as.numeric(df[[col]]), na.rm = T) == 1) # ctrBin
@@ -131,9 +133,11 @@ for (col in 1:ncol(df)) {
         else{
           if (typeof(df[[col]]) == "integer" || typeof(df[[col]]) == "double" # val
           && !(names(df)[col] %in% lonNames)
-          && !(names(df)[col] %in% latNames))
+          && !(names(df)[col] %in% latNames)
+          && names(df[col]) != "geometry")
           { if (valflag == 0)
-            {df2$val <- as.double(df[[col]])
+            {print(paste("Think it's a val!"))
+            df2$val <- as.double(df[[col]])
             print(paste("Found a val column: ", names(df)[[col]]))
             valflag <- 1}
             else{
@@ -147,7 +151,23 @@ for (col in 1:ncol(df)) {
   }
 }
 
-df2 <- dplyr::select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
+if("ctrBin" %in% names(df)[col]) {
+  print("you prepared your data soooooo well!")
+} else {
+  df2$ctrBin <- FALSE
+}
+
+if(df_ext == "csv"){
+  df2 <- dplyr::select(df2, valName, val, lat, lon, ctrBin) # just the fields we want
+} else {
+  if(df_ext == "geojson"){
+    df2 <- dplyr::select(df2, valName, val, lat, lon, ctrBin) #something else 
+  } else {
+    print(paste("what even is this?"))
+  }
+}
+
+
 
 ```
 
