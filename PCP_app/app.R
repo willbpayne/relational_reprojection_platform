@@ -9,6 +9,8 @@
 
 library(shiny)
 
+dataFile <- "IND_remittances.csv"
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
    
@@ -60,12 +62,12 @@ server <- function(input, output) {
   ##### NB: Function-ize map data and put it here 
   
    output$distPlot <- renderPlot({
-      # generate bins based on input$bins from ui.R
-      x    <- faithful[, 2] 
-      bins <- seq(min(x), max(x), length.out = input$bins + 1)
+     df <- read.csv(file = dataFile)
+      plot(df$lon, df$lat)
       
-      # draw the histogram with the specified number of bins
-      hist(x, breaks = bins, col = 'darkgray', border = 'white')
+      if uploadFile = !NULL,
+        something something something
+
    })
 }
 
