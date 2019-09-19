@@ -9,7 +9,7 @@
 
 library(shiny)
 
-dataFile <- "IND_remittances.csv"
+# dataFile <- "IND_remittances.csv"
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -26,7 +26,7 @@ ui <- fluidPage(
      #              ),
       
      sidebarPanel(
-       fileInput("uploadedFile", "Data File", multiple = FALSE, accept = NULL
+       fileInput("uploadFile", "Data File", multiple = FALSE, accept = NULL
        ),  
        # radio buttons
        radioButtons("interpMeth", "interpolation method", 
@@ -62,11 +62,16 @@ server <- function(input, output) {
   ##### NB: Function-ize map data and put it here 
   
    output$distPlot <- renderPlot({
-     df <- read.csv(file = dataFile)
-      plot(df$lon, df$lat)
       
-      if uploadFile = !NULL,
-        something something something
+      if (is.null(input$uploadFile) == TRUE){
+        df <- read.csv(file = "IND_remittances.csv")
+        plot(df$lon, df$lat)
+      }
+     else{
+       uploadFileData <- input$uploadFile
+       df <- read.csv(file = uploadFileData$datapath)
+       plot(df$lon, df$lat)
+     }
 
    })
 }
