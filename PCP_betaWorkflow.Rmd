@@ -9,7 +9,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(sf)
+library(sf) #
 library(sp) # might not need
 library(ggplot2)
 library(ggforce) # to plot circles
