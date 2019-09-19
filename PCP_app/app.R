@@ -13,7 +13,9 @@ library(shiny)
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Old Faithful Geyser Data"),
+   titlePanel("Pseudo-Spatial Chart Program"),
+   
+   ##### NB: WIDGET: Close/med/far text entry
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
@@ -25,16 +27,23 @@ ui <- fluidPage(
                      value = 30)
       ),
       
+      ##### NB: WIDGET: Add second side bar for dist type dropdown
+      
       # Show a plot of the generated distribution
       mainPanel(
+       
+         ##### NB: This should be our map instead
          plotOutput("distPlot")
       )
    )
 )
 
+
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-   
+  
+  ##### NB: Function-ize map data and put it here 
+  
    output$distPlot <- renderPlot({
       # generate bins based on input$bins from ui.R
       x    <- faithful[, 2] 
