@@ -9,7 +9,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(sf) #
+library(sf) 
 library(sp) # might not need
 library(ggplot2)
 library(ggforce) # to plot circles
@@ -30,6 +30,10 @@ library(reshape2) # for contor/grid
 library(contoureR) # for contours w/o grid
 library(deldir) # CHECK: trying for TIN generation, see sec. 11
 library(lawn) # CHECK:  trying for TIN generation, see sec. 11
+#
+# Holy moly it's shinytime
+library(shiny)
+library(shinydashboard)
 
 
 # FUNCTIONS WE'RE USING
