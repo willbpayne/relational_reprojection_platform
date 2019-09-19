@@ -19,14 +19,29 @@ ui <- fluidPage(
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
-      sidebarPanel(
-         sliderInput("bins",
-                     "Number of bins:",
-                     min = 1,
-                     max = 50,
-                     value = 30)
-      ),
+     # sidebarPanel(
+     #   fileInput("inputId", "label", multiple = FALSE, accept = NULL)
+     #              ),
       
+     sidebarPanel(
+       fileInput("uploadedFile", "Data File", multiple = FALSE, accept = NULL
+       ),  
+       # radio buttons
+       radioButtons("interpMeth", "interpolation method", 
+                    choices = c("Square Root", "Logarithmic", "Exponential", "Custom"), 
+                    inline = TRUE, width = "100%"),
+       ## if radio button custom
+    #   conditionalPanel(condition, ...
+       sliderInput("manualCutPoints", 
+                   "cut points", 0, 500, #to be parametarized
+                   "value", step = NULL, 
+                   # value is 1 if it is a single value or 2 if it is a vector of 2 eg, [x,y]
+                   round = FALSE, 
+                   format = "#,##0.#####", 
+                   locale = "us", 
+                   ticks = TRUE, animate = FALSE) #,
+   #  ) # end conditional panel
+     ),
       ##### NB: WIDGET: Add second side bar for dist type dropdown
       
       # Show a plot of the generated distribution
