@@ -32,7 +32,10 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 
 # dataFile <- "IND_remittances.csv"
 
-# Define UI for application
+########################################
+##          UI PARTY TONIGHT!         ##
+########################################
+
 ui <- fluidPage(
    
    # Application title
@@ -44,20 +47,22 @@ ui <- fluidPage(
    sidebarLayout(
      sidebarPanel(
        fileInput("uploadFile", "Data File", multiple = FALSE, accept = NULL
-       ),  
+       ), 
+       checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL),
+       checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL),
        plotOutput("distPlot", height = "250px", width="100%"),
-       # radio buttons
+       # Radio buttons for interpolation method
        radioButtons("interpMeth", "Interpolation Method", 
                     choices = c("Lat & Long","Great Circle Distances","Square Root", "Logarithmic", "Custom"), 
                     inline = FALSE, width = "100%",
                     selected = "Great Circle Distances"),
-       ## if radio button custom
+       ## If radio button is on "Custom", show cut point slider
        conditionalPanel(
          condition = "input.interpMeth == 'Custom'", 
           sliderInput("manualCutPoints", 
-                   "Cut Points", 0, 500, #to be parametarized
-                   c(150,250), step = NULL, 
-                   # value is 1 if it is a single value or 2 if it is a vector of 2 eg, [x,y]
+                   "Cut Points", 0, 10000, 
+                   #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
+                   c(1500,5000), step = NULL, 
                    round = FALSE, 
                    format = "#,##0.#####", 
                    locale = "us", 
@@ -69,22 +74,18 @@ ui <- fluidPage(
       mainPanel(
        
          ##### NB: This should be our map instead
-         plotOutput("geoPlot")
+         plotOutput("geoPlot", height = "550px")
       )
    )
 )
 
+########################################
+##        STOP, SERVER TIME!          ##
+########################################
 
-########################################
-########################################
-########################################
-
-# Define server logic
 server <- function(input, output) {
   
-  ##### NB: Function-ize map data and put it here 
-  
-   output$distPlot <- renderPlot({
+   output$distPlot <- renderPlot({ # the basic dot plot for sidebar
       
       if (is.null(input$uploadFile) == TRUE){
         df <- read.csv(file = "IND_remittances.csv")
@@ -98,15 +99,17 @@ server <- function(input, output) {
 
    })
    
-   output$geoPlot <- renderPlot({
+   output$geoPlot <- renderPlot({ # the main event
      
      if (is.null(input$uploadFile) == TRUE){
        df <- read.csv(file = "IND_remittances.csv")
+       df_ext <- ".csv"
        plot(df$lon, df$lat)
      }
      else{
        uploadFileData <- input$uploadFile
        df <- read.csv(file = uploadFileData$datapath)
+       df_ext <- ".csv" # MANUAL FOR NOW, NEED TO ADD GEOJSON SUPPORT BACK
        plot(df$lon, df$lat, ann=FALSE, axes=FALSE,xaxt="n", yaxt="n",xlab='',ylab='')
      }
      
@@ -204,7 +207,6 @@ server <- function(input, output) {
      }
      # cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 
-
      ###################################
      #        CREATE DF2               #
      ###################################
@@ -253,14 +255,6 @@ server <- function(input, output) {
 
      maxdist <- max(df2$distance) # max great circle distance
 
-     plot_latLon <- ggplot(df2,
-                      aes(df2$lon,
-                          df2$lat,
-                          color = df2$distance)) +
-       geom_point() +
-       geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = "orange")
-
-     
      
      ###################################
      #        GREAT CIRCLE             #
@@ -269,7 +263,6 @@ server <- function(input, output) {
      df2$valTrans <- log(df2$val) + 1 # manual one I did for NH data to see what we're looking for
      #df2$valTrans <- (df2$val / 400)^1.5 # manual one I did for NH data to see what we're looking for
   
-     
      ### NB: one day a separate UI thing? 9/19   
      # hist(df2$val, breaks = 20) # just for giggles
      # hist(sqrt(df2$val), breaks = 20)
@@ -297,25 +290,6 @@ server <- function(input, output) {
      )
      circles <- circles[-1,] # remove zero-radius circle to help with log transformation
      
-     # Use coord_fixed to ensure true circularity
-     
-     plot_greatCircles <- ggplot(df2, aes(
-       df2$circcoords[,1], 
-       df2$circcoords[,2], 
-       color = df2$distance)) +
-       geom_circle(aes(x0 = x0, y0 = y0, r = r),
-                   colour = "orange", 
-                   data = circles, 
-                   show.legend = NA, 
-                   inherit.aes = FALSE) +
-       geom_point(stroke = 1, size = df2$valTrans) +
-       geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-       coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
-       guides(colour = "colorbar",size = "legend") +
-       theme(panel.background = element_blank())
-     
-
-     
      ###################################
      #      LOGARITHMIC SCALE          #
      ###################################      
@@ -336,28 +310,6 @@ server <- function(input, output) {
      df2 <- dplyr::arrange(df2, -val) # sorting for draw order below
      df2$num <- ave(df2$val, FUN = seq_along) # also sorting?
      
-     plot_logScale <-  ggplot(df2 %>%
-                          arrange(desc(val)),
-                        aes(
-                          df2$logcoords[,1], 
-                          df2$logcoords[,2], 
-                          color = df2$val,
-                          order=df2$num)) + 
-       geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
-                   colour = "grey65", data = circles, 
-                   show.legend = NA, inherit.aes = FALSE) +
-       geom_point(stroke = 1, size = df2$valTrans) + 
-       geom_text(data = df2,
-                 aes(df2$logcoords[,1],
-                     df2$logcoords[,2],
-                     label= df2$valName),
-                 size = 3,
-                 check_overlap = TRUE,
-                 color = "White") +
-       coord_fixed() + labs(color = paste0("Visits to ",ctrPtName), x = NULL, y = NULL) +
-       theme(panel.background = element_rect(fill = "grey50", linetype = "blank"), axis.ticks = element_blank(),
-             axis.text.x = element_blank(),axis.text.y = element_blank(), panel.grid = element_blank())
-
      
      ###################################
      #        SQUARE ROUTE             #
@@ -372,25 +324,7 @@ server <- function(input, output) {
      # Combine x and y into a matrix, add as a column, remove x and y columns
      df2$sqrtcoords <- cbind(df2$sqrtdistancex,df2$sqrtdistancey)
      df2 <- select(df2,-starts_with("sqrtdistance"))
-     
-     df2$sqrtcoords
-     
-     plot_sqrt <- ggplot(df2, aes( # plot with scale circles
-       df2$sqrtcoords[,1], 
-       df2$sqrtcoords[,2], 
-       color = df2$distance)) +  
-       geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                   colour = "orange", data = sqrt(circles), 
-                   show.legend = NA, inherit.aes = FALSE) + 
-       geom_point(stroke = 1, size = df2$valTrans) + 
-       geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-       coord_fixed() + 
-       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) + 
-       theme(panel.background = element_blank(), axis.ticks = element_blank(),
-             axis.text.x = element_blank(),axis.text.y = element_blank())
-     
-     
-     
+
      ###################################
      #        LAGRANGE DIST            #
      ################################### 
@@ -409,6 +343,10 @@ server <- function(input, output) {
      geogdist <- c(0, distancemedian, maxdist) # let's say under 500 km is close, over 2000km is far
      neardist <- geogdist[2] # these two are the output of geogdist above
      fardist <- geogdist[3]
+     
+     neardist <- input$manualCutPoints[1]
+     fardist <- input$manualCutPoints[2]
+     
      chartdist <- c(0, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
      
      # plot(geogdist, chartdist)
@@ -431,44 +369,75 @@ server <- function(input, output) {
      
      # Replot coordinates on custom distance scale using piecewise function
      df2 <- df2 %>% mutate(
-       customdistancex =  (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+       customdistancex = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
        customdistancey = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
      )
-     
-     plot_custom <- ggplot(df2, aes( # plot with maxdist/10 circles
-       customcoords[,1], 
-       customcoords[,2], 
-       color = df2$distance)) +  
-       geom_circle(aes(x0 = x0, y0 = y0, r = r), 
-                   colour = "orange", data = lagrangecircles, 
-                   show.legend = NA, inherit.aes = FALSE) + 
-       geom_point(stroke = 1, size = df2$valTrans) + 
-       geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") + 
-       coord_fixed() + 
-       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) + 
-       theme(panel.background = element_blank(), 
-             axis.ticks = element_blank(), 
-             axis.text.x = element_blank(),
-             axis.text.y = element_blank())
+     df2$customcoords <- cbind(df2$customdistancex,df2$customdistancey)
+     df2 <- select(df2,-starts_with("customdistance"))
      
      ###################################
      #            PLOT CALL            #
      ################################### 
      
-     if(input$interpMeth == "Lat & Long"){
-       plot_latLon
-     } else if(input$interpMeth == "Great Circle Distances"){
-       plot_greatCircles
+     # Figure out which plot to show
+     plot_circles <- circles # set default for great circle/logarithmic
+     if(input$interpMeth == "Great Circle Distances"){
+       plot_coordinates <- df2$circcoords
      } else if(input$interpMeth == "Square Root"){
-       plot_sqrt
+       plot_coordinates <- df2$sqrtcoords
+       plot_circles <- sqrt(circles)
      } else if(input$interpMeth == "Logarithmic"){
-       plot_logScale
+       plot_coordinates <- df2$logcoords
      } else if(input$interpMeth == "Custom"){
-       plot_custom
-       # THIS WILL GET SO COMPLICATED
+       plot_coordinates <- df2$customcoords
+       plot_circles <- lagrangecircles
      }
-       
+     
+     # For all the circular plots, plug in variables
+     if(input$interpMeth != "Lat & Long"){
+     plot <- ggplot(df2 %>% arrange(desc(val)), aes(
+       plot_coordinates[,1], 
+       plot_coordinates[,2], 
+       color = df2$distance)) +
+       geom_point(stroke = 1, size = df2$valTrans) +
+       coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
+       guides(colour = "colorbar",size = "legend") +
+       theme(panel.background = element_blank())
+     
+     if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
+      plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
+                                  colour = "orange", 
+                                  data = plot_circles, 
+                                  show.legend = NA, 
+                                  inherit.aes = FALSE), plot$layers)
+      }
+      else{
+      plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = r),
+                    colour = "orange", 
+                    data = plot_circles, 
+                    show.legend = NA, 
+                    inherit.aes = FALSE), plot$layers)
+      }
+      if(input$labelsOn == TRUE){
+        plot <- plot + geom_text(data = df2,
+                                 aes(df2$plot_coordinates[,1],
+                                     df2$plot_coordinates[,2],
+                                     label = df2$valName),
+                                 size = 3,
+                                 check_overlap = TRUE,
+                                 color = "White")
+      }
+      if(input$centerOn == TRUE){
+       plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = "orange", fill = "orange")
+      }
       
+      plot
+      }
+     # Use simpler plot for Lat-Long (don't need circles, valTrans, etc.) 
+     else{ 
+       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = "orange")
+       plot_latLon
+     }
 
    })
 }
