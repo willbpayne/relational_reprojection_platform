@@ -203,7 +203,7 @@ server <- function(input, output) {
 
      } else {
        ctrPtName <- "Default Center"
-       ctrPt <- c(median(df2$lat), median(df2$lon))
+       ctrPt <- c(median(df2$lat), median(df2$lon)) # 
      }
      # cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 
