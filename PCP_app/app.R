@@ -52,7 +52,11 @@ ui <- fluidPage(
        checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL),
        plotOutput("distPlot", height = "250px", width="100%"),
        # Radio buttons for interpolation method
-       radioButtons("interpMeth", "Interpolation Method", 
+       radioButtons("valTransMeth", "Value Interpolation", 
+                    choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
+                    inline = FALSE, width = "100%",
+                    selected = "Log Scale"),
+       radioButtons("interpMeth", "Distance Interpolation", 
                     choices = c("Lat & Long","Great Circle Distances","Square Root", "Logarithmic", "Custom"), 
                     inline = FALSE, width = "100%",
                     selected = "Great Circle Distances"),
@@ -255,24 +259,50 @@ server <- function(input, output) {
 
      maxdist <- max(df2$distance) # max great circle distance
 
-     
      ###################################
-     #        GREAT CIRCLE             #
-     ###################################     
+     #    DATA VALUE TRANSLATION       #
+     ###################################   
      
-     df2$valTrans <- log(df2$val) + 1 # manual one I did for NH data to see what we're looking for
+     valMin <- min(df2$val, na.rm = T) # find lowest non-zero value (that will be radius 1)
+     valMax <- max(df2$val, na.rm = T) # find highest non-zero value (that will be radius X)
+     valMed <- median(df2$val, na.rm = T) # find median value (that could be radius 1 + X / 2)
+   
+     minRadius <- 1 # change this with the UI later?
+     maxRadius <- 15 # change this with the UI later?
+     
+     if(input$valTransMeth == "Raw"){
+       df2$valTrans <- sqrt(df2$val)
+       # only works if we have data at a specific scale, for comparison only
+     } else if(input$valTransMeth == "Scaled"){
+       df2$valTrans <- sqrt(df2$val/valMax) * maxRadius
+       # not sure of the exact math here but realized that linear scale
+       # doesn't work since we want the areas to be proportionate, not
+       # the radii. think the square root works because area is pi(r)2
+       # so the pi doesn't matter if we're rescaling to maxRadius at 
+       # maxValue anyway. Right? it's weekend, will come back to this later
+     } else if(input$valTransMeth == "Log Scale"){
+       df2$valTrans <- log(df2$val) + minRadius
+     } else if(input$valTransMeth == "Square Root"){
+       df2$valTrans <- sqrt(df2$val) + minRadius
+       # this is basically "raw square root" since it's not scaled at all
+     } else if(input$valTransMeth == "Custom"){
+       df2$valTrans <- df2$val
+       # raw right now. time for another slider? or is that too extra?
+     }
+      
      #df2$valTrans <- (df2$val / 400)^1.5 # manual one I did for NH data to see what we're looking for
-  
-     ### NB: one day a separate UI thing? 9/19   
+     
      # hist(df2$val, breaks = 20) # just for giggles
      # hist(sqrt(df2$val), breaks = 20)
      # hist(log(df2$val), breaks = 20)
      
      #df2$val[df2$val == 0] <- NA # turn zeros to NAs for our purposes
      
-     print(min(df2$val, na.rm = T)) # find lowest non-zero value (that will be radius 1)
-     print(max(df2$val, na.rm = T)) # find highest non-zero value (that will be radius X)
-     print(median(df2$val, na.rm = T)) # find median value (that could be radius 1 + X / 2)
+
+     
+     ###################################
+     #        GREAT CIRCLE             #
+     ###################################     
      
      # Run polar to cartesian conversion on x and y axes
      df2 <- df2 %>% mutate(circdistancex =  (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[1]]))
@@ -288,7 +318,7 @@ server <- function(input, output) {
        y0 = 0,
        r = seq(0, maxdist,length.out = 11)
      )
-     circles <- circles[-1,] # remove zero-radius circle to help with log transformation
+     circles <- circles[-1,] # remove zero-radius circle
      
      ###################################
      #      LOGARITHMIC SCALE          #
