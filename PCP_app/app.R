@@ -48,23 +48,27 @@ ui <- fluidPage(
      sidebarPanel(
        fileInput("uploadFile", "Data File", multiple = FALSE, accept = NULL
        ), 
-       checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL),
-       checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL),
+       fluidRow(
+         column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
+         column(6,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL))
+         ),
        plotOutput("distPlot", height = "250px", width="100%"),
        # Radio buttons for interpolation method
-       radioButtons("valTransMeth", "Value Interpolation", 
-                    choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
-                    inline = FALSE, width = "100%",
-                    selected = "Log Scale"),
-       radioButtons("interpMeth", "Distance Interpolation", 
-                    choices = c("Lat & Long","Great Circle Distances","Square Root", "Logarithmic", "Custom"), 
-                    inline = FALSE, width = "100%",
-                    selected = "Great Circle Distances"),
+       fluidRow(
+         column(6,radioButtons("valTransMeth", "Value Interpolation", 
+                               choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
+                               inline = FALSE, width = "100%",
+                               selected = "Log Scale")),
+         column(6,radioButtons("interpMeth", "Distance Interpolation", 
+                               choices = c("Lat & Long","Great Circle Distances","Square Root", "Logarithmic", "Custom"), 
+                               inline = FALSE, width = "100%",
+                               selected = "Great Circle Distances"))
+         ),
        ## If radio button is on "Custom", show cut point slider
        conditionalPanel(
          condition = "input.interpMeth == 'Custom'", 
           sliderInput("manualCutPoints", 
-                   "Cut Points", 0, 10000, 
+                   "Distance Cut Points", 0, 10000, 
                    #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
                    c(1500,5000), step = NULL, 
                    round = FALSE, 
@@ -76,7 +80,9 @@ ui <- fluidPage(
 
       # Show a plot of the generated distribution
       mainPanel(
-       
+         textOutput("centerpoint_selected"),
+         textOutput("namefield_selected"),
+         textOutput("valuefield_selected"),
          ##### NB: This should be our map instead
          plotOutput("geoPlot", height = "550px")
       )
@@ -469,6 +475,18 @@ server <- function(input, output) {
        plot_latLon
      }
 
+   })
+   
+   output$centerpoint_selected <- renderText({ 
+     paste("You have selected the following center point:")
+   })
+   
+   output$namefield_selected <- renderText({ 
+     paste("You have selected the following name field:")
+   })
+   
+   output$valuefield_selected <- renderText({ 
+     paste("You have selected the following value field:")
    })
 }
 
