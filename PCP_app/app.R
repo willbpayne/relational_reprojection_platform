@@ -109,6 +109,11 @@ server <- function(input, output) {
 
    })
    
+   # I think what we want to do is chunk out all the earlier parts of the
+   # code into their own little input-output sections here, including
+   # reactivity to the UI, so that the plot code is really only drawing
+   # the plot. 
+   
    output$geoPlot <- renderPlot({ # the main event
      
      if (is.null(input$uploadFile) == TRUE){
@@ -478,18 +483,19 @@ server <- function(input, output) {
    })
    
    output$centerpoint_selected <- renderText({ 
-     paste("You have selected the following center point:")
+     paste("You have selected the following center point:",ctrPt[1],", ",ctrPt[2])
    })
    
    output$namefield_selected <- renderText({ 
-     paste("You have selected the following name field:")
+     paste("These are the potential name fields:", valNameChoices)
    })
    
    output$valuefield_selected <- renderText({ 
-     paste("You have selected the following value field:")
+     paste("These are the potential value fields:", valChoices)
    })
 }
 
+# "You have selected the following value field:") + 
 # Run the application 
 shinyApp(ui = ui, server = server)
 
