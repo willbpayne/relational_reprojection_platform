@@ -47,7 +47,8 @@ ui <- fluidPage(
    sidebarLayout(
      sidebarPanel(
        fileInput("uploadFile", "Data File", multiple = FALSE, accept = NULL
-       ), 
+       ),
+       downloadButton("downloadSVG", label = "Export SVG"), 
        fluidRow(
          column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
          column(6,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL))
@@ -109,12 +110,23 @@ server <- function(input, output) {
 
    })
    
+   output$downloadSVG <- downloadHandler(
+     filename = function() {
+       paste("test", ".svg", sep = "")
+     },
+     content = function(file) {
+       ggsave("test.svg", plot = currentPlot, scale = 1, device = "svg", dpi = 150)
+     }
+   )
+   
+   
    # I think what we want to do is chunk out all the earlier parts of the
    # code into their own little input-output sections here, including
    # reactivity to the UI, so that the plot code is really only drawing
    # the plot. 
    
-   output$geoPlot <- renderPlot({ # the main event
+   
+  geoPlot <- reactive({ # the main event
      
      if (is.null(input$uploadFile) == TRUE){
        df <- read.csv(file = "IND_remittances.csv")
@@ -566,8 +578,8 @@ server <- function(input, output) {
        plot_latLon
      }
 
-   })
-   
+   }) # end react element
+  
    output$centerpoint_selected <- renderText({ 
      paste("You have selected the following center point:",ctrPt[1],", ",ctrPt[2])
    })
