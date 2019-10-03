@@ -49,22 +49,34 @@ ui <- fluidPage(
        fileInput("uploadFile", "Data File", multiple = FALSE, accept = NULL
        ),
        downloadButton("downloadSVG", label = "Export SVG"), 
-       fluidRow(
-         column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
-         column(6,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL))
-         ),
-       plotOutput("distPlot", height = "250px", width="100%"),
+       div(name="randoDiv",
+         fluidRow(
+           column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
+           column(6,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL))
+           )
+       ),
+       div(style = "font-size: 12px; padding: 10px 0px; margin:3%",
+           fluidRow(
+             column(6,selectInput("plotTheme", label = "Theme", c("Light" = "lightPlot", "Dark" = "darkPlot"), selected = "lightPlot", multiple = FALSE,
+                                  selectize = TRUE, width = NULL, size = NULL))
+           )
+       ),
+       div(style = "margin-top: -50px",
+        plotOutput("distPlot", height = "250px", width="100%")
+       ),
        # Radio buttons for interpolation method
-       fluidRow(
-         column(6,radioButtons("valTransMeth", "Value Interpolation", 
-                               choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
-                               inline = FALSE, width = "100%",
-                               selected = "Log Scale")),
-         column(6,radioButtons("interpMeth", "Distance Interpolation", 
-                               choices = c("Lat & Long","Great Circle Distances","Square Root", "Logarithmic", "Custom"), 
-                               inline = FALSE, width = "100%",
-                               selected = "Great Circle Distances"))
-         ),
+       div(style = "font-size: 12px; padding: 10px 0px; margin:3%",
+         fluidRow(
+           column(6,radioButtons("valTransMeth", "Value Interpolation", 
+                                 choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
+                                 inline = FALSE, width = "100%",
+                                 selected = "Log Scale")),
+           column(6,radioButtons("interpMeth", "Distance Interpolation", 
+                                 choices = c("Lat & Long","Great Circle Distances","Square Root", "Logarithmic", "Custom"), 
+                                 inline = FALSE, width = "100%",
+                                 selected = "Great Circle Distances"))
+           )
+       ),
        ## If radio button is on "Custom", show cut point slider
        conditionalPanel(
          condition = "input.interpMeth == 'Custom'", 
@@ -96,11 +108,20 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
+
+  p2 <- reactive ({
+    #uploadFileData <- input$uploadFile
+    #df <- read.csv(file = uploadFileData$datapath)
+    df <- read.csv(file = "IND_remittances.csv")
+    plot(df$lon, df$lat)
+  })
+  
    output$distPlot <- renderPlot({ # the basic dot plot for sidebar
-      
+
       if (is.null(input$uploadFile) == TRUE){
         df <- read.csv(file = "IND_remittances.csv")
-        plot(df$lon, df$lat)
+        par(bg = '#f5f5f5')
+        plot(df$lon, df$lat, bg = "blue")
       }
      else{
        uploadFileData <- input$uploadFile
@@ -115,10 +136,12 @@ server <- function(input, output) {
        paste("test", ".svg", sep = "")
      },
      content = function(file) {
-       ggsave("test.svg", plot = currentPlot, scale = 1, device = "svg", dpi = 150)
+       #ggsave("test.svg", plot = p2, scale = 1, device = "svg", dpi = 150)
+       png(file = file)
+       p2()
+       dev.off()
      }
    )
-   
    
    # I think what we want to do is chunk out all the earlier parts of the
    # code into their own little input-output sections here, including
@@ -126,7 +149,7 @@ server <- function(input, output) {
    # the plot. 
    
    
-  geoPlot <- reactive({ # the main event
+  output$geoPlot <- renderPlot({ # the main event
      
      if (is.null(input$uploadFile) == TRUE){
        df <- read.csv(file = "IND_remittances.csv")
@@ -447,28 +470,6 @@ server <- function(input, output) {
 
      )
      
-     # STYLE BASE
-     # plot07B <-  ggplot(df2 %>%
-     #                      arrange(desc(val)),
-     #                    aes(
-     #                      df2$logcoords[,1], 
-     #                      df2$logcoords[,2], 
-     #                      color = df2$val,
-     #                      order=df2$num)) + 
-     #   geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
-     #               colour = "grey65", data = circles, 
-     #               show.legend = NA, inherit.aes = FALSE) +
-     #   geom_point(stroke = 1, size = df2$valTrans) + 
-     #   geom_text(data = df2,
-     #             aes(df2$logcoords[,1],
-     #                 df2$logcoords[,2],
-     #                 label= df2$valName),
-     #             size = 3,
-     #             check_overlap = TRUE,
-     #             color = "White") +
-     #       + labs(color = paste0("FIX THIS TEXT ",ctrPtName), x = NULL, y = NULL)
-     #   
-     
      
      lightPlot <- list(
        theme(panel.background = element_blank(),
@@ -481,18 +482,6 @@ server <- function(input, output) {
        guides(colour = "colorbar",size = "legend")
     )
      
-     
-     # plot10A <- ggplot(df2, aes( # plot with maxdist/10 circles
-     #   customcoords[,1],
-     #   customcoords[,2],
-     #   color = df2$distance)) +
-     #   geom_circle(aes(x0 = x0, y0 = y0, r = r),
-     #               colour = "orange", data = lagrangecircles,
-     #               show.legend = NA, inherit.aes = FALSE) +
-     #   geom_point(stroke = 1, size = df2$valTrans) +
-     #   geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
-     #   labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
-     # 
      
      # label
      labelPlot <- list(
@@ -519,13 +508,8 @@ server <- function(input, output) {
        plot_coordinates[,1], 
        plot_coordinates[,2], 
        color = df2$distance)) +
-       # geom_point(stroke = 1, size = df2$valTrans) +
-       # coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
-       # guides(colour = "colorbar",size = "legend") +
-       # theme(panel.background = element_blank())
-       darkPlot +
-       #lightPlot
-       labelPlot
+       input$plotTheme
+       #labelPlot
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
@@ -571,15 +555,21 @@ server <- function(input, output) {
       }
       
       plot
+      
       }
      # Use simpler plot for Lat-Long (don't need circles, valTrans, etc.) 
      else{ 
        plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = "orange")
        plot_latLon
      }
-
-   }) # end react element
-  
+     
+     # ### does this make a reactive element???
+     # geoPlot4svg <- reactive({
+     #   plot
+     # })
+     
+   })
+   
    output$centerpoint_selected <- renderText({ 
      paste("You have selected the following center point:",ctrPt[1],", ",ctrPt[2])
    })
