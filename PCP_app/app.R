@@ -482,6 +482,11 @@ server <- function(input, output) {
      #   labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
      # 
      
+     # label
+     labelPlot <- list(
+       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL)
+     )
+     
      # Figure out which plot to show
      plot_circles <- circles # set default for great circle/logarithmic
      if(input$interpMeth == "Great Circle Distances"){
@@ -506,8 +511,9 @@ server <- function(input, output) {
        # coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
        # guides(colour = "colorbar",size = "legend") +
        # theme(panel.background = element_blank())
-       darkPlot
+       darkPlot +
        #lightPlot
+       labelPlot
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
@@ -527,15 +533,27 @@ server <- function(input, output) {
      ###
      ###
      ### NB: Labels broken EM Oct 3
-      if(input$labelsOn == TRUE){
-        plot <- plot + geom_text(data = df2,
-                                 aes(df2$plot_coordinates[,1],
-                                     df2$plot_coordinates[,2],
-                                     label = df2$valName),
-                                 size = 3,
-                                 check_overlap = TRUE,
-                                 color = "White")
-      }
+     ### broken version, trying a new tack
+      # if(input$labelsOn == TRUE){
+      #   plot <- plot + geom_text(data = df2,
+      #                            aes(df2$plot_coordinates[,1],
+      #                                df2$plot_coordinates[,2],
+      #                                label = df2$valName),
+      #                            size = 3,
+      #                            check_overlap = TRUE,
+      #                            color = "White")
+      # }
+     if(input$labelsOn == TRUE){
+       plot <- plot + geom_text(data = df2,
+                                aes(df2$plot_coordinates[,1],
+                                    df2$plot_coordinates[,2],
+                                    label = df2$valName),
+                                size = 3,
+                                check_overlap = TRUE,
+                                color = "White")
+     }
+     
+     
       if(input$centerOn == TRUE){
        plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = "orange", fill = "orange")
       }
