@@ -483,6 +483,7 @@ server <- function(input, output) {
     )
      
      selectedPlotTheme <- darkPlot
+     selectedLabelChoice <- NULL
      
      #this is where all the crazy themes go
      if(input$plotTheme == "Light"){
@@ -515,8 +516,8 @@ server <- function(input, output) {
        plot_coordinates[,1], 
        plot_coordinates[,2], 
        color = df2$distance)) +
-       selectedPlotTheme
-       #labelPlot
+       selectedPlotTheme +
+       selectedLabelChoice
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
@@ -547,13 +548,7 @@ server <- function(input, output) {
       #                            color = "White")
       # }
      if(input$labelsOn == TRUE){
-       plot <- plot + geom_text(data = df2,
-                                aes(df2$plot_coordinates[,1],
-                                    df2$plot_coordinates[,2],
-                                    label = df2$valName),
-                                size = 3,
-                                check_overlap = TRUE,
-                                color = "White")
+       selectedLabelChoice <- labelPlot
      }
      
      
