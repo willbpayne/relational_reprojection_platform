@@ -39,33 +39,37 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Pseudo-Spatial Chart Program"),
-   
+   div(style = "padding: 10px",
+     titlePanel("Pseudo-Spatial Chart Program")
+     ),
    ##### NB: WIDGET: Close/med/far text entry
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
      sidebarPanel(
-       fileInput("uploadFile", "Data File", multiple = FALSE, accept = NULL
+       div(style = "font-size: 14px; padding: 0px; margin-top: -5px",
+           fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
-       downloadButton("downloadSVG", label = "Export SVG"), 
-       div(name="randoDiv",
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -40px",
+         downloadButton("downloadSVG", label = "Export SVG")
+       ),
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
            column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
            column(6,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL))
            )
        ),
-       div(style = "font-size: 12px; padding: 10px 0px; margin:3%",
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
            fluidRow(
-             column(6,selectInput("plotTheme", label = "Theme", c("Light" = "Light", "Dark" = "Dark"), selected = "Light", multiple = FALSE,
-                                  selectize = TRUE, width = NULL, size = NULL))
+             column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme"), selected = "Light", multiple = FALSE,
+                                  selectize = TRUE, width = "100%", size = NULL))
            )
        ),
-       div(style = "margin-top: -50px",
+       div(style = "margin-top: -60px",
         plotOutput("distPlot", height = "250px", width="100%")
        ),
        # Radio buttons for interpolation method
-       div(style = "font-size: 12px; padding: 10px 0px; margin:3%",
+       div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
          fluidRow(
            column(6,radioButtons("valTransMeth", "Value Interpolation", 
                                  choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
@@ -482,12 +486,13 @@ server <- function(input, output) {
        guides(colour = "colorbar",size = "legend")
     )
      
-     selectedPlotTheme <- darkPlot
      selectedLabelChoice <- NULL
      
      #this is where all the crazy themes go
-     if(input$plotTheme == "Light"){
+     if(input$plotTheme == "Light Theme"){
        selectedPlotTheme <- lightPlot
+     } else if (input$plotTheme == "Dark Theme"){
+       selectedPlotTheme <-darkPlot
      }
      
      
