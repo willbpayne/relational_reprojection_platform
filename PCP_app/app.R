@@ -57,7 +57,7 @@ ui <- fluidPage(
        ),
        div(style = "font-size: 12px; padding: 10px 0px; margin:3%",
            fluidRow(
-             column(6,selectInput("plotTheme", label = "Theme", c("Light" = "lightPlot", "Dark" = "darkPlot"), selected = "lightPlot", multiple = FALSE,
+             column(6,selectInput("plotTheme", label = "Theme", c("Light" = "Light", "Dark" = "Dark"), selected = "Light", multiple = FALSE,
                                   selectize = TRUE, width = NULL, size = NULL))
            )
        ),
@@ -482,6 +482,13 @@ server <- function(input, output) {
        guides(colour = "colorbar",size = "legend")
     )
      
+     selectedPlotTheme <- darkPlot
+     
+     #this is where all the crazy themes go
+     if(input$plotTheme == "Light"){
+       selectedPlotTheme <- lightPlot
+     }
+     
      
      # label
      labelPlot <- list(
@@ -508,7 +515,7 @@ server <- function(input, output) {
        plot_coordinates[,1], 
        plot_coordinates[,2], 
        color = df2$distance)) +
-       input$plotTheme
+       selectedPlotTheme
        #labelPlot
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
