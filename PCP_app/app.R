@@ -420,6 +420,46 @@ server <- function(input, output) {
      #            PLOT CALL            #
      ################################### 
      
+     # PLOT STYLE TEST
+     darkPlot <- list(
+       theme(panel.background = element_rect(fill = "grey50", linetype = "blank"),
+             axis.ticks = element_blank(),
+             axis.text.x = element_blank(),
+             axis.text.y = element_blank(),
+             panel.grid = element_blank()
+             ),
+       coord_fixed(),
+       labs(color = paste0("FIX THIS TEXT ",ctrPtName), x = NULL, y = NULL)
+
+     )
+     
+     # STYLE BASE
+     # plot07B <-  ggplot(df2 %>%
+     #                      arrange(desc(val)),
+     #                    aes(
+     #                      df2$logcoords[,1], 
+     #                      df2$logcoords[,2], 
+     #                      color = df2$val,
+     #                      order=df2$num)) + 
+     #   geom_circle(aes(x0 = x0, y0 = y0, r = log(r)), 
+     #               colour = "grey65", data = circles, 
+     #               show.legend = NA, inherit.aes = FALSE) +
+     #   geom_point(stroke = 1, size = df2$valTrans) + 
+     #   geom_text(data = df2,
+     #             aes(df2$logcoords[,1],
+     #                 df2$logcoords[,2],
+     #                 label= df2$valName),
+     #             size = 3,
+     #             check_overlap = TRUE,
+     #             color = "White") +
+     #       + labs(color = paste0("FIX THIS TEXT ",ctrPtName), x = NULL, y = NULL)
+     #   
+     
+     
+     # lightPlot
+     
+     
+     
      # Figure out which plot to show
      plot_circles <- circles # set default for great circle/logarithmic
      if(input$interpMeth == "Great Circle Distances"){
@@ -444,6 +484,7 @@ server <- function(input, output) {
        coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
        guides(colour = "colorbar",size = "legend") +
        theme(panel.background = element_blank())
+       #darkPlot #test of plot style, requires "theme" and "Coordo" lines to be commented out
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
@@ -459,6 +500,10 @@ server <- function(input, output) {
                     show.legend = NA, 
                     inherit.aes = FALSE), plot$layers)
       }
+     
+     ###
+     ###
+     ### NB: Labels broken EM Oct 3
       if(input$labelsOn == TRUE){
         plot <- plot + geom_text(data = df2,
                                  aes(df2$plot_coordinates[,1],
