@@ -429,7 +429,9 @@ server <- function(input, output) {
              panel.grid = element_blank()
              ),
        coord_fixed(),
-       labs(color = paste0("FIX THIS TEXT ",ctrPtName), x = NULL, y = NULL)
+       labs(color = paste0("FIX THIS TEXT ",ctrPtName), x = NULL, y = NULL),
+       geom_point(stroke = 1, size = df2$valTrans),
+       guides(colour = "colorbar",size = "legend")
 
      )
      
@@ -456,9 +458,29 @@ server <- function(input, output) {
      #   
      
      
-     # lightPlot
+     lightPlot <- list(
+       theme(panel.background = element_blank(),
+             axis.ticks = element_blank(),
+             axis.text.x = element_blank(),
+             axis.text.y = element_blank()),
+       coord_fixed(),
+       geom_point(stroke = 1, size = df2$valTrans),
+       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
+       guides(colour = "colorbar",size = "legend")
+    )
      
      
+     # plot10A <- ggplot(df2, aes( # plot with maxdist/10 circles
+     #   customcoords[,1],
+     #   customcoords[,2],
+     #   color = df2$distance)) +
+     #   geom_circle(aes(x0 = x0, y0 = y0, r = r),
+     #               colour = "orange", data = lagrangecircles,
+     #               show.legend = NA, inherit.aes = FALSE) +
+     #   geom_point(stroke = 1, size = df2$valTrans) +
+     #   geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), color = "orange") +
+     #   labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
+     # 
      
      # Figure out which plot to show
      plot_circles <- circles # set default for great circle/logarithmic
@@ -480,11 +502,12 @@ server <- function(input, output) {
        plot_coordinates[,1], 
        plot_coordinates[,2], 
        color = df2$distance)) +
-       geom_point(stroke = 1, size = df2$valTrans) +
-       coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
-       guides(colour = "colorbar",size = "legend") +
-       theme(panel.background = element_blank())
-       #darkPlot #test of plot style, requires "theme" and "Coordo" lines to be commented out
+       # geom_point(stroke = 1, size = df2$valTrans) +
+       # coord_fixed() + labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL) +
+       # guides(colour = "colorbar",size = "legend") +
+       # theme(panel.background = element_blank())
+       darkPlot
+       #lightPlot
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
