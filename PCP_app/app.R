@@ -84,8 +84,7 @@ ui <- fluidPage(
        ## If radio button is on "Custom", show cut point slider
        conditionalPanel(
          condition = "input.interpMeth == 'Custom'", 
-          sliderInput("manualCutPoints", 
-                   "Distance Cut Points", 0, 10000, 
+          sliderInput("manualCutPoints", "Distance Cut Points", 0, 10000, 
                    #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
                    c(1500,5000), step = NULL, 
                    round = FALSE, 
@@ -97,10 +96,10 @@ ui <- fluidPage(
 
       # Show a plot of the generated distribution
       mainPanel(
+         textOutput("df"),
          textOutput("centerpoint_selected"),
          textOutput("namefield_selected"),
          textOutput("valuefield_selected"),
-         ##### NB: This should be our map instead
          plotOutput("geoPlot", height = "550px")
       )
    )
@@ -125,7 +124,7 @@ server <- function(input, output) {
       if (is.null(input$uploadFile) == TRUE){
         df <- read.csv(file = "IND_remittances.csv")
         par(bg = '#f5f5f5')
-        plot(df$lon, df$lat, bg = "blue")
+        plot(df$lon, df$lat, col = "#2E6EFC")
       }
      else{
        uploadFileData <- input$uploadFile
@@ -152,24 +151,24 @@ server <- function(input, output) {
    # reactivity to the UI, so that the plot code is really only drawing
    # the plot. 
    
+   dataframefinder <- function() { # First reactive function!
+     if(is.null(input$uploadFile) == TRUE){
+       read.csv(file = "IND_remittances.csv")
+     } else {
+       n <- input$uploadFile
+       read.csv(file = n$datapath)
+     }
+   }
+  output$df <- renderText(paste("Column names are: ", paste(colnames(dataframefinder()), collapse=", ")))
    
-  output$geoPlot <- renderPlot({ # the main event
-     
-     if (is.null(input$uploadFile) == TRUE){
-       df <- read.csv(file = "IND_remittances.csv")
-       df_ext <- ".csv"
-       plot(df$lon, df$lat)
-     }
-     else{
-       uploadFileData <- input$uploadFile
-       df <- read.csv(file = uploadFileData$datapath)
-       df_ext <- ".csv" # MANUAL FOR NOW, NEED TO ADD GEOJSON SUPPORT BACK
-       plot(df$lon, df$lat, ann=FALSE, axes=FALSE,xaxt="n", yaxt="n",xlab='',ylab='')
-     }
-     
+  output$geoPlot <- renderPlot({ 
+
      ###################################
      #        PARSE COLUMNS            #
      ###################################
+     
+     df <- dataframefinder()
+     df_ext <- ".csv"
      
      colListOrig <- colnames(df) # store column names for later
      latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
@@ -348,8 +347,6 @@ server <- function(input, output) {
      
      #df2$val[df2$val == 0] <- NA # turn zeros to NAs for our purposes
      
-
-     
      ###################################
      #        GREAT CIRCLE             #
      ###################################     
@@ -468,12 +465,10 @@ server <- function(input, output) {
              panel.grid = element_blank()
              ),
        coord_fixed(),
-       labs(color = paste0("FIX THIS TEXT ",ctrPtName), x = NULL, y = NULL),
+       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
        guides(colour = "colorbar",size = "legend")
-
      )
-     
      
      lightPlot <- list(
        theme(panel.background = element_blank(),
@@ -577,12 +572,16 @@ server <- function(input, output) {
      
    })
    
+   valNameChoices <- reactive(
+     c("Name1","Name2","Name3")
+   )
+  
    output$centerpoint_selected <- renderText({ 
      paste("You have selected the following center point:",ctrPt[1],", ",ctrPt[2])
    })
    
    output$namefield_selected <- renderText({ 
-     paste("These are the potential name fields:", valNameChoices)
+     paste0("These are the potential name fields:", valNameChoices)
    })
    
    output$valuefield_selected <- renderText({ 
