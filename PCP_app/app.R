@@ -477,7 +477,7 @@ server <- function(input, output) {
              legend.title = element_text(color = "white")
              ),
        coord_fixed(),
-       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
+       labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
        guides(colour = "colorbar",size = "legend")
      )
@@ -490,7 +490,7 @@ server <- function(input, output) {
              axis.text.y = element_blank()),
        coord_fixed(),
        geom_point(stroke = 1, size = df2$valTrans),
-       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
+       labs(color = paste0("Distance from", '\n', ctrPtName," (km)"), x = NULL, y = NULL),
        guides(colour = "colorbar",size = "legend")
     )
     
@@ -502,7 +502,7 @@ server <- function(input, output) {
             axis.text.y = element_blank()),
       coord_fixed(),
       geom_point(stroke = 1, size = df2$valTrans),
-      labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
+      labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
       guides(colour = "colorbar",size = "legend")
     ) 
       
@@ -525,12 +525,6 @@ server <- function(input, output) {
        themeText = "black"
      }
      
-     
-     # label
-     # labelPlot <- list(
-     #   labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL)
-     # )
-     
      # Figure out which plot to show
      plot_circles <- circles # set default for great circle/logarithmic
      if(input$interpMeth == "Great Circle Distances"){
@@ -551,8 +545,7 @@ server <- function(input, output) {
        plot_coordinates[,1], 
        plot_coordinates[,2],
        color = df2$distance) ) +
-       selectedPlotTheme #+
-       #selectedLabelChoice
+       selectedPlotTheme
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
@@ -581,18 +574,6 @@ server <- function(input, output) {
                                  check_overlap = TRUE,
                                  color = themeText)
       }
-
-     
-     
-     
-     # if(input$labelsOn == TRUE){
-     #   selectedLabelChoice <- labelPlot
-     #   plot <- plot + selectedLabelChoice
-     # }
-     # else if(input$labelsOn == FALSE){
-     #   selectedLabelChoice <- labelPlotOff
-     #   plot <- plot + selectedLabelChoice
-     # }
      
      
       if(input$centerOn == TRUE){
@@ -608,8 +589,7 @@ server <- function(input, output) {
          geom_point() + 
          geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = ctrPtColor, shape = 10, size = 3) +
          scale_color_viridis_c(option = "plasma") +
-         selectedPlotTheme #+
-        # selectedLabelChoice
+         selectedPlotTheme
        plot_latLon
      }
      
