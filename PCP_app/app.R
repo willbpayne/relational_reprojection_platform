@@ -126,7 +126,7 @@ server <- function(input, output) {
       if (is.null(input$uploadFile) == TRUE){
         df <- read.csv(file = "IND_remittances.csv")
         par(bg = '#f5f5f5')
-        plot(df$lon, df$lat, col = "#2E6EFC")
+        plot(df$lon, df$lat, col = "#000000")
       }
      else{
        uploadFileData <- input$uploadFile
@@ -460,7 +460,29 @@ server <- function(input, output) {
      
      circleColor = "red" #default value for circle color. If they are red, something is broken
      ctrPtColor = "red"  #default value for center point color. If it is red, something is broken
-
+     # selectedLabelChoice <- labelPlotOff # testing phase: blue if it's off, red if on
+     # 
+     # 
+     # labelPlot <- list(
+     #   geom_text(data = df2,
+     #             aes(df2$logcoords[,1],
+     #                 df2$logcoords[,2],
+     #                 label= df2$valName),
+     #             size = 3,
+     #             check_overlap = TRUE,
+     #             color = "Red") 
+     # )
+     # 
+     # 
+     # labelPlotOff <- list(
+     #   geom_text(data = df2,
+     #             aes(df2$logcoords[,1],
+     #                 df2$logcoords[,2],
+     #                 label= df2$valName),
+     #             size = 3,
+     #             check_overlap = TRUE,
+     #             color = "Blue") 
+     # )
      
      # PLOT STYLE TEST
      darkPlot <- list(
@@ -475,6 +497,7 @@ server <- function(input, output) {
              legend.text = element_text(color = "white"),
              legend.title = element_text(color = "white")
              ),
+      #selectedLabelChoice,
        coord_fixed(),
        labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
@@ -505,7 +528,6 @@ server <- function(input, output) {
       guides(colour = "colorbar",size = "legend")
     ) 
       
-     selectedLabelChoice <- NULL
      
      #this is where all the crazy themes go
      if(input$plotTheme == "Light Theme"){
@@ -524,9 +546,9 @@ server <- function(input, output) {
      
      
      # label
-     labelPlot <- list(
-       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL)
-     )
+     # labelPlot <- list(
+     #   labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL)
+     # )
      
      # Figure out which plot to show
      plot_circles <- circles # set default for great circle/logarithmic
@@ -548,8 +570,8 @@ server <- function(input, output) {
        plot_coordinates[,1], 
        plot_coordinates[,2],
        color = df2$distance) ) +
-       selectedPlotTheme +
-       selectedLabelChoice
+       selectedPlotTheme #+
+       #selectedLabelChoice
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
@@ -570,18 +592,27 @@ server <- function(input, output) {
      ###
      ### NB: Labels broken EM Oct 3
      ### broken version, trying a new tack
-      # if(input$labelsOn == TRUE){
-      #   plot <- plot + geom_text(data = df2,
-      #                            aes(df2$plot_coordinates[,1],
-      #                                df2$plot_coordinates[,2],
-      #                                label = df2$valName),
-      #                            size = 3,
-      #                            check_overlap = TRUE,
-      #                            color = "White")
-      # }
-     if(input$labelsOn == TRUE){
-       selectedLabelChoice <- labelPlot
-     }
+      if(input$labelsOn == TRUE){
+        plot <- plot + geom_text(data = df2,
+                                 aes(plot_coordinates[,1],
+                                     plot_coordinates[,2],
+                                     label = df2$valName),
+                                 size = 3,
+                                 check_overlap = TRUE,
+                                 color = "red")
+      }
+
+     
+     
+     
+     # if(input$labelsOn == TRUE){
+     #   selectedLabelChoice <- labelPlot
+     #   plot <- plot + selectedLabelChoice
+     # }
+     # else if(input$labelsOn == FALSE){
+     #   selectedLabelChoice <- labelPlotOff
+     #   plot <- plot + selectedLabelChoice
+     # }
      
      
       if(input$centerOn == TRUE){
@@ -597,8 +628,8 @@ server <- function(input, output) {
          geom_point() + 
          geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = ctrPtColor, shape = 10, size = 3) +
          scale_color_viridis_c(option = "plasma") +
-         selectedPlotTheme +
-         selectedLabelChoice
+         selectedPlotTheme #+
+        # selectedLabelChoice
        plot_latLon
      }
      
