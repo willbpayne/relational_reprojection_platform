@@ -22,6 +22,8 @@ library(geojsonio) # for loading geojson
 library(geosphere) # where we get bearing
 library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
+#
+library(RColorBrewer) # for graph colors
 
 # NB: to check later as we re-visit new contours
 library(akima) # for irregular grid
@@ -61,7 +63,7 @@ ui <- fluidPage(
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
            fluidRow(
-             column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme"), selected = "Light", multiple = FALSE,
+             column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme"), selected = "Light", multiple = FALSE,
                                   selectize = TRUE, width = "100%", size = NULL))
            )
        ),
@@ -458,6 +460,7 @@ server <- function(input, output) {
      
      # PLOT STYLE TEST
      darkPlot <- list(
+      scale_color_viridis_c(option = "plasma"),
        theme(panel.background = element_rect(fill = "grey50", linetype = "blank"),
              axis.ticks = element_blank(),
              axis.text.x = element_blank(),
@@ -467,10 +470,12 @@ server <- function(input, output) {
        coord_fixed(),
        labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
-       guides(colour = "colorbar",size = "legend")
+       guides(colour = "colorbar",size = "legend")#,
+      #circleColor = "blue"
      )
      
      lightPlot <- list(
+       scale_color_viridis_c(option = "D"),
        theme(panel.background = element_blank(),
              axis.ticks = element_blank(),
              axis.text.x = element_blank(),
@@ -478,9 +483,23 @@ server <- function(input, output) {
        coord_fixed(),
        geom_point(stroke = 1, size = df2$valTrans),
        labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
-       guides(colour = "colorbar",size = "legend")
+       guides(colour = "colorbar",size = "legend")#,
+       #circleColor = "red"
     )
-     
+    
+    monoPlot <- list(
+      scale_color_gradient(low = "gray95", high = "#000000"),
+      theme(panel.background = element_blank(),
+            axis.ticks = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank()),
+      coord_fixed(),
+      geom_point(stroke = 1, size = df2$valTrans),
+      labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
+      guides(colour = "colorbar",size = "legend")#,
+      #circleColor = "gray50"
+    ) 
+      
      selectedLabelChoice <- NULL
      
      #this is where all the crazy themes go
@@ -488,6 +507,8 @@ server <- function(input, output) {
        selectedPlotTheme <- lightPlot
      } else if (input$plotTheme == "Dark Theme"){
        selectedPlotTheme <-darkPlot
+     } else if (input$plotTheme == "Mono Theme"){
+       selectedPlotTheme <-monoPlot
      }
      
      
@@ -514,14 +535,15 @@ server <- function(input, output) {
      if(input$interpMeth != "Lat & Long"){
      plot <- ggplot(df2 %>% arrange(desc(val)), aes(
        plot_coordinates[,1], 
-       plot_coordinates[,2], 
-       color = df2$distance)) +
+       plot_coordinates[,2],
+       color = df2$distance) ) +
        selectedPlotTheme +
        selectedLabelChoice
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
-                                  colour = "orange", 
+                                  colour = "orange",
+                                  #colour = circleColor,
                                   data = plot_circles, 
                                   show.legend = NA, 
                                   inherit.aes = FALSE), plot$layers)
@@ -561,7 +583,12 @@ server <- function(input, output) {
       }
      # Use simpler plot for Lat-Long (don't need circles, valTrans, etc.) 
      else{ 
-       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$distance)) + geom_point() + geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = "orange")
+       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$distance)) + 
+         geom_point() + 
+         geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = "orange") +
+         scale_color_viridis_c(option = "plasma") +
+         selectedPlotTheme +
+         selectedLabelChoice
        plot_latLon
      }
      
