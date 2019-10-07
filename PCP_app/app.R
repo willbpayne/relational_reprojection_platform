@@ -458,7 +458,7 @@ server <- function(input, output) {
      #            PLOT CALL            #
      ################################### 
      
-     circleColor = "yellow"
+     circleColor = "red" #default value for circle color. If they are red, something is broken
      
 
      
@@ -466,16 +466,19 @@ server <- function(input, output) {
      darkPlot <- list(
       scale_color_viridis_c(option = "plasma"),
        theme(panel.background = element_rect(fill = "grey50", linetype = "blank"),
+             plot.background = element_rect(fill= "grey50"),
              axis.ticks = element_blank(),
              axis.text.x = element_blank(),
              axis.text.y = element_blank(),
-             panel.grid = element_blank()
+             panel.grid = element_blank(),
+             legend.background = element_rect(fill = "grey50"),
+             legend.text = element_text(color = "white"),
+             legend.title = element_text(color = "white")
              ),
        coord_fixed(),
        labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
        guides(colour = "colorbar",size = "legend")
-     # circleColor = "blue"
      )
      
      lightPlot <- list(
@@ -487,8 +490,7 @@ server <- function(input, output) {
        coord_fixed(),
        geom_point(stroke = 1, size = df2$valTrans),
        labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
-       guides(colour = "colorbar",size = "legend")#,
-       #circleColor = "red"
+       guides(colour = "colorbar",size = "legend")
     )
     
     monoPlot <- list(
@@ -500,8 +502,7 @@ server <- function(input, output) {
       coord_fixed(),
       geom_point(stroke = 1, size = df2$valTrans),
       labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
-      guides(colour = "colorbar",size = "legend")#,
-      #circleColor = "gray50"
+      guides(colour = "colorbar",size = "legend")
     ) 
       
      selectedLabelChoice <- NULL
@@ -512,7 +513,7 @@ server <- function(input, output) {
        circleColor <- "gold"
      } else if (input$plotTheme == "Dark Theme"){
        selectedPlotTheme <-darkPlot
-       circleColor <- "gray25"
+       circleColor <- "gray95"
      } else if (input$plotTheme == "Mono Theme"){
        selectedPlotTheme <-monoPlot
        circleColor <- "gray50"
