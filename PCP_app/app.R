@@ -129,17 +129,14 @@ server <- function(input, output) {
   
    output$distPlot <- renderPlot({ # the basic dot plot for sidebar
 
-      if (is.null(input$uploadFile) == TRUE){
+     if (is.null(input$uploadFile) == TRUE){
         df <- read.csv(file = "IND_remittances.csv")
-        par(bg = '#f5f5f5')
-        plot(df$lon, df$lat, col = "#000000")
       }
      else{
-       uploadFileData <- input$uploadFile
-       df <- read.csv(file = uploadFileData$datapath)
-       plot(df$lon, df$lat)
+        df <- read.csv(file = input$uploadFile$datapath) # read uploaded CSV
      }
-
+     par(bg = '#f5f5f5') # set background color to match sidebar
+     plot(df$lon, df$lat, col = "#000000") # generate plot
    })
    
    output$downloadSVG <- downloadHandler(
@@ -167,6 +164,7 @@ server <- function(input, output) {
        read.csv(file = n$datapath)
      }
    }
+  
   output$df <- renderText(paste("Column names are: ", paste(colnames(dataframeFinder()), collapse=", ")))
   
   colNamesFinder <- function(df) {
