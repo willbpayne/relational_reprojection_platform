@@ -52,6 +52,12 @@ ui <- fluidPage(
        div(style = "font-size: 14px; padding: 0px; margin-top: -5px",
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
+       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
+       #     fluidRow(
+       #       column(6,selectInput("valNameSelected", "Name Field", valNameChoicesDropdown, selected = valNameChoicesDropdown[1], multiple = FALSE, selectize = TRUE, width = "100%", size = NULL)),
+       #       column(6,selectInput("valSelected", "Value Field", valChoicesDropdown, selected = valChoicesDropdown[1], multiple = FALSE, selectize = TRUE, width = "100%", size = NULL))
+       #     )
+       # ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -40px",
          downloadButton("downloadSVG", label = "Export SVG")
        ),
@@ -99,9 +105,9 @@ ui <- fluidPage(
       # Show a plot of the generated distribution
       mainPanel(
          textOutput("df"),
+         uiOutput("valNameChoicesDropdown"),
+         uiOutput("valChoicesDropdown"),
          textOutput("centerpoint_selected"),
-         textOutput("namefield_selected"),
-         textOutput("valuefield_selected"),
          plotOutput("geoPlot", height = "550px")
       )
    )
@@ -153,7 +159,7 @@ server <- function(input, output) {
    # reactivity to the UI, so that the plot code is really only drawing
    # the plot. 
    
-   dataframefinder <- function() { # First reactive function!
+   dataframeFinder <- function() { # First reactive function!
      if(is.null(input$uploadFile) == TRUE){
        read.csv(file = "IND_remittances.csv")
      } else {
@@ -161,15 +167,87 @@ server <- function(input, output) {
        read.csv(file = n$datapath)
      }
    }
-  output$df <- renderText(paste("Column names are: ", paste(colnames(dataframefinder()), collapse=", ")))
-   
+  output$df <- renderText(paste("Column names are: ", paste(colnames(dataframeFinder()), collapse=", ")))
+  
+  colNamesFinder <- function(df) {
+    colListOrig <- colnames(df) # store column names for later
+    latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
+    lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
+    valNameChoices <- list()
+    valChoices <- list()
+    
+    latflag <- 0 # need these here for the column detection
+    lonflag <- 0
+    ctrBinflag <- 0
+    valNameflag <- 0
+    valflag <- 0
+    
+    for (col in 1:ncol(df)) {
+      if (typeof(df[[col]]) == "double"
+          && latflag == 0
+          && max(as.numeric(df[[col]]), na.rm = T) <= 90.0
+          && min(as.numeric(df[[col]]), na.rm = T) >= -90.0
+          && names(df)[[col]] %in% latNames) # lat
+      { 
+        latflag <- 1}
+      else{
+        if (typeof(df[[col]]) == "double"
+            && lonflag == 0
+            && max(as.numeric(df[[col]]), na.rm = T) <= 180.0
+            && min(as.numeric(df[[col]]), na.rm = T) >= -180.0
+            && names(df)[col] %in% lonNames) # lon
+        { 
+        lonflag <- 1}
+        else{
+          if (typeof(df[[col]]) != "character"
+              && typeof(df[[col]]) != "list"
+              && min(as.numeric(df[[col]]), na.rm = T) == 0
+              && max(as.numeric(df[[col]]), na.rm = T) == 1
+              && sum(as.numeric(df[[col]]), na.rm = T) == 1) # ctrBin
+          {
+          ctrBinflag <- 1}
+          else{
+            if (typeof(df[[col]]) == "character" # catches name and name_long
+                || is.factor(df[[col]]) == T) # valName
+            { valNameChoices <- c(valNameChoices, names(df)[[col]])
+            }
+            else{
+              if (typeof(df[[col]]) == "integer" || typeof(df[[col]]) == "double" # val
+                  && !(names(df)[col] %in% lonNames)
+                  && !(names(df)[col] %in% latNames)
+                  && names(df[col]) != "geometry")
+              {  valChoices <- c(valChoices, names(df)[[col]])
+              }
+            }
+          }
+        }
+      }
+    }
+    bothLists <- list(valNameChoices, valChoices) # combine two lists
+    return(bothLists) # numeric columns that aren't lat-long
+  } 
+
+  # valNameChoicesDropdown <- reactive (
+  #   colNamesFinder(dataframefinder())[1]
+  # )
+  # 
+  # valChoicesDropdown <- reactive (
+  #   colNamesFinder(dataframefinder())[2]
+  # )
+  
+  output$valNameChoicesDropdown <- renderUI(
+    paste("Possible name columns are: ", paste(unlist(colNamesFinder(dataframeFinder())[1]), collapse=", ")))
+  
+  output$valChoicesDropdown <- renderUI(
+    paste("Possible value columns are: ", paste(unlist(colNamesFinder(dataframeFinder())[2]), collapse=", ")))
+  
   output$geoPlot <- renderPlot({ 
 
      ###################################
      #        PARSE COLUMNS            #
      ###################################
      
-     df <- dataframefinder()
+     df <- dataframeFinder()
      df_ext <- ".csv"
      
      colListOrig <- colnames(df) # store column names for later
