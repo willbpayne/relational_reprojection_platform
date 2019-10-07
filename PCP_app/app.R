@@ -458,6 +458,8 @@ server <- function(input, output) {
      #            PLOT CALL            #
      ################################### 
      
+     circleColor = "yellow"
+     
      # PLOT STYLE TEST
      darkPlot <- list(
       scale_color_viridis_c(option = "plasma"),
@@ -542,15 +544,16 @@ server <- function(input, output) {
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
-                                  colour = "orange",
-                                  #colour = circleColor,
+                                  #colour = "orange",
+                                  colour = circleColor,
                                   data = plot_circles, 
                                   show.legend = NA, 
                                   inherit.aes = FALSE), plot$layers)
       }
       else{
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = r),
-                    colour = "orange", 
+                    #colour = "orange", 
+                    colour = circleColor,
                     data = plot_circles, 
                     show.legend = NA, 
                     inherit.aes = FALSE), plot$layers)
