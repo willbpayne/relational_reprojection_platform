@@ -459,7 +459,7 @@ server <- function(input, output) {
      ################################### 
      
      circleColor = "red" #default value for circle color. If they are red, something is broken
-     
+     ctrPtColor = "red"  #default value for center point color. If it is red, something is broken
 
      
      # PLOT STYLE TEST
@@ -511,12 +511,15 @@ server <- function(input, output) {
      if(input$plotTheme == "Light Theme"){
        selectedPlotTheme <- lightPlot
        circleColor <- "gold"
+       ctrPtColor <- "gold"
      } else if (input$plotTheme == "Dark Theme"){
        selectedPlotTheme <-darkPlot
        circleColor <- "gray95"
+       ctrPtColor <- "gray95"
      } else if (input$plotTheme == "Mono Theme"){
        selectedPlotTheme <-monoPlot
        circleColor <- "gray50"
+       ctrPtColor <- "gray50"
      }
      
      
@@ -550,7 +553,6 @@ server <- function(input, output) {
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
-                                  #colour = "orange",
                                   colour = circleColor,
                                   data = plot_circles, 
                                   show.legend = NA, 
@@ -558,7 +560,6 @@ server <- function(input, output) {
       }
       else{
       plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = r),
-                    #colour = "orange", 
                     colour = circleColor,
                     data = plot_circles, 
                     show.legend = NA, 
@@ -584,7 +585,7 @@ server <- function(input, output) {
      
      
       if(input$centerOn == TRUE){
-       plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = "orange", fill = "orange")
+       plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
       }
       
       plot
@@ -594,7 +595,7 @@ server <- function(input, output) {
      else{ 
        plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$distance)) + 
          geom_point() + 
-         geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = "orange") +
+         geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = ctrPtColor, shape = 10, size = 3) +
          scale_color_viridis_c(option = "plasma") +
          selectedPlotTheme +
          selectedLabelChoice
