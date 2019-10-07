@@ -460,6 +460,8 @@ server <- function(input, output) {
      
      circleColor = "yellow"
      
+
+     
      # PLOT STYLE TEST
      darkPlot <- list(
       scale_color_viridis_c(option = "plasma"),
@@ -472,8 +474,8 @@ server <- function(input, output) {
        coord_fixed(),
        labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
-       guides(colour = "colorbar",size = "legend")#,
-      #circleColor = "blue"
+       guides(colour = "colorbar",size = "legend")
+     # circleColor = "blue"
      )
      
      lightPlot <- list(
@@ -507,10 +509,13 @@ server <- function(input, output) {
      #this is where all the crazy themes go
      if(input$plotTheme == "Light Theme"){
        selectedPlotTheme <- lightPlot
+       circleColor <- "gold"
      } else if (input$plotTheme == "Dark Theme"){
        selectedPlotTheme <-darkPlot
+       circleColor <- "gray25"
      } else if (input$plotTheme == "Mono Theme"){
        selectedPlotTheme <-monoPlot
+       circleColor <- "gray50"
      }
      
      
