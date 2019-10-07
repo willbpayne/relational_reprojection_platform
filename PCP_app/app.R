@@ -458,31 +458,10 @@ server <- function(input, output) {
      #            PLOT CALL            #
      ################################### 
      
+     #initating variables
      circleColor = "red" #default value for circle color. If they are red, something is broken
      ctrPtColor = "red"  #default value for center point color. If it is red, something is broken
-     # selectedLabelChoice <- labelPlotOff # testing phase: blue if it's off, red if on
-     # 
-     # 
-     # labelPlot <- list(
-     #   geom_text(data = df2,
-     #             aes(df2$logcoords[,1],
-     #                 df2$logcoords[,2],
-     #                 label= df2$valName),
-     #             size = 3,
-     #             check_overlap = TRUE,
-     #             color = "Red") 
-     # )
-     # 
-     # 
-     # labelPlotOff <- list(
-     #   geom_text(data = df2,
-     #             aes(df2$logcoords[,1],
-     #                 df2$logcoords[,2],
-     #                 label= df2$valName),
-     #             size = 3,
-     #             check_overlap = TRUE,
-     #             color = "Blue") 
-     # )
+     themeText = "red"
      
      # PLOT STYLE TEST
      darkPlot <- list(
@@ -497,7 +476,6 @@ server <- function(input, output) {
              legend.text = element_text(color = "white"),
              legend.title = element_text(color = "white")
              ),
-      #selectedLabelChoice,
        coord_fixed(),
        labs(color = paste0("Distance from ",ctrPtName," (km)"), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
@@ -517,7 +495,7 @@ server <- function(input, output) {
     )
     
     monoPlot <- list(
-      scale_color_gradient(low = "gray95", high = "#000000"),
+      scale_color_gradient(low = "gray80", high = "#000000"),
       theme(panel.background = element_blank(),
             axis.ticks = element_blank(),
             axis.text.x = element_blank(),
@@ -534,14 +512,17 @@ server <- function(input, output) {
        selectedPlotTheme <- lightPlot
        circleColor <- "gold"
        ctrPtColor <- "gold"
+       themeText = "gray75"
      } else if (input$plotTheme == "Dark Theme"){
        selectedPlotTheme <-darkPlot
        circleColor <- "gray95"
        ctrPtColor <- "gray95"
+       themeText = "white"
      } else if (input$plotTheme == "Mono Theme"){
        selectedPlotTheme <-monoPlot
        circleColor <- "gray50"
        ctrPtColor <- "gray50"
+       themeText = "black"
      }
      
      
@@ -590,8 +571,7 @@ server <- function(input, output) {
      
      ###
      ###
-     ### NB: Labels broken EM Oct 3
-     ### broken version, trying a new tack
+     ### This works now, but nicer to shove into a list to change by theme
       if(input$labelsOn == TRUE){
         plot <- plot + geom_text(data = df2,
                                  aes(plot_coordinates[,1],
@@ -599,7 +579,7 @@ server <- function(input, output) {
                                      label = df2$valName),
                                  size = 3,
                                  check_overlap = TRUE,
-                                 color = "red")
+                                 color = themeText)
       }
 
      
