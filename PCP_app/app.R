@@ -327,7 +327,7 @@ server <- function(input, output) {
      #        SET CENTER POINT         #
      ###################################
      
-     if("ctrBin" %in% names(df)[col]) {
+     if("ctrBin" %in% colnames(df2)) {
        ctrPtName <- df2$valName[df2$ctrBin == TRUE]
        ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
        # print("you prepared your data soooooo well!")
