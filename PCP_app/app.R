@@ -52,7 +52,7 @@ ui <- fluidPage(
        div(style = "font-size: 14px; padding: 0px; margin-top: -5px",
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
-       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -40px",
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
          downloadButton("downloadSVG", label = "Export SVG")
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
@@ -166,9 +166,12 @@ server <- function(input, output) {
   output$geoPlot <- renderPlot({ 
 
      ###################################
-     #        PARSE COLUMNS            #
+     #        PARSE COLUMNS            #   
      ###################################
-     
+    #let's make this a function then make it an input selection, 
+    #then df2 takes user input w a sensible default
+    
+    
      df <- dataframefinder()
      df_ext <- ".csv"
      
