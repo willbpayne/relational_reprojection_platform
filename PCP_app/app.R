@@ -52,8 +52,15 @@ ui <- fluidPage(
        div(style = "font-size: 14px; padding: 0px; margin-top: -5px",
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
+       
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-         downloadButton("downloadSVG", label = "Export SVG")
+           fluidRow(
+             
+             column(8,selectInput("dataColumn", label = "Select Data", c("Fake data","these", "are", "dummy","values"), selected = "Light", multiple = FALSE,
+                                  selectize = TRUE, width = "100%", size = NULL))
+           )
+           ###
+           ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
@@ -93,6 +100,9 @@ ui <- fluidPage(
                    format = "#,##0.#####", 
                    locale = "us", 
                    ticks = TRUE, animate = FALSE)
+       ),
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+           downloadButton("downloadSVG", label = "Export SVG")
        )
      ),
 
