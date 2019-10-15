@@ -60,7 +60,7 @@ ui <- fluidPage(
              ###
              ###
              column(8,selectInput("dataColumn", label = "Select Data",
-                                  choices = colnames(df), 
+                                  choices = textOutput("dataCols"), 
                                   selected = "Light", 
                                   multiple = FALSE,
                                   selectize = TRUE, 
@@ -120,6 +120,7 @@ ui <- fluidPage(
          textOutput("namefield_selected"),
          textOutput("valuefield_selected"),
          plotOutput("geoPlot", height = "550px")
+         #tableOutput("selectedData"))
       )
    )
 )
@@ -141,11 +142,22 @@ server <- function(input, output) {
   ###
   ###
   ### super fakey example to be deleted soon
-  selectedData <- reactive({
-    uploadFileData <- input$uploadFile
-    df <- read.csv(file = uploadFileData$datapath)
-    uploadFileData[, c(input$xcol, input$ycol)]
-  })   
+  # selectedData <- reactive({
+  #   uploadFileData <- input$uploadFile
+  #   df <- read.csv(file = uploadFileData$datapath)
+  #   uploadFileData[, c(input$xcol, input$ycol)]
+  # })   
+  
+  output$selectedData <- renderTable(
+     # First reactive function!
+    if(is.null(input$uploadFile) == TRUE){
+      read.csv(file = "IND_remittances.csv")
+    } else {
+      n <- input$uploadFile
+      read.csv(file = n$datapath)
+    }
+  
+  )
   
    output$distPlot <- renderPlot({ # the basic dot plot for sidebar
 
@@ -201,7 +213,8 @@ server <- function(input, output) {
    ###
    ###
   output$df <- renderText(paste("Column names are: ", paste(colnames(dataframefinder()), collapse=", ")))
-  output$df4 <-             renderText(paste("Center point is: ", paste("FIXME"), collapse=", ")) 
+  output$dataCols <- renderText(colnames(dataframefinder())) 
+  # output$df4 <-             renderText(paste("Center point is: ", paste("FIXME"), collapse=", ")) 
   
   output$geoPlot <- renderPlot({ 
 
