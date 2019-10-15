@@ -53,22 +53,22 @@ ui <- fluidPage(
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
        
-       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-           fluidRow(
-             ###
-             ###
-             ###
-             ###
-             column(8,selectInput("dataColumn", label = "Select Data",
-                                  choices = textOutput("dataCols"), 
-                                  selected = "Light", 
-                                  multiple = FALSE,
-                                  selectize = TRUE, 
-                                  width = "100%", size = NULL))
-           )
-           ###
-           ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
-       ),
+       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+       #     fluidRow(
+       #       ###
+       #       ###
+       #       ###
+       #       ###
+       #       column(8,selectInput("dataColumn", label = "Select Data",
+       #                            choices = textOutput("dataCols"), 
+       #                            selected = "Light", 
+       #                            multiple = FALSE,
+       #                            selectize = TRUE, 
+       #                            width = "100%", size = NULL))
+       #     )
+       #     ###
+       #     ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
+       # ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
            column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
@@ -92,9 +92,9 @@ ui <- fluidPage(
                                  inline = FALSE, width = "100%",
                                  selected = "Log Scale")),
            column(6,radioButtons("interpMeth", "Distance Interpolation", 
-                                 choices = c("Lat & Long","Great Circle Distances","Square Root", "Logarithmic", "Custom"), 
+                                 choices = c("Lat & Long","Great Circles","Square Root", "Logarithmic", "Custom"), 
                                  inline = FALSE, width = "100%",
-                                 selected = "Great Circle Distances"))
+                                 selected = "Great Circles"))
            )
        ),
        ## If radio button is on "Custom", show cut point slider
@@ -107,20 +107,21 @@ ui <- fluidPage(
                    format = "#,##0.#####", 
                    locale = "us", 
                    ticks = TRUE, animate = FALSE)
-       ),
-       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-           downloadButton("downloadSVG", label = "Export SVG")
        )
+       # ,
+       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+       #     downloadButton("downloadSVG", label = "Export SVG")
+       # )
      ),
 
       # Show a plot of the generated distribution
       mainPanel(
          textOutput("df"),
-         textOutput("dataCols"),
-         textOutput("ctr"),
-         textOutput("centerpoint_selected"),
-         textOutput("namefield_selected"),
-         textOutput("valuefield_selected"),
+         #textOutput("dataCols"),
+         #textOutput("ctr"),
+         #textOutput("centerpoint_selected"),
+         #textOutput("namefield_selected"),
+         #textOutput("valuefield_selected"),
          plotOutput("geoPlot", height = "550px")
          #tableOutput("selectedData"))
       )
@@ -168,8 +169,8 @@ server <- function(input, output) {
         par(bg = '#f5f5f5')
         plot(df$lon, df$lat, 
              col = "#000000", 
-             xlab = "latitude", 
-             ylab = "longitude",
+             xlab = "Longitude", 
+             ylab = "Latitude",
              tck = -.01)
       }
      else{
@@ -178,9 +179,9 @@ server <- function(input, output) {
        par(bg = '#f5f5f5')
        plot(df$lon, df$lat, 
             col = "#000000", 
-            xaxt = "none", 
-            yaxt = "none",
-            ann = "FALSE")
+            xlab = "Longitude", 
+            ylab = "Latitude",
+            tck = -.01)
      }
 
    })
@@ -324,7 +325,7 @@ server <- function(input, output) {
      #        SET CENTER POINT         #
      ###################################
      
-     if("ctrBin" %in% names(df)[col]) {
+     if("ctrBin" %in% colnames(df2)) {
        ctrPtName <- df2$valName[df2$ctrBin == TRUE]
        ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
 
@@ -385,7 +386,10 @@ server <- function(input, output) {
      #    DATA VALUE TRANSLATION       #
      ###################################   
      
-     valMin <- min(df2$val, na.rm = T) # find lowest non-zero value (that will be radius 1)
+     
+     # min(my_data_frame[my_data_frame$my_column_number>0,my_column_number])
+     
+     valMin <- min(df2$val[df2$val != 0], na.rm = TRUE) # find lowest non-zero value (that will be radius 1)
      valMax <- max(df2$val, na.rm = T) # find highest non-zero value (that will be radius X)
      valMed <- median(df2$val, na.rm = T) # find median value (that could be radius 1 + X / 2)
    
@@ -406,7 +410,7 @@ server <- function(input, output) {
        df2$valTrans <- log(df2$val) + minRadius
      } else if(input$valTransMeth == "Square Root"){
        df2$valTrans <- sqrt(df2$val) + minRadius
-       # this is basically "raw square root" since it's not scaled at all
+       # this is basically "raw square root" since it's not scaled at all (had plus minRadius before)
      } else if(input$valTransMeth == "Custom"){
        df2$valTrans <- df2$val
        # raw right now. time for another slider? or is that too extra?
@@ -549,7 +553,7 @@ server <- function(input, output) {
              ),
        coord_fixed(),
        labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
-       geom_point(stroke = 1, size = df2$valTrans),
+       geom_point(size = df2$valTrans),
        guides(colour = "colorbar",size = "legend")
      )
      
@@ -574,7 +578,9 @@ server <- function(input, output) {
       coord_fixed(),
       geom_point(stroke = 1, size = df2$valTrans),
       labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
-      guides(colour = "colorbar",size = "legend")
+      labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
+      # guides(colour = "colorbar",size = "legend")
+      guides(size = guide_legend())
     ) 
       
      
@@ -598,7 +604,7 @@ server <- function(input, output) {
      
      # Figure out which plot to show
      plot_circles <- circles # set default for great circle/logarithmic
-     if(input$interpMeth == "Great Circle Distances"){
+     if(input$interpMeth == "Great Circles"){
        plot_coordinates <- df2$circcoords
      } else if(input$interpMeth == "Square Root"){
        plot_coordinates <- df2$sqrtcoords
