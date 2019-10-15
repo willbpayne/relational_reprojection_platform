@@ -60,7 +60,7 @@ ui <- fluidPage(
              ###
              ###
              column(8,selectInput("dataColumn", label = "Select Data",
-                                  choices = colnames("FIXME"), 
+                                  choices = colnames(df), 
                                   selected = "Light", 
                                   multiple = FALSE,
                                   selectize = TRUE, 
@@ -141,9 +141,12 @@ server <- function(input, output) {
   ###
   ###
   ### super fakey example to be deleted soon
-  df3 <- reactive({
-    read.csv(file = "IND_remittances.csv")
+  selectedData <- reactive({
+    uploadFileData <- input$uploadFile
+    df <- read.csv(file = uploadFileData$datapath)
+    uploadFileData[, c(input$xcol, input$ycol)]
   })   
+  
    output$distPlot <- renderPlot({ # the basic dot plot for sidebar
 
       if (is.null(input$uploadFile) == TRUE){
@@ -163,8 +166,7 @@ server <- function(input, output) {
             col = "#000000", 
             xaxt = "none", 
             yaxt = "none",
-            xlab = "", 
-            ylab = "")
+            ann = "FALSE")
      }
 
    })
