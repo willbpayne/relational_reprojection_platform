@@ -116,14 +116,14 @@ ui <- fluidPage(
 
       # Show a plot of the generated distribution
       mainPanel(
-         textOutput("df"),
          #textOutput("dataCols"),
          #textOutput("ctr"),
          #textOutput("centerpoint_selected"),
          #textOutput("namefield_selected"),
          #textOutput("valuefield_selected"),
-         plotOutput("geoPlot", height = "550px")
-         #tableOutput("selectedData"))
+        #tableOutput("selectedData")),
+         plotOutput("geoPlot", height = "550px"),
+         htmlOutput("df")
       )
    )
 )
@@ -228,7 +228,7 @@ server <- function(input, output) {
    ###
    ###
    ###
-  output$df <- renderText(paste("Column names are: ", paste(colnames(dataframefinder()), collapse=", ")))
+  output$df <- renderText(paste("<b>Data File Column Names: </b>", paste(colnames(dataframefinder()), collapse=", ")))
   output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
   #output$ctr <- renderText(paste("Center is: ", paste(ctrPtFinder(), collapse=", ")))
   
@@ -553,7 +553,7 @@ server <- function(input, output) {
              ),
        coord_fixed(),
        labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
-       geom_point(size = df2$valTrans),
+       geom_point(stroke = 1, size = df2$valTrans),
        guides(colour = "colorbar",size = "legend")
      )
      
@@ -567,7 +567,7 @@ server <- function(input, output) {
        geom_point(stroke = 1, size = df2$valTrans),
        labs(color = paste0("Distance from", '\n', ctrPtName," (km)"), x = NULL, y = NULL),
        guides(colour = "colorbar",size = "legend")
-    )
+      )
     
     monoPlot <- list(
       scale_color_gradient(low = "gray80", high = "#000000"),
@@ -578,7 +578,7 @@ server <- function(input, output) {
       coord_fixed(),
       geom_point(stroke = 1, size = df2$valTrans),
       labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
-      labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
+      #labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
       # guides(colour = "colorbar",size = "legend")
       guides(size = guide_legend())
     ) 
@@ -670,7 +670,7 @@ server <- function(input, output) {
        plot_latLon
      }
      
-     # ### does this make a reactive element???
+     # ###
      # geoPlot4svg <- reactive({
      #   plot
      # })
