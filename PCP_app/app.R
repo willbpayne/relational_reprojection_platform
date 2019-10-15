@@ -55,9 +55,16 @@ ui <- fluidPage(
        
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
            fluidRow(
-             
-             column(8,selectInput("dataColumn", label = "Select Data", c("Fake data","these", "are", "dummy","values"), selected = "Light", multiple = FALSE,
-                                  selectize = TRUE, width = "100%", size = NULL))
+             ###
+             ###
+             ###
+             ###
+             column(8,selectInput("dataColumn", label = "Select Data",
+                                  choices = colnames("FIXME"), 
+                                  selected = "Light", 
+                                  multiple = FALSE,
+                                  selectize = TRUE, 
+                                  width = "100%", size = NULL))
            )
            ###
            ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
@@ -131,17 +138,33 @@ server <- function(input, output) {
     plot(df$lon, df$lat)
   })
   
+  ###
+  ###
+  ### super fakey example to be deleted soon
+  df3 <- reactive({
+    read.csv(file = "IND_remittances.csv")
+  })   
    output$distPlot <- renderPlot({ # the basic dot plot for sidebar
 
       if (is.null(input$uploadFile) == TRUE){
         df <- read.csv(file = "IND_remittances.csv")
         par(bg = '#f5f5f5')
-        plot(df$lon, df$lat, col = "#000000")
+        plot(df$lon, df$lat, 
+             col = "#000000", 
+             xlab = "latitude", 
+             ylab = "longitude",
+             tck = -.01)
       }
      else{
        uploadFileData <- input$uploadFile
        df <- read.csv(file = uploadFileData$datapath)
-       plot(df$lon, df$lat)
+       par(bg = '#f5f5f5')
+       plot(df$lon, df$lat, 
+            col = "#000000", 
+            xaxt = "none", 
+            yaxt = "none",
+            xlab = "", 
+            ylab = "")
      }
 
    })
@@ -171,8 +194,13 @@ server <- function(input, output) {
        read.csv(file = n$datapath)
      }
    }
-  output$df <- renderText(paste("Column names are: ", paste(colnames(dataframefinder()), collapse=", ")))
    
+   ###
+   ###
+   ###
+  output$df <- renderText(paste("Column names are: ", paste(colnames(dataframefinder()), collapse=", ")))
+  output$df4 <-             renderText(paste("Center point is: ", paste("FIXME"), collapse=", ")) 
+  
   output$geoPlot <- renderPlot({ 
 
      ###################################
