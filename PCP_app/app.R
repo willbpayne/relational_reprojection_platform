@@ -116,6 +116,8 @@ ui <- fluidPage(
       # Show a plot of the generated distribution
       mainPanel(
          textOutput("df"),
+         textOutput("dataCols"),
+         textOutput("ctr"),
          textOutput("centerpoint_selected"),
          textOutput("namefield_selected"),
          textOutput("valuefield_selected"),
@@ -208,13 +210,28 @@ server <- function(input, output) {
        read.csv(file = n$datapath)
      }
    }
-   
+
+##### duplicate of ctr in geodist, implies refactoring still necessary      
+# ctrPtFinder <- function() {   
+#    if("ctrBin" %in% names(df)[col]) {
+#      ctrPtName <- df2$valName[df2$ctrBin == TRUE]
+#      ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
+#      # print("you prepared your data soooooo well!")
+#      
+#    } else {
+#      ctrPtName <- "Default Center"
+#      ctrPt <- c(median(df2$lat), median(df2$lon)) # 
+#    }
+# }
+
    ###
    ###
    ###
   output$df <- renderText(paste("Column names are: ", paste(colnames(dataframefinder()), collapse=", ")))
-  output$dataCols <- renderText(colnames(dataframefinder())) 
-  # output$df4 <-             renderText(paste("Center point is: ", paste("FIXME"), collapse=", ")) 
+  output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
+  #output$ctr <- renderText(paste("Center is: ", paste(ctrPtFinder(), collapse=", ")))
+  
+
   
   output$geoPlot <- renderPlot({ 
 
@@ -310,13 +327,11 @@ server <- function(input, output) {
      if("ctrBin" %in% names(df)[col]) {
        ctrPtName <- df2$valName[df2$ctrBin == TRUE]
        ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
-       # print("you prepared your data soooooo well!")
 
      } else {
        ctrPtName <- "Default Center"
        ctrPt <- c(median(df2$lat), median(df2$lon)) # 
      }
-     # cat("Your center point, ",ctrPtName,", is located at", ctrPt[1],"longitude and", ctrPt[2], "latitude. ")
 
      ###################################
      #        CREATE DF2               #
