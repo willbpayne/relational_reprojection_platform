@@ -163,27 +163,24 @@ server <- function(input, output) {
   )
   
    output$distPlot <- renderPlot({ # the basic dot plot for sidebar
-
+     
       if (is.null(input$uploadFile) == TRUE){
         df <- read.csv(file = "IND_remittances.csv")
-        par(bg = '#f5f5f5')
-        plot(df$lon, df$lat, 
-             col = "#000000", 
-             xlab = "Longitude", 
-             ylab = "Latitude",
-             tck = -.01)
       }
      else{
        uploadFileData <- input$uploadFile
        df <- read.csv(file = uploadFileData$datapath)
-       par(bg = '#f5f5f5')
-       plot(df$lon, df$lat, 
-            col = "#000000", 
-            xlab = "Longitude", 
-            ylab = "Latitude",
-            tck = -.01)
      }
 
+     par(bg = '#f5f5f5',
+         mgp=c(1.75,0.5,0))
+     plot(df$lon, df$lat, 
+          col = "#000000", 
+          xlab = "Longitude", 
+          ylab = "Latitude",
+          tck = -.04,
+          cex.axis = 0.7)
+     
    })
    
    output$downloadSVG <- downloadHandler(
