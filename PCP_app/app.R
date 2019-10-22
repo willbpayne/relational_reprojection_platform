@@ -394,7 +394,7 @@ server <- function(input, output) {
      maxRadius <- 15 # change this with the UI later?
      
      if(input$valTransMeth == "Raw"){
-       df2$valTrans <- sqrt(df2$val)
+       df2$valTrans <- df2$val
        # only works if we have data at a specific scale, for comparison only
      } else if(input$valTransMeth == "Scaled"){
        df2$valTrans <- sqrt(df2$val/valMax) * maxRadius
