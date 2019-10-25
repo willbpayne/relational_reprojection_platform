@@ -8,9 +8,8 @@ Short-term:
 * Add ability for center to have or not have data (checkbox)
 * Documentation: more of it
 * Code refactoring: functionizing, making generic (data variable/value, get rid of center column and hardcode), etc.
-* Design a user interface and build it out with a JavaScript wrapper on our code
-* Figure out Jenks for distance (more exploded than on a line due to circle)
-  ? hours best one-dimensional clustering algorithm in R?
+* Come up with automated function for distance decay, 2-d clustering
+* variable selection from csv
 
 Mid-term:
 * Accepting JSON/GeoJSON/Shapefile instead of just CSV input
@@ -18,11 +17,16 @@ Mid-term:
 * Add value trim step ("Below what value do you not care about observations?" Subset the data and plot)
 * Accept that the center might also carry value (null or not?)
   Add a question: should the center point have null value or a numeric value?
-* TIN/Delauney Triangles
+* TIN/Delauney Triangles and/or raster surface
 * Control contours at all (move out of GGplot into sp?) Do it all at the end? Smoothing functions with existing approach?
-  Eve to look into more seriously
+* SVG export
+* flannery's exponent support
+* custom value interpretation
 
 Long-term:
-* Add support for doing things with two values/centers at the same time
+* project polygons 
+* proj4 integration (talk to hyperproj folks)
+* Add support for doing things with two values/centers at the same time (meh, maybe not?)
+* better: add support for changing center point 
 * Port to JavaScript?
 * Add Universal Location Finder 3000 function (first look for lat/long, then look for polygons you can centroid, then look for location-esque string fields that you can geocode, in the order Census Block/Tract, ZIP, Town/City/etc., County, State, Country?) 
