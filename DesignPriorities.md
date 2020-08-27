@@ -4,6 +4,7 @@ Design Priorities
 ----------
 
 Short-term:
+* Come up with actual uses cases and test data (keep remittances but find 2-3 more uses cases and at least one that's real). Will to get bikeshare station data to use here. Geology data.
 * Recenter existing test cases to do side by side analysis, small multiples
 * Add ability for center to have or not have data (checkbox)
 * Documentation: more of it
