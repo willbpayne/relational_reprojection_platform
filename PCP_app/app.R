@@ -318,17 +318,122 @@ server <- function(input, output) {
      my_list <- list(maxdist, maxdist, maxdist)
      return(my_list)
    }
-   
+
+   ctrPtFinder <- function(selected_dataframe) { # Second non-reactive function! still super duplicated. Ugh.
+     df <- selected_dataframe
+     df_ext <- ".csv"
+     
+     colListOrig <- colnames(df) # store column names for later
+     latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
+     lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
+     valNameChoices <- list()
+     valChoices <- list()
+     
+     df2 <- df # cloning df for non-destructive editing
+     
+     latflag <- 0 # need these here for the column detection
+     lonflag <- 0
+     ctrBinflag <- 0
+     valNameflag <- 0
+     valflag <- 0
+     
+     for (col in 1:ncol(df)) {
+       if (typeof(df[[col]]) == "double"
+           && latflag == 0
+           && max(as.numeric(df[[col]]), na.rm = T) <= 90.0
+           && min(as.numeric(df[[col]]), na.rm = T) >= -90.0
+           && names(df)[[col]] %in% latNames) # lat
+       { 
+         # print(paste("Found a lat column: ", names(df)[[col]]))
+         df2$lat <- df[[col]]
+         latflag <- 1}
+       else{
+         if (typeof(df[[col]]) == "double"
+             && lonflag == 0
+             && max(as.numeric(df[[col]]), na.rm = T) <= 180.0
+             && min(as.numeric(df[[col]]), na.rm = T) >= -180.0
+             && names(df)[col] %in% lonNames) # lon
+         { 
+           # print(paste("Found a lon column: ", names(df)[[col]]))
+           df2$lon <- df[[col]]
+           lonflag <- 1}
+         else{
+           if (typeof(df[[col]]) != "character"
+               && typeof(df[[col]]) != "list"
+               && min(as.numeric(df[[col]]), na.rm = T) == 0
+               && max(as.numeric(df[[col]]), na.rm = T) == 1
+               && sum(as.numeric(df[[col]]), na.rm = T) == 1) # ctrBin
+           { df2$ctrBin <- as.logical(df[[col]])
+           # print(paste("Found a ctrBin column: ", names(df)[[col]]))
+           ctrBinflag <- 1}
+           else{
+             if (typeof(df[[col]]) == "character" # catches name and name_long
+                 || is.factor(df[[col]]) == T) # valName
+             { if (valNameflag == 0)
+             {df2$valName <- as.character(df[[col]])
+             # print(paste("Found a valName column: ", names(df)[[col]]))
+             valNameflag <- 1}
+               else{
+                 # print(paste("Found an alternate valName column: ", names(df)[[col]]))
+                 valNameChoices <- c(valNameChoices, names(df)[[col]])}
+               # NOTE this isn't storing anywhere yet, might need to later for input
+             }
+             else{
+               if (typeof(df[[col]]) == "integer" || typeof(df[[col]]) == "double" # val
+                   && !(names(df)[col] %in% lonNames)
+                   && !(names(df)[col] %in% latNames)
+                   && names(df[col]) != "geometry")
+               { if (valflag == 0)
+               {df2$val <- as.double(df[[col]])
+               # print(paste("Found a val column: ", names(df)[[col]]))
+               valflag <- 1}
+                 else{
+                   # print(paste("Found an alternate val column: ", names(df)[[col]]))
+                   valChoices <- c(valChoices, names(df)[[col]])}
+                 # NB: NOTE this isn't storing anywhere yet, might need to later for input
+               }
+             }
+           }
+         }
+       }
+     }
+     
+     if("ctrBin" %in% colnames(df2)) {
+       ctrPtName <- df2$valName[df2$ctrBin == TRUE]
+       ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
+       
+     } else {
+       ctrPtName <- "Default Center"
+       ctrPt <- c(median(df2$lat), median(df2$lon)) # 
+     }
+     
+     if(df_ext == "csv"){
+       df2 <- dplyr::select(df2, valName, val, lat, lon) # just the fields we want
+     } else {
+       if(df_ext == "geojson"){
+         df2 <- dplyr::select(df2, valName, val, lat, lon) #something else
+       } else {
+         # print(paste("What even is this?"))
+       }
+     }
+     df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")
+     maxdist <- max(df2$distance) # max great circle distance
+     
+     my_list <- list(ctrPt[1], ctrPt[2], ctrPtName)
+     return(my_list)
+   }  
+ 
+     
 ##### duplicate of ctr in geodist, implies refactoring still necessary      
-# ctrPtFinder <- function() {   
+# ctrPtFinder <- function() {
 #    if("ctrBin" %in% names(df)[col]) {
 #      ctrPtName <- df2$valName[df2$ctrBin == TRUE]
 #      ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
 #      # print("you prepared your data soooooo well!")
-#      
+# 
 #    } else {
 #      ctrPtName <- "Default Center"
-#      ctrPt <- c(median(df2$lat), median(df2$lon)) # 
+#      ctrPt <- c(median(df2$lat), median(df2$lon)) #
 #    }
 # }
 
@@ -339,11 +444,11 @@ server <- function(input, output) {
 
  output$circledist <- renderText(paste("<b>Circle Spacing: </b>", paste(round((maxdistfinder(dataframefinder())[[1]] / 10),2), paste("km")), collapse=", "))
  
- output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste(round((maxdistfinder(dataframefinder())[[1]] / 10),2), paste("km")), collapse=", "))
+ output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste((ctrPtFinder(dataframefinder())[[3]]))))
 
- output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste(round((maxdistfinder(dataframefinder())[[1]] / 10),2), paste("km")), collapse=", "))
+ output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
  
- output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>", paste(round((maxdistfinder(dataframefinder())[[1]] / 10),2), paste("km")), collapse=", "))
+ output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>", paste(colnames(dataframefinder()), collapse=", ")))
  
  output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(round((maxdistfinder(dataframefinder())[[1]] / 10),2), paste("km")), collapse=", "))
 
