@@ -149,15 +149,6 @@ server <- function(input, output) {
     plot(df$lon, df$lat)
   })
   
-  ###
-  ###
-  ### super fakey example to be deleted soon
-  # selectedData <- reactive({
-  #   uploadFileData <- input$uploadFile
-  #   df <- read.csv(file = uploadFileData$datapath)
-  #   uploadFileData[, c(input$xcol, input$ycol)]
-  # })   
-  
   output$selectedData <- renderTable(
      # First reactive function!
     if(is.null(input$uploadFile) == TRUE){
@@ -190,17 +181,17 @@ server <- function(input, output) {
      
    })
    
-   output$downloadSVG <- downloadHandler(
-     filename = function() {
-       paste("test", ".svg", sep = "")
-     },
-     content = function(file) {
-       #ggsave("test.svg", plot = p2, scale = 1, device = "svg", dpi = 150)
-       png(file = file)
-       p2()
-       dev.off()
-     }
-   )
+   # output$downloadSVG <- downloadHandler(
+   #   filename = function() {
+   #     paste("test", ".svg", sep = "")
+   #   },
+   #   content = function(file) {
+   #     ggsave("test.svg", plot = p2, scale = 1, device = "svg", dpi = 150)
+   #     # png(file = file)
+   #     # p2()
+   #     #dev.off()
+   #   }
+   # )
    
    # I think what we want to do is chunk out all the earlier parts of the
    # code into their own little input-output sections here, including
