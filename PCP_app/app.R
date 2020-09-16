@@ -130,7 +130,7 @@ ui <- fluidPage(
          htmlOutput("valuecolumn_name"),
          htmlOutput("valuecolumn_min"),
          htmlOutput("valuecolumn_max"),
-         htmlOutput("newdfparser")
+         htmlOutput("newdfparser") #this is where we put all text outputs that require data from df2
       )
    )
 )
@@ -376,15 +376,6 @@ output$df <- renderText(paste("<b>Column Names: </b>", paste(colnames(dataframef
  output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((dfparser(dataframefinder())[[3]])), ", ", paste((dfparser(dataframefinder())[[4]])) ))
  
  output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder()[[4]]), collapse=", ")))
-=======
-output$circledist <- renderText(paste("<b>Circle Spacing: </b>", paste(round((dfparser(dataframefinder())[[1]] / 10),2), paste("km")), collapse=", "))
- 
-output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste((ctrPtFinder(dataframefinder())[[3]]))))
-
-output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
- 
-output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder())[[4]], collapse=", ")))
->>>>>>> 1f682a7b17b8428610115804354b45151c065406
  ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
  #paste(colnames(valfinder(dataframefinder())))))
  
