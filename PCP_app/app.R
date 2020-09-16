@@ -211,10 +211,12 @@ server <- function(input, output) {
    dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
    
    output$newdfparser <- renderText({ # New place to store reactive output
-       paste("Max value is:", max(dfvalues()[[4]]))
+       paste("Max value is:", max(dfvalues()[[4]])) #this is hard-coded--needs to find value column
+      ### this is where we put all reactive text
    })
 
    dfparser <- function(selected_dataframe) { # First non-reactive function! We copied a bunch o code for this
+     # ^^ works in concert with newdfparser
      df <- selected_dataframe
      df_ext <- ".csv"
      
@@ -321,17 +323,6 @@ server <- function(input, output) {
    }
 
 
-     
-   #   my_list <- list(ctrPt[1], ctrPt[2], ctrPtName)
-   #   return(my_list)
-   # }  
- 
-# 
-#      
-#      my_vect <- df2$val
-#      return(my_vect)
-#    }
-
    ###
 # output$dfparsertext <- 
   # renderText(
@@ -346,6 +337,8 @@ server <- function(input, output) {
   #  
 # paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
 
+  
+   ### to be moved into newdfparser reactive obj
 output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder())[[4]], collapse=", ")))
 ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
 #paste(colnames(valfinder(dataframefinder())))))
@@ -359,7 +352,7 @@ output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list())
    
 output$df <- renderText(paste("<b>Column Names: </b>", paste(colnames(dataframefinder()), collapse=", ")))
 
-<<<<<<< HEAD
+
  output$circledist <- renderText(paste("<b>Circle Spacing: </b>", paste(round((dfparser(dataframefinder())[[2]] / 10),2), paste("km")), collapse=", "))
  
  output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste((dfparser(dataframefinder())[[5]]))))
