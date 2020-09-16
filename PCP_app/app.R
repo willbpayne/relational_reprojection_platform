@@ -129,7 +129,7 @@ ui <- fluidPage(
          htmlOutput("valuecolumn_name"),
          htmlOutput("valuecolumn_min"),
          htmlOutput("valuecolumn_max"),
-         htmlOutput("newdfparser")
+         htmlOutput("newdfparser") #this is where we put all text outputs that require data from df2
       )
    )
 )
@@ -226,10 +226,12 @@ server <- function(input, output) {
    dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
    
    output$newdfparser <- renderText({ # New place to store reactive output
-       paste("Max value is:", max(dfvalues()[[4]]))
+       paste("Max value is:", max(dfvalues()[[4]])) #this is hard-coded--needs to find value column
+      ### this is where we put all reactive text
    })
 
    dfparser <- function(selected_dataframe) { # First non-reactive function! We copied a bunch o code for this
+     # ^^ works in concert with newdfparser
      df <- selected_dataframe
      df_ext <- ".csv"
      
@@ -331,21 +333,10 @@ server <- function(input, output) {
      df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")
      maxdist <- max(df2$distance) # max great circle distance
      
-     my_list <- list(maxdist, maxdist, maxdist)
+     my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName)
      return(my_list)
    }
 
-
-     
-   #   my_list <- list(ctrPt[1], ctrPt[2], ctrPtName)
-   #   return(my_list)
-   # }  
- 
-# 
-#      
-#      my_vect <- df2$val
-#      return(my_vect)
-#    }
 
    ###
 # output$dfparsertext <- 
@@ -361,6 +352,8 @@ server <- function(input, output) {
   #  
 # paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
 
+  
+   ### to be moved into newdfparser reactive obj
 output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder())[[4]], collapse=", ")))
 ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
 #paste(colnames(valfinder(dataframefinder())))))
@@ -376,19 +369,20 @@ output$justdataCols <- renderText(colnames(dataframefinder())[[1]])
    
 output$df <- renderText(paste("<b>Column Names: </b>", paste(colnames(dataframefinder()), collapse=", ")))
 
-output$circledist <- renderText(paste("<b>Circle Spacing: </b>", paste(round((dfparser(dataframefinder())[[1]] / 10),2), paste("km")), collapse=", "))
- 
-output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste((ctrPtFinder(dataframefinder())[[3]]))))
 
-output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
+ output$circledist <- renderText(paste("<b>Circle Spacing: </b>", paste(round((dfparser(dataframefinder())[[2]] / 10),2), paste("km")), collapse=", "))
  
-output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder())[[4]], collapse=", ")))
+ output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste((dfparser(dataframefinder())[[5]]))))
+
+ output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((dfparser(dataframefinder())[[3]])), ", ", paste((dfparser(dataframefinder())[[4]])) ))
+ 
+ output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder()[[4]]), collapse=", ")))
  ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
  #paste(colnames(valfinder(dataframefinder())))))
  
- output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(valfinder(dataframefinder())))))
+ output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(dfparser(dataframefinder())[[4]]))))
 
- output$valuecolumn_max <- renderText(paste("<b>Max Value: </b>", paste(max(valfinder(dataframefinder())))))
+ output$valuecolumn_max <- renderText(paste("<b>Max Value: </b>", paste(max(dfparser(dataframefinder()[4])))))
  
  output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
   #output$ctr <- renderText(paste("Center is: ", paste(ctrPtFinder(), collapse=", ")))
