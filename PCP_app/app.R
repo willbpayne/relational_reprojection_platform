@@ -89,11 +89,11 @@ ui <- fluidPage(
            column(6,radioButtons("valTransMeth", "Value Interpolation", 
                                  choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
                                  inline = FALSE, width = "100%",
-                                 selected = "Log Scale")),
+                                 selected = "Scaled")),
            column(6,radioButtons("interpMeth", "Distance Interpolation", 
                                  choices = c("Lat & Long","Great Circles","Square Root", "Logarithmic", "Custom"), 
                                  inline = FALSE, width = "100%",
-                                 selected = "Great Circles"))
+                                 selected = "Square Root"))
            )
        ),
        ## If radio button is on "Custom", show cut point slider
