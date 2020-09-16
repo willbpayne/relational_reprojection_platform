@@ -53,22 +53,21 @@ ui <- fluidPage(
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
        
-       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-       #     fluidRow(
-       #       ###
-       #       ###
-       #       ###
-       #       ###
-       #       column(8,selectInput("dataColumn", label = "Select Data",
-       #                            choices = textOutput("dataCols"), 
-       #                            selected = "Light", 
-       #                            multiple = FALSE,
-       #                            selectize = TRUE, 
-       #                            width = "100%", size = NULL))
-       #     )
-       #     ###
-       #     ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
-       # ),
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+           fluidRow(
+             ###
+             ###
+             ###
+             ###
+             column(8,selectInput("column", "Select Data",
+                                  multiple = FALSE,
+                                  choices = "placeholder1", 
+                                  selectize = TRUE,
+                                  width = "100%", size = NULL))
+           )
+           ###
+           ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
+       ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
            column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
@@ -141,7 +140,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-
+  
   p2 <- reactive ({
     #uploadFileData <- input$uploadFile
     #df <- read.csv(file = uploadFileData$datapath)
@@ -208,6 +207,22 @@ server <- function(input, output) {
      return(found_df)
    }
 
+   # observe({
+   #   updateSelectInput(session, "column", choices = names(dataframefinder()))
+   # })
+   
+   # observe({
+   #   valu <- unique(unlist(filedata()[input$selectcol10]))
+   #   updateSelectInput(session, "level", choices = valu)
+   # })
+   # 
+   # observeEvent(input$column, {
+   #   column_levels <- as.character(sort(unique(
+   #     dataframefinder()[[input$column]]
+   #   )))
+   #   updateSelectInput(session, "level", choices = column_levels)
+   # })
+   
    dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
    
    output$newdfparser <- renderText({ # New place to store reactive output
@@ -355,6 +370,8 @@ output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(valfi
 output$valuecolumn_max <- renderText(paste("<b>Max Value: </b>", paste(max(valfinder(dataframefinder())))))
 
 output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
+
+output$justdataCols <- renderText(colnames(dataframefinder())[[1]])
 
    
 output$df <- renderText(paste("<b>Column Names: </b>", paste(colnames(dataframefinder()), collapse=", ")))
