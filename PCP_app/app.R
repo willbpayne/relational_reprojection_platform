@@ -59,7 +59,7 @@ ui <- fluidPage(
              ###
              ###
              ###
-             column(8,selectInput("column", "Select Data",
+             column(8,selectInput("column", "Select Data Column",
                                   multiple = FALSE,
                                   choices = "placeholder1", 
                                   selectize = TRUE,
