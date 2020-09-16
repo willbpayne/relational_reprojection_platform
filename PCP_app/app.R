@@ -303,15 +303,17 @@ server <- function(input, output) {
        ctrPt <- c(median(df2$lat), median(df2$lon)) # 
      }
      
-     if(df_ext == "csv"){
-       df2 <- dplyr::select(df2, valName, val, lat, lon) # just the fields we want
-     } else {
-       if(df_ext == "geojson"){
-         df2 <- dplyr::select(df2, valName, val, lat, lon) #something else
-       } else {
-         # print(paste("What even is this?"))
-       }
-     }
+     # if(df_ext == "csv"){
+     #   df2 <- dplyr::select(df2, valName, val, lat, lon) # just the fields we want
+     # } else {
+     #   if(df_ext == "geojson"){
+     #     df2 <- dplyr::select(df2, valName, val, lat, lon) #something else
+     #   } else {
+     #     # print(paste("What even is this?"))
+     #   }
+     # }
+     ### THIS OMISSION MIGHT BREAK MORE COMPLEX DATA, OR AT LEAST GET SLOW AND LEAKY
+     
      df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")
      maxdist <- max(df2$distance) # max great circle distance
      
@@ -326,8 +328,8 @@ server <- function(input, output) {
      colListOrig <- colnames(df) # store column names for later
      latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
      lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
-     valNameChoices <- list()
-     valChoices <- list()
+     # valNameChoices <- list()
+     # valChoices <- list()
      
      df2 <- df # cloning df for non-destructive editing
      
@@ -552,8 +554,9 @@ server <- function(input, output) {
 
  output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
  
- output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>", paste(colnames(dataframefinder())[[4]], collapse=", "))) 
+ output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder())[[4]], collapse=", ")))
  ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
+ #paste(colnames(valfinder(dataframefinder())))))
  
  output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(valfinder(dataframefinder())))))
 
