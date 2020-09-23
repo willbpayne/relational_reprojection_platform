@@ -211,7 +211,21 @@ server <- function(input, output) {
    dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
    
    output$newdfparser <- renderText({ # New place to store reactive output
-       paste("Max value is:", max(dfvalues()[[4]])) #this is hard-coded--needs to find value column
+     #paste("test: ", colnames(dfvalues())),
+     
+     
+     
+     
+     #### fix column names
+
+     
+     paste(#paste("<i>Column names: ", as.list(colnames(dfvalues())),  "<br>"),
+          "Circle spacing: ", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
+           "Center point name: ", dfparser(dataframefinder())[[5]], "</br>",
+           "Center point coordinates: ", dfparser(dataframefinder())[[3]], ", ", dfparser(dataframefinder())[[4]], "</br>",
+           "Value column name: ", colnames(dataframefinder())[[4]], "</br>",
+           "Min value is: ", min(dfvalues()[[4]]), "<br>", #italic just to remember which function which
+           "Max value is:", max(dfvalues()[[4]]), "</i>") #this is hard-coded--needs to find value column
       ### this is where we put all reactive text
    })
 
