@@ -220,14 +220,16 @@ server <- function(input, output) {
 
      #renderText(colnames(dataframefinder()), outputArgs = list())
      
-     paste(#paste("<i>Column names: ", as.list(colnames(dfvalues())),  "<br>"),
-          "Circle spacing: ", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
-           "Center point name: ", dfparser(dataframefinder())[[5]], "</br>",
-           "Center point coordinates: ", dfparser(dataframefinder())[[3]], ", ", dfparser(dataframefinder())[[4]], "</br>",
-           "Value column name: ", colnames(dataframefinder())[[4]], "</br>",
-           "Min value is: ", min(dfvalues()[[4]]), "<br>", #italic just to remember which function which
-           "Max value is:", max(dfvalues()[[4]]), "</i>") #this is hard-coded--needs to find value column
-      ### this is where we put all reactive text
+     paste0(#paste("<b>Column names: </b>", as.list(colnames(dfvalues())),  "<br>"),
+          "<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
+           "<b> Center point name: </b>", dfparser(dataframefinder())[[5]], "</br>",
+           "<b> Center point coordinates: </b>", dfparser(dataframefinder())[[3]], ", ", dfparser(dataframefinder())[[4]], "</br>",
+           "<b> Value column name: </b>", colnames(dataframefinder())[[4]], "</br>",
+           "<b> Min value is: </b>", min(dfvalues()[[4]]), "<br>", #italic just to remember which function which
+           "<b> Max value is: </b>", max(dfvalues()[[4]]), "</i>", "</br>"#, #this is hard-coded--needs to find value column
+           #"<b>Column names: </b>", colnames(dfvalues()), ouputArgs = list(), sep = ", " 
+          )
+
    })
 
    dfparser <- function(selected_dataframe) { # First non-reactive function! We copied a bunch o code for this
