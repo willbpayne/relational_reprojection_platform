@@ -53,22 +53,21 @@ ui <- fluidPage(
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
        
-       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-       #     fluidRow(
-       #       ###
-       #       ###
-       #       ###
-       #       ###
-       #       column(8,selectInput("dataColumn", label = "Select Data",
-       #                            choices = textOutput("dataCols"), 
-       #                            selected = "Light", 
-       #                            multiple = FALSE,
-       #                            selectize = TRUE, 
-       #                            width = "100%", size = NULL))
-       #     )
-       #     ###
-       #     ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
-       # ),
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+           fluidRow(
+             ###
+             ###
+             ###
+             ###
+             column(8,selectInput("column", "Select Data Column",
+                                  multiple = FALSE,
+                                  choices = "placeholder1", 
+                                  selectize = TRUE,
+                                  width = "100%", size = NULL))
+           )
+           ###
+           ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
+       ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
            column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
@@ -90,11 +89,11 @@ ui <- fluidPage(
            column(6,radioButtons("valTransMeth", "Value Interpolation", 
                                  choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
                                  inline = FALSE, width = "100%",
-                                 selected = "Log Scale")),
+                                 selected = "Scaled")),
            column(6,radioButtons("interpMeth", "Distance Interpolation", 
                                  choices = c("Lat & Long","Great Circles","Square Root", "Logarithmic", "Custom"), 
                                  inline = FALSE, width = "100%",
-                                 selected = "Great Circles"))
+                                 selected = "Square Root"))
            )
        ),
        ## If radio button is on "Custom", show cut point slider
@@ -141,7 +140,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-
+  
   p2 <- reactive ({
     #uploadFileData <- input$uploadFile
     #df <- read.csv(file = uploadFileData$datapath)
@@ -208,15 +207,26 @@ server <- function(input, output) {
      return(found_df)
    }
 
+   # observe({
+   #   updateSelectInput(session, "column", choices = names(dataframefinder()))
+   # })
+   
+   # observe({
+   #   valu <- unique(unlist(filedata()[input$selectcol10]))
+   #   updateSelectInput(session, "level", choices = valu)
+   # })
+   # 
+   # observeEvent(input$column, {
+   #   column_levels <- as.character(sort(unique(
+   #     dataframefinder()[[input$column]]
+   #   )))
+   #   updateSelectInput(session, "level", choices = column_levels)
+   # })
+   
    dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
    
    output$newdfparser <- renderText({ # New place to store reactive output
      #paste("test: ", colnames(dfvalues())),
-     
-     
-     #### FIX COLUMN NAMES # # ## ### ##### ######## ###### ### ## # #
-
-     #renderText(colnames(dataframefinder()), outputArgs = list())
      
      paste(#paste("<b>Column names: </b>", as.list(colnames(dfvalues())),  "<br>"),
           "<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
@@ -352,6 +362,45 @@ server <- function(input, output) {
 # paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
 
   
+<<<<<<< HEAD
+=======
+   ### to be moved into newdfparser reactive obj
+output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder())[[4]], collapse=", ")))
+### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
+#paste(colnames(valfinder(dataframefinder())))))
+
+output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(valfinder(dataframefinder())))))
+
+output$valuecolumn_max <- renderText(paste("<b>Max Value: </b>", paste(max(valfinder(dataframefinder())))))
+
+output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
+
+output$justdataCols <- renderText(colnames(dataframefinder())[[1]])
+
+   
+output$df <- renderText(paste("<b>Column Names: </b>", paste(colnames(dataframefinder()), collapse=", ")))
+
+
+ output$circledist <- renderText(paste("<b>Circle Spacing: </b>", paste(round((dfparser(dataframefinder())[[2]] / 10),2), paste("km")), collapse=", "))
+ 
+ output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste((dfparser(dataframefinder())[[5]]))))
+
+ output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((dfparser(dataframefinder())[[3]])), ", ", paste((dfparser(dataframefinder())[[4]])) ))
+ 
+ output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder()[[4]]), collapse=", ")))
+ ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
+ #paste(colnames(valfinder(dataframefinder())))))
+ 
+ output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(dfparser(dataframefinder())[[4]]))))
+
+ output$valuecolumn_max <- renderText(paste("<b>Max Value: </b>", paste(max(dfparser(dataframefinder()[4])))))
+ 
+ output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
+  #output$ctr <- renderText(paste("Center is: ", paste(ctrPtFinder(), collapse=", ")))
+  
+
+  
+>>>>>>> 194d6cae2ff93a5542a30fbdbaefcc550c2c4150
   output$geoPlot <- renderPlot({ 
 
      ###################################
