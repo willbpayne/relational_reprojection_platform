@@ -106,13 +106,14 @@ ui <- fluidPage(
        ## If distance transformation radio button is on "Custom", show cut point slider
        conditionalPanel(
          condition = "input.interpMeth == 'Custom'", 
-          sliderInput("manualCutPoints", "Distance Cut Points", 0, 20000, 
-                   #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
-                   c(1500,5000), step = NULL, 
-                   round = FALSE, 
-                   format = "#,##0.#####", 
-                   locale = "us", 
-                   ticks = TRUE, animate = FALSE)
+            uiOutput("CustomDistanceSlider")
+          # sliderInput("manualCutPoints", "Distance Cut Points", 0, 20000, 
+          #          #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
+          #          c(1500,5000), step = NULL, 
+          #          round = FALSE, 
+          #          format = "#,##0.#####", 
+          #          locale = "us", 
+          #          ticks = TRUE, animate = FALSE)
        ),
      ## If value transformation radio button is on "Custom", show cut point slider
      conditionalPanel(
@@ -370,6 +371,22 @@ server <- function(input, output) {
    
    # output$maxdistforcutpoints <- dfparser(dataframefinder())[[2]]
 
+   output$CustomDistanceSlider <-  renderUI({
+     sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(dfparser(dataframefinder())[[2]]), value = c((dfparser(dataframefinder())[[2]]/3),dfparser(dataframefinder())[[2]]*.67), step = (round(dfparser(dataframefinder())[[2]])/100))
+                 })
+                                                         
+                 # max(input$n, isolate(input$myslider)), 21)
+   
+     #          #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
+     #          c(1500,5000), step = NULL, 
+     #          round = FALSE, 
+     #          format = "#,##0.#####", 
+     #          locale = "us", 
+     #          ticks = TRUE, animate = FALSE)
+     
+   # output$maxdistforcutpoints <- dfparser(dataframefinder())[[2]]
+   
+   
    # output$ValNameChoicesFromServer <- reactive(selectInput("column", "Select Data Column",
    #             multiple = FALSE,
    #             choices = dfparser(dataframefinder())[[9]], 
@@ -379,7 +396,7 @@ server <- function(input, output) {
    
    # output$ValNameChoicesFromServer <- reactive(as.list(levels(dfparser(dataframefinder())[[9]])))
    
-   output$ValNameChoicesFromServer <- renderText(as.list(levels(dfparser(dataframefinder())[[9]])))
+   # output$ValNameChoicesFromServer <- renderText(as.list(levels(dfparser(dataframefinder())[[9]])))
    
 
    ###
