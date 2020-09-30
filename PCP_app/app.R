@@ -97,22 +97,39 @@ ui <- fluidPage(
                                  selected = "Square Root"))
            )
        ),
-       ## If radio button is on "Custom", show cut point slider
+       div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
+           fluidRow(
+             column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 100, c(1,15), ticks = TRUE)
+           )
+           )
+       ),
+       ## If distance transformation radio button is on "Custom", show cut point slider
        conditionalPanel(
          condition = "input.interpMeth == 'Custom'", 
-          sliderInput("manualCutPoints", "Distance Cut Points", 0, 10000, 
+          sliderInput("manualCutPoints", "Distance Cut Points", 0, 20000, 
                    #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
                    c(1500,5000), step = NULL, 
                    round = FALSE, 
                    format = "#,##0.#####", 
                    locale = "us", 
                    ticks = TRUE, animate = FALSE)
-       )
-       # ,
-       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-       #     downloadButton("downloadSVG", label = "Export SVG")
-       # )
-     ),
+       ),
+     ## If value transformation radio button is on "Custom", show cut point slider
+     conditionalPanel(
+       condition = "input.valTransMeth == 'Custom'", 
+       sliderInput("manualValueCutPoints", "Value Cut Points", 0, 10000, 
+                   #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
+                   c(1500,5000), step = NULL, 
+                   round = FALSE, 
+                   format = "#,##0.#####", 
+                   locale = "us", 
+                   ticks = TRUE, animate = FALSE)
+        )
+     # ,
+     # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+     #     downloadButton("downloadSVG", label = "Export SVG")
+     # )
+   ),
 
       # Show a plot of the generated distribution
       mainPanel(
@@ -577,8 +594,8 @@ server <- function(input, output) {
      valMax <- max(df2$val, na.rm = T) # find highest non-zero value (that will be radius X)
      valMed <- median(df2$val, na.rm = T) # find median value (that could be radius 1 + X / 2)
    
-     minRadius <- 1 # change this with the UI later?
-     maxRadius <- 15 # change this with the UI later?
+     minRadius <- input$SymbolSizeRange[1] # change this with the UI later?
+     maxRadius <- input$SymbolSizeRange[2] # change this with the UI later?
      
      if(input$valTransMeth == "Raw"){
        df2$valTrans <- df2$val
@@ -597,6 +614,13 @@ server <- function(input, output) {
        # this is basically "raw square root" since it's not scaled at all (had plus minRadius before)
      } else if(input$valTransMeth == "Custom"){
        df2$valTrans <- df2$val
+       
+       
+       # df2$valTrans <- 
+       # maxRadius   
+       # input$manualValueCutPoints[1]
+       # input$manualValueCutPoints[2]
+       
        # raw right now. time for another slider? or is that too extra?
      }
       
@@ -686,8 +710,8 @@ server <- function(input, output) {
      neardist <- geogdist[2] # these two are the output of geogdist above
      fardist <- geogdist[3]
      
-     neardist <- input$manualCutPoints[1]
-     fardist <- input$manualCutPoints[2]
+     neardist <- input$manualCutPoints[1]*1000
+     fardist <- input$manualCutPoints[2]*1000
      
      chartdist <- c(0, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
      
