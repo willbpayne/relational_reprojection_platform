@@ -4,11 +4,12 @@ Design Priorities
 ----------
 
 Short-term:
-* Come up with actual uses cases and test data (keep remittances but find 2-3 more uses cases and at least one that's real). Will to get bikeshare station data to use here. Geology data.
 * Fix custom distance to be data driven instead of just the India remittance scale
 * Fix custom value interpolation
+* Find at least one new transformation we like
 * Recenter existing test cases to do side by side analysis, small multiples
-* Get clean datasets for Austin and Philly relational trips from weighted mean center of bikeshare network
+DONE BUT WANT MORE * Come up with actual uses cases and test data (keep remittances but find 2-3 more uses cases and at least one that's real). Will to get bikeshare station data to use here. Geology data.
+DONE * Get clean datasets for Austin and Philly relational trips from weighted mean center of bikeshare network
 * Add ability for center to be derived from data for non-relational datasets, rather than known a priori
   * Upload workflow needs a step where user chooses a center point (get past "isCTR" column)
   * Checkbox for no center 

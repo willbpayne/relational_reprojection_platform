@@ -342,7 +342,7 @@ server <- function(input, output) {
      ### THIS OMISSION MIGHT BREAK MORE COMPLEX DATA, OR AT LEAST GET SLOW AND LEAKY
      
      df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")
-     maxdist <- max(df2$distance) # max great circle distance
+     maxdist <- max(df2$distance) # max great circle distance in kilometers
      
      maxvaltoprint <- max(df2$val)
      minvaltoprint <- min(df2$val)
@@ -531,8 +531,8 @@ server <- function(input, output) {
          # print(paste("What even is this?"))
        }
      }
-     df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")
-     maxdist <- max(df2$distance) # max great circle distance
+     df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")*1000
+     maxdist <- max(df2$distance) # max great circle distance in meters
 
      # print( # print out both the longest axial and great circle distances
      #   paste0("The great circle distance between your center point, ",
@@ -634,12 +634,16 @@ server <- function(input, output) {
      
      # Replot coordinates on log distance scale
      df2 <- df2 %>% mutate(
-       logdistancex =  (useful::pol2cart(log(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
-       logdistancey = (useful::pol2cart(log(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
+       logdistancex =  (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+       logdistancey = (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[2]])
      )
-     
+
+     df2$logdistancex[is.nan(df2$logdistancex)] <- 0
+     df2$logdistancey[is.nan(df2$logdistancey)] <- 0
+          
      # Combine x and y into a matrix, add as a column, remove x and y columns
      df2$logcoords <- cbind(df2$logdistancex,df2$logdistancey)
+     # THIS IS WHERE WE PUT HANDLER TO MAKE SURE CENTER POINT IS PLOTTED AT CENTER???
      df2 <- dplyr::select(df2,-starts_with("logdistance"))
      
      # NEED TO OVERRIDE CENTER POINT INFINITE VALUES WITH 0,0
