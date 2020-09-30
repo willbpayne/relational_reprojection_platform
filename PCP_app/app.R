@@ -134,22 +134,8 @@ ui <- fluidPage(
 
       # Show a plot of the generated distribution
       mainPanel(
-         #textOutput("dataCols"),
-         #textOutput("ctr"),
-         #textOutput("centerpoint_selected"),
-         #textOutput("namefield_selected"),
-         #textOutput("valuefield_selected"),
-        #tableOutput("selectedData")),
-         plotOutput("geoPlot", height = "550px"),
-         htmlOutput("df"),
-         htmlOutput("circledist"),
-         # htmlOutput("ValNameChoicesFromServer"),
-         htmlOutput("centerpoint_name"),
-         htmlOutput("centerpoint_latlong"),
-         htmlOutput("valuecolumn_name"),
-         htmlOutput("valuecolumn_min"),
-         htmlOutput("valuecolumn_max"),
-         htmlOutput("newdfparser") #this is where we put all text outputs that require data from df2
+         htmlOutput("newdfparser"),
+         plotOutput("geoPlot", height = "800px")
       )
    )
 )
@@ -249,14 +235,14 @@ server <- function(input, output) {
      #paste("test: ", colnames(dfvalues())),
      
      paste(#paste("<b>Column names: </b>", as.list(colnames(dfvalues())),  "<br>"),
-          "<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
-           "<b> Center point name: </b>", dfparser(dataframefinder())[[5]], "</br>",
-           "<b> Center point coordinates: </b>", dfparser(dataframefinder())[[3]], ", ", dfparser(dataframefinder())[[4]], "</br>",
-           "<b> Value column name: </b>", dfparser(dataframefinder())[[6]], "</br>",
-           "<b> Min value is: </b>", dfparser(dataframefinder())[[8]], "<br>", #italic just to remember which function which
-           "<b> Max value is: </b>", dfparser(dataframefinder())[[7]], "</i>", "</br>", #this is hard-coded--needs to find value column
-           "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", ") 
-          ) 
+       "<b> Maximum distance: </b>", round((dfparser(dataframefinder())[[2]]),0), "km","<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
+           "<b> Center point: </b>", dfparser(dataframefinder())[[5]], " ",
+           " ( latitude: ", round(dfparser(dataframefinder())[[3]], 4), ", longitude: ", round(dfparser(dataframefinder())[[4]], 5), ")</br>",
+           "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", "),
+       "<br><b> Value column name: </b>", dfparser(dataframefinder())[[6]], " ",
+       "<b> Min value: </b>", dfparser(dataframefinder())[[8]], " ", #italic just to remember which function which
+       "<b> Max value: </b>", dfparser(dataframefinder())[[7]], "</i>", "</br>", #this is hard-coded--needs to find value column
+          collapse = " ") 
    })
 
    dfparser <- function(selected_dataframe) { # First non-reactive function! We copied a bunch o code for this
