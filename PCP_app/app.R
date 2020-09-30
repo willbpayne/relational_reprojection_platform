@@ -59,11 +59,12 @@ ui <- fluidPage(
              ###
              ###
              ###
-             column(8,selectInput("column", "Select Data Column",
-                                  multiple = FALSE,
-                                  choices = "placeholder1", 
-                                  selectize = TRUE,
-                                  width = "100%", size = NULL))
+             column(8, htmlOutput("ValNameChoicesFromServer"))
+                    # selectInput("column", "Select Data Column",
+                    #             multiple = FALSE,
+                    #             choices = renderUI("ValNameChoicesFromServer"),
+                    #             selectize = TRUE,
+                    #             width = "100%", size = NULL))
            )
            ###
            ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
@@ -124,6 +125,7 @@ ui <- fluidPage(
          plotOutput("geoPlot", height = "550px"),
          htmlOutput("df"),
          htmlOutput("circledist"),
+         # htmlOutput("ValNameChoicesFromServer"),
          htmlOutput("centerpoint_name"),
          htmlOutput("centerpoint_latlong"),
          htmlOutput("valuecolumn_name"),
@@ -232,9 +234,9 @@ server <- function(input, output) {
           "<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
            "<b> Center point name: </b>", dfparser(dataframefinder())[[5]], "</br>",
            "<b> Center point coordinates: </b>", dfparser(dataframefinder())[[3]], ", ", dfparser(dataframefinder())[[4]], "</br>",
-           "<b> Value column name: </b>", colnames(dataframefinder())[[4]], "</br>",
-           "<b> Min value is: </b>", min(dfvalues()[[4]]), "<br>", #italic just to remember which function which
-           "<b> Max value is: </b>", max(dfvalues()[[4]]), "</i>", "</br>", #this is hard-coded--needs to find value column
+           "<b> Value column name: </b>", dfparser(dataframefinder())[[6]], "</br>",
+           "<b> Min value is: </b>", dfparser(dataframefinder())[[8]], "<br>", #italic just to remember which function which
+           "<b> Max value is: </b>", dfparser(dataframefinder())[[7]], "</i>", "</br>", #this is hard-coded--needs to find value column
            "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", ") 
           ) 
    })
@@ -306,6 +308,7 @@ server <- function(input, output) {
                    && names(df[col]) != "geometry")
                { if (valflag == 0)
                {df2$val <- as.double(df[[col]])
+               ValColNametoprint <- names(df)[[col]]
                # print(paste("Found a val column: ", names(df)[[col]]))
                valflag <- 1}
                  else{
@@ -318,7 +321,6 @@ server <- function(input, output) {
          }
        }
      }
-     
      if("ctrBin" %in% colnames(df2)) {
        ctrPtName <- df2$valName[df2$ctrBin == TRUE]
        ctrPt <- c(df2$lat[df2$ctrBin == TRUE],df2$lon[df2$ctrBin == TRUE]) # get lat/lon
@@ -342,10 +344,24 @@ server <- function(input, output) {
      df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")
      maxdist <- max(df2$distance) # max great circle distance
      
-     my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName)
+     maxvaltoprint <- max(df2$val)
+     minvaltoprint <- min(df2$val)
+     
+     my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName, ValColNametoprint, maxvaltoprint, minvaltoprint, valChoices)
      return(my_list)
    }
 
+   # output$ValNameChoicesFromServer <- reactive(selectInput("column", "Select Data Column",
+   #             multiple = FALSE,
+   #             choices = dfparser(dataframefinder())[[9]], 
+   #             selectize = TRUE,
+   #             width = "100%", size = NULL))
+   # 
+   
+   # output$ValNameChoicesFromServer <- reactive(as.list(levels(dfparser(dataframefinder())[[9]])))
+   
+   output$ValNameChoicesFromServer <- renderText(as.list(levels(dfparser(dataframefinder())[[9]])))
+   
 
    ###
 # output$dfparsertext <- 
@@ -475,6 +491,7 @@ server <- function(input, output) {
                    && names(df[col]) != "geometry")
                { if (valflag == 0)
                {df2$val <- as.double(df[[col]])
+               LegendValName <- names(df)[[col]]
                # print(paste("Found a val column: ", names(df)[[col]]))
                valflag <- 1}
                  else{
@@ -719,7 +736,7 @@ server <- function(input, output) {
              legend.title = element_text(color = "white")
              ),
        coord_fixed(),
-       labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
+       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
        geom_point(stroke = 1, size = df2$valTrans),
        guides(colour = "colorbar",size = "legend")
      )
@@ -732,7 +749,7 @@ server <- function(input, output) {
              axis.text.y = element_blank()),
        coord_fixed(),
        geom_point(stroke = 1, size = df2$valTrans),
-       labs(color = paste0("Distance from", '\n', ctrPtName," (km)"), x = NULL, y = NULL),
+       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
        guides(colour = "colorbar",size = "legend")
       )
     
@@ -744,7 +761,7 @@ server <- function(input, output) {
             axis.text.y = element_blank()),
       coord_fixed(),
       geom_point(stroke = 1, size = df2$valTrans),
-      labs(color = paste0("Distance from ", '\n',ctrPtName," (km)"), x = NULL, y = NULL),
+      labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
       #labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
       # guides(colour = "colorbar",size = "legend")
       guides(size = guide_legend())
@@ -788,7 +805,7 @@ server <- function(input, output) {
      plot <- ggplot(df2 %>% arrange(desc(val)), aes(
        plot_coordinates[,1], 
        plot_coordinates[,2],
-       color = df2$distance) ) +
+       color = df2$val) ) +
        selectedPlotTheme
      
      if(input$interpMeth == "Logarithmic"){ # sneaky way to add circles below
