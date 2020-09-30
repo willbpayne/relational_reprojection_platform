@@ -367,6 +367,8 @@ server <- function(input, output) {
      my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName, ValColNametoprint, maxvaltoprint, minvaltoprint, valChoices)
      return(my_list)
    }
+   
+   # output$maxdistforcutpoints <- dfparser(dataframefinder())[[2]]
 
    # output$ValNameChoicesFromServer <- reactive(selectInput("column", "Select Data Column",
    #             multiple = FALSE,
