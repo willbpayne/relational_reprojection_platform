@@ -53,22 +53,22 @@ ui <- fluidPage(
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
        
-       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-           fluidRow(
-             ###
-             ###
-             ###
-             ###
-             column(8, htmlOutput("ValNameChoicesFromServer"))
-                    # selectInput("column", "Select Data Column",
-                    #             multiple = FALSE,
-                    #             choices = renderUI("ValNameChoicesFromServer"),
-                    #             selectize = TRUE,
-                    #             width = "100%", size = NULL))
-           )
-           ###
-           ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
-       ),
+       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+       #     # fluidRow(
+       #     #   ###
+       #     #   ###
+           #   ###
+           #   ###
+           #   column(8, htmlOutput("ValNameChoicesFromServer"))
+           #          # selectInput("column", "Select Data Column",
+           #          #             multiple = FALSE,
+           #          #             choices = renderUI("ValNameChoicesFromServer"),
+           #          #             selectize = TRUE,
+           #          #             width = "100%", size = NULL))
+       #     # )
+       #     ###
+       #     ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
+       # ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
            column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
