@@ -107,24 +107,11 @@ ui <- fluidPage(
        conditionalPanel(
          condition = "input.interpMeth == 'Custom'", 
             uiOutput("CustomDistanceSlider")
-          # sliderInput("manualCutPoints", "Distance Cut Points", 0, 20000, 
-          #          #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
-          #          c(1500,5000), step = NULL, 
-          #          round = FALSE, 
-          #          format = "#,##0.#####", 
-          #          locale = "us", 
-          #          ticks = TRUE, animate = FALSE)
        ),
      ## If value transformation radio button is on "Custom", show cut point slider
      conditionalPanel(
        condition = "input.valTransMeth == 'Custom'", 
-       sliderInput("manualValueCutPoints", "Value Cut Points", 0, 10000, 
-                   #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
-                   c(1500,5000), step = NULL, 
-                   round = FALSE, 
-                   format = "#,##0.#####", 
-                   locale = "us", 
-                   ticks = TRUE, animate = FALSE)
+          uiOutput("CustomValueSlider")
         )
      # ,
      # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
@@ -357,6 +344,10 @@ server <- function(input, output) {
    
    # output$maxdistforcutpoints <- dfparser(dataframefinder())[[2]]
 
+   output$CustomValueSlider <-  renderUI({
+     sliderInput("manualValueCutPoints", "Value Cut Points", min = round(dfparser(dataframefinder())[[8]]), max = round(dfparser(dataframefinder())[[7]]), value = c((dfparser(dataframefinder())[[7]]/3),dfparser(dataframefinder())[[7]]*.67), step = (round(dfparser(dataframefinder())[[7]])/100))
+   })
+   
    output$CustomDistanceSlider <-  renderUI({
      sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(dfparser(dataframefinder())[[2]]), value = c((dfparser(dataframefinder())[[2]]/3),dfparser(dataframefinder())[[2]]*.67), step = (round(dfparser(dataframefinder())[[2]])/100))
                  })
