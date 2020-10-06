@@ -24,6 +24,8 @@ library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
 #
 library(RColorBrewer) # for graph colors
+library(scico) # for newer graph colors (colorblind friendly, better for continuous)
+library(metR)
 
 # NB: to check later as we re-visit new contours
 library(akima) # for irregular grid
@@ -748,14 +750,15 @@ server <- function(input, output) {
      
      # PLOT STYLE 
      darkPlot <- list(
-      scale_color_viridis_c(option = "plasma"),
-       theme(panel.background = element_rect(fill = "grey50", linetype = "blank"),
-             plot.background = element_rect(fill= "grey50"),
+      scale_color_scico(palette = "tokyo", begin = 0.1, end = 0.95),
+       #scale_color_viridis_c(option = "plasma"),
+       theme(panel.background = element_rect(fill = "grey30", linetype = "blank"),
+             plot.background = element_rect(fill= "grey30"),
              axis.ticks = element_blank(),
              axis.text.x = element_blank(),
              axis.text.y = element_blank(),
              panel.grid = element_blank(),
-             legend.background = element_rect(fill = "grey50"),
+             legend.background = element_rect(fill = "grey30"),
              legend.text = element_text(color = "white"),
              legend.title = element_text(color = "white")
              ),
@@ -766,7 +769,7 @@ server <- function(input, output) {
      )
      
      lightPlot <- list(
-       scale_color_viridis_c(option = "D"),
+       scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
        theme(panel.background = element_blank(),
              axis.ticks = element_blank(),
              axis.text.x = element_blank(),
@@ -792,13 +795,14 @@ server <- function(input, output) {
     ) 
     
     surfPlot <- list(
-      scale_color_viridis_c(option = "D"),
+      scale_color_viridis_c(option = "A"),
       theme(panel.background = element_blank(),
             axis.ticks = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank()),
       coord_fixed(),
-      geom_point(stroke = 1, size = df2$valTrans),
+      #geom_contour2(aes(z = df2$valTrans)),
+      #geom_point(stroke = 1, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
       guides(colour = "colorbar",size = "legend")
     )
@@ -807,23 +811,21 @@ server <- function(input, output) {
      #this is where all the crazy themes go
      if(input$plotTheme == "Light Theme"){
        selectedPlotTheme <- lightPlot
-       circleColor <- "gold"
-       ctrPtColor <- "gold"
+       circleColor <- "ivory2"
+       ctrPtColor <- "ivory3"
        themeText = "gray75"
      } else if (input$plotTheme == "Dark Theme"){
        selectedPlotTheme <-darkPlot
-       circleColor <- "gray95"
-       ctrPtColor <- "gray95"
+       circleColor <- "gray50"
+       ctrPtColor <- "gray75"
        themeText = "white"
      } else if (input$plotTheme == "Mono Theme"){
        selectedPlotTheme <-monoPlot
-       circleColor <- "gray50"
-       ctrPtColor <- "gray50"
+       circleColor <- "gray75"
+       ctrPtColor <- "gray75"
        themeText = "black"
      } else if (input$plotTheme == "Surface"){
        selectedPlotTheme <-surfPlot
-       circleColor <- "gray50"
-       ctrPtColor <- "gray50"
        themeText = "black"
      }
      
@@ -864,6 +866,8 @@ server <- function(input, output) {
                     inherit.aes = FALSE), plot$layers)
       }
      
+     
+    # ggplot(df2, aes(df2$lon, df2$lat)),
      ###
      ###
      ### This works now, but nicer to shove into a list to change by theme
@@ -881,7 +885,28 @@ server <- function(input, output) {
       if(input$centerOn == TRUE){
        plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
       }
-      
+     
+     if(input$plotTheme == "Surface" && input$interpMeth == "Lat & Long"){
+       #for debug
+       #plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
+       #actual code
+       plot <- ggplot(df2, aes(lon, lat, z = df2$valTrans)) +
+                        geom_density2dc() #+
+        # selectectPlotTheme
+
+       ### SCRAP
+       #   plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0),
+       #                     colour = ctrPtColor, shape = 10, size = 3)
+       # geom_contour2(aes(z = df2$valTrans))
+       #
+       # ggplot(df2 %>% arrange(desc(val)), aes(
+       #   plot_coordinates[,1],
+       #   plot_coordinates[,2],
+       #   color = df2$val) ) +
+       #   selectedPlotTheme
+       ###
+     }
+
       plot
       
       }
