@@ -41,6 +41,7 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 ########################################
 
 ui <- fluidPage(
+  includeCSS("pscp_style.css"),
    
    # Application title
    div(style = "padding: 10px",
