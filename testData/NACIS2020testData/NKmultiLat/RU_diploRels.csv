@@ -1,4 +1,4 @@
-NAME,LATITUDE,LONGITUDE,TOTAL_ORGS,isCTR,CISFTA,PfP,BSEC,ConfOnDisArm,CouncEur,EurAtlPart,ParisClub,OSCE,CSTO,UnionState,EEU,CIS,ShanghiCoop,BRICS,AsiaPacEconCOop,EastAsiaSummit,G20,embassy,ACD
+NAME,latitude,longitude,TOTAL_ORGS,isCTR,CISFTA,PfP,BSEC,ConfOnDisArm,CouncEur,EurAtlPart,ParisClub,OSCE,CSTO,UnionState,EEU,CIS,ShanghiCoop,BRICS,AsiaPacEconCOop,EastAsiaSummit,G20,embassy,ACD
 AFG,34.5166902863,69.1832600493,2,0,,,,,,,,,,,,,,,,,,1,1
 ALB,41.3275407095,19.8188830146,4,0,,,1,,1,,,1,,,,,,,,,,1,
 DZA,36.763064798,3.0505525295,2,0,,,,1,,,,,,,,,,,,,,1,
