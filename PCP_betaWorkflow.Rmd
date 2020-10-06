@@ -79,8 +79,8 @@ class(df[["geometry"]]) # test to make sure it's a data frame
 colListOrig <- colnames(df) # store column names for later
 latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
 lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
-valNameChoices <- list()
-valChoices <- list()
+valNameChoices <- c() # instead of list()
+valChoices <- c() # ditto
 
 df2 <- df # cloning df for non-destructive editing
 
@@ -140,7 +140,7 @@ for (col in 1:ncol(df)) {
             valflag <- 1}
             else{
               print(paste("Found an alternate val column: ", names(df)[[col]]))
-              valChoices <- c(valChoices, names(df)[[col]])}
+              valChoices <- c(valChoices, names(df)[[col]][[1]])}
               # NB: NOTE this isn't storing anywhere yet, might need to later for input
           }
         }
@@ -148,6 +148,8 @@ for (col in 1:ncol(df)) {
     }
   }
 }
+
+valChoicesList <- as.list(valChoices)
 
 df2$val <- as.double(df[["NumCost"]]) # hardcoding for Zagat 1991 GeoJSON
 
@@ -172,6 +174,12 @@ if(df_ext == "csv"){
     print(paste("What even is this?"))
   }
 }
+
+print(valChoices)
+typeof(valChoices)
+valChoices
+valChoices[1][[1]]
+listchoices <- as.list(valChoices)
 ```
 
 ## 02: Plot Test
