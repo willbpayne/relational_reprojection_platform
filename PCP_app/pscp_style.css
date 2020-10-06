@@ -1,0 +1,7 @@
+    body {
+        background-color: #dec4de;
+    }
+
+    body, label, input, button, select { 
+      font-family: 'Arial';
+    }
