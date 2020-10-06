@@ -1,0 +1,29 @@
+
+    
+    h1 {
+      font-family: 'HelveticaNeue-UltraLight', serif;
+      font-weight: lighter;
+    }
+    
+    .panel {
+      font-weight: 100;
+      color: #404040;
+      background: transparent; /* interior of side panel */
+    }
+    
+  .mainP {
+    color: #696969;
+  }
+  
+  .col-sm-4{
+    background: transparent; /* area around side panel, but behind it */
+  }
+  
+/* .container-fluid{
+    background: purple; /* whole background
+  } */
+
+
+   body, label, input, button, select { 
+      font-family: 'HelveticaNeue', 'helvetica', monospace;
+    }

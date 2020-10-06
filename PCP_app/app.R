@@ -40,19 +40,18 @@ library(lawn) # CHECK:  trying for TIN generation, see sec. 11
 ##          UI PARTY TONIGHT!         ##
 ########################################
 
-ui <- fluidPage(
-  includeCSS("pscp_style.css"),
+ui <- fluidPage(theme = "pscp_style.css",
    
    # Application title
-   div(style = "padding: 10px",
-     titlePanel("Pseudo-Spatial Chart Program")
+   div(style = "padding: 10px", 
+     h1("Pseudo-Spatial Chart Program")
      ),
    ##### NB: WIDGET: Close/med/far text entry
    
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
-     sidebarPanel(
-       div(style = "font-size: 14px; padding: 0px; margin-top: -5px",
+     sidebarPanel( div(class="panel", 
+       div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
        
@@ -120,14 +119,14 @@ ui <- fluidPage(
      # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
      #     downloadButton("downloadSVG", label = "Export SVG")
      # )
-   ),
+   )), #end of sidebar panel, end of class panel div
 
       # Show a plot of the generated distribution
-      mainPanel(
+      mainPanel( div(class = "mainP",
          htmlOutput("newdfparser"),
-         plotOutput("geoPlot", height = "800px")
-      )
-   )
+         plotOutput("geoPlot", height = "600px")
+      ))
+   ) #end panel layout
 )
 
 ########################################
@@ -378,61 +377,6 @@ server <- function(input, output) {
    
    # output$ValNameChoicesFromServer <- renderText(as.list(levels(dfparser(dataframefinder())[[9]])))
    
-
-   ###
-# output$dfparsertext <- 
-  # renderText(
-  #   paste("<b>Column Names: </b>", 
-  #   paste(colnames(dataframefinder()), 
-  #   paste("<br><b>Circle Spacing: </b>", 
-  #   paste(((dfparser(dataframefinder())[[1]] / 10)),2),
-  #   paste("<b>Center Point Name: </b>", 
-  #   paste((ctrPtFinder(dataframefinder())[[3]])))),
-  #   collapse=", ")
-  #   ))
-  #  
-# paste("<b>Center Point Lat-Long: </b>", paste((ctrPtFinder(dataframefinder())[[1]])), ", ", paste((ctrPtFinder(dataframefinder())[[2]])) ))
-
-  
-# <<<<<<< HEAD
-# =======
-#    ### to be moved into newdfparser reactive obj
-# output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder())[[4]], collapse=", ")))
-# ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
-# #paste(colnames(valfinder(dataframefinder())))))
-# 
-# output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(valfinder(dataframefinder())))))
-# 
-# output$valuecolumn_max <- renderText(paste("<b>Max Value: </b>", paste(max(valfinder(dataframefinder())))))
-# 
-# output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
-# 
-# output$justdataCols <- renderText(colnames(dataframefinder())[[1]])
-# 
-#    
-# output$df <- renderText(paste("<b>Column Names: </b>", paste(colnames(dataframefinder()), collapse=", ")))
-# 
-# 
-#  output$circledist <- renderText(paste("<b>Circle Spacing: </b>", paste(round((dfparser(dataframefinder())[[2]] / 10),2), paste("km")), collapse=", "))
-#  
-#  output$centerpoint_name <- renderText(paste("<b>Center Point Name: </b>", paste((dfparser(dataframefinder())[[5]]))))
-# 
-#  output$centerpoint_latlong <- renderText(paste("<b>Center Point Lat-Long: </b>", paste((dfparser(dataframefinder())[[3]])), ", ", paste((dfparser(dataframefinder())[[4]])) ))
-#  
-#  output$valuecolumn_name <- renderText(paste("<b>Value Column Name: </b>",  paste(colnames(dataframefinder()[[4]]), collapse=", ")))
-#  ### ^^ obviously not how we actually do it, unless we assume since we're taking it after columns have been arranged in a set order
-#  #paste(colnames(valfinder(dataframefinder())))))
-#  
-#  output$valuecolumn_min <- renderText(paste("<b>Min Value: </b>", paste(min(dfparser(dataframefinder())[[4]]))))
-# 
-#  output$valuecolumn_max <- renderText(paste("<b>Max Value: </b>", paste(max(dfparser(dataframefinder()[4])))))
-#  
-#  output$dataCols <- renderText(colnames(dataframefinder()), outputArgs = list()) 
-#   #output$ctr <- renderText(paste("Center is: ", paste(ctrPtFinder(), collapse=", ")))
-#   
-# 
-#   
-# >>>>>>> 194d6cae2ff93a5542a30fbdbaefcc550c2c4150
   output$geoPlot <- renderPlot({ 
 
      ###################################
