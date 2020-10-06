@@ -77,7 +77,7 @@ ui <- fluidPage(
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
            fluidRow(
-             column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme"), selected = "Light", multiple = FALSE,
+             column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme", "Surface"), selected = "Light", multiple = FALSE,
                                   selectize = TRUE, width = "100%", size = NULL))
            )
        ),
@@ -790,6 +790,18 @@ server <- function(input, output) {
       # guides(colour = "colorbar",size = "legend")
       guides(size = guide_legend())
     ) 
+    
+    surfPlot <- list(
+      scale_color_viridis_c(option = "D"),
+      theme(panel.background = element_blank(),
+            axis.ticks = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank()),
+      coord_fixed(),
+      geom_point(stroke = 1, size = df2$valTrans),
+      labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
+      guides(colour = "colorbar",size = "legend")
+    )
       
      
      #this is where all the crazy themes go
@@ -805,6 +817,11 @@ server <- function(input, output) {
        themeText = "white"
      } else if (input$plotTheme == "Mono Theme"){
        selectedPlotTheme <-monoPlot
+       circleColor <- "gray50"
+       ctrPtColor <- "gray50"
+       themeText = "black"
+     } else if (input$plotTheme == "Surface"){
+       selectedPlotTheme <-surfPlot
        circleColor <- "gray50"
        ctrPtColor <- "gray50"
        themeText = "black"
