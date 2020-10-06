@@ -95,7 +95,7 @@ ui <- fluidPage(theme = "pscp_style.css",
        div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
          fluidRow(
            column(6,radioButtons("valTransMeth", "Value Interpolation", 
-                                 choices = c("Raw","Scaled","Square Root","Log Scale","Custom"), 
+                                 choices = c("Scaled","Square Root","Exponential","Log Scale","Custom"), 
                                  inline = FALSE, width = "100%",
                                  selected = "Scaled")),
            column(6,radioButtons("interpMeth", "Distance Interpolation", 
@@ -106,7 +106,7 @@ ui <- fluidPage(theme = "pscp_style.css",
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
            fluidRow(
-             column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 100, c(1,15), ticks = TRUE)
+             column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 50, c(1,15), ticks = TRUE)
            )
            )
        ),
@@ -382,11 +382,6 @@ server <- function(input, output) {
                width = "100%", size = NULL)
    })
 
-   
-   # output$ValNameChoicesFromServer <- reactive(as.list(levels(dfparser(dataframefinder())[[9]])))
-   
-   # output$ValNameChoicesFromServer <- renderText(as.list(levels(dfparser(dataframefinder())[[9]])))
-   
   output$geoPlot <- renderPlot({ 
 
      ###################################
@@ -550,19 +545,19 @@ server <- function(input, output) {
      minRadius <- input$SymbolSizeRange[1] # change this with the UI later?
      maxRadius <- input$SymbolSizeRange[2] # change this with the UI later?
      
-     if(input$valTransMeth == "Raw"){
-       df2$valTrans <- df2$val
+     if(input$valTransMeth == "Scaled"){
+       df2$valTrans <- (df2$val/valMax) * maxRadius + (minRadius - 1)
        # only works if we have data at a specific scale, for comparison only
-     } else if(input$valTransMeth == "Scaled"){
-       df2$valTrans <- sqrt(df2$val/valMax) * maxRadius
+     } else if(input$valTransMeth == "Square Root"){
+       df2$valTrans <- (sqrt(df2$val/valMax)) * maxRadius + (minRadius - 1)
        # not sure of the exact math here but realized that linear scale
        # doesn't work since we want the areas to be proportionate, not
        # the radii. think the square root works because area is pi(r)2
        # so the pi doesn't matter if we're rescaling to maxRadius at 
        # maxValue anyway. Right? it's weekend, will come back to this later
      } else if(input$valTransMeth == "Log Scale"){
-       df2$valTrans <- log(df2$val) + minRadius
-     } else if(input$valTransMeth == "Square Root"){
+       df2$valTrans <- (log(df2$val)/log(valMax) * maxRadius) + (minRadius - 1)
+     } else if(input$valTransMeth == "Exponential"){
        df2$valTrans <- sqrt(df2$val) + minRadius
        # this is basically "raw square root" since it's not scaled at all (had plus minRadius before)
      } else if(input$valTransMeth == "Custom"){
