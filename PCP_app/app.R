@@ -746,7 +746,7 @@ server <- function(input, output) {
      ctrPtColor = "red"  #default value for center point color. If it is red, something is broken
      themeText = "red"
      
-     # PLOT STYLE TEST
+     # PLOT STYLE 
      darkPlot <- list(
       scale_color_viridis_c(option = "plasma"),
        theme(panel.background = element_rect(fill = "grey50", linetype = "blank"),
@@ -887,7 +887,7 @@ server <- function(input, output) {
       }
      # Use simpler plot for Lat-Long (don't need circles, valTrans, etc.) 
      else{ 
-       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$distance)) + 
+       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$val)) + 
          geom_point() + 
          geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = ctrPtColor, shape = 10, size = 3) +
          scale_color_viridis_c(option = "plasma") +
