@@ -81,6 +81,11 @@ ui <- fluidPage(
                                   selectize = TRUE, width = "100%", size = NULL))
            )
        ),
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+           fluidRow(
+             column(8,  uiOutput("ValChoicesFromServer"))
+           )
+       ),
        div(style = "margin-top: -60px",
         plotOutput("distPlot", height = "250px", width="100%")
        ),
@@ -240,8 +245,8 @@ server <- function(input, output) {
      colListOrig <- colnames(df) # store column names for later
      latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
      lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
-     valNameChoices <- list()
-     valChoices <- list()
+     valNameChoices <- c() # changed from a list to a vector
+     valChoices <- c() # ditto
      
      df2 <- df # cloning df for non-destructive editing
      
@@ -300,6 +305,7 @@ server <- function(input, output) {
                { if (valflag == 0)
                {df2$val <- as.double(df[[col]])
                ValColNametoprint <- names(df)[[col]]
+               valChoices <- c(valChoices, names(df)[[col]])
                # print(paste("Found a val column: ", names(df)[[col]]))
                valflag <- 1}
                  else{
@@ -321,6 +327,8 @@ server <- function(input, output) {
        ctrPt <- c(median(df2$lat), median(df2$lon)) # 
      }
      
+     valChoicesList <- as.list(valChoices)
+      
      # if(df_ext == "csv"){
      #   df2 <- dplyr::select(df2, valName, val, lat, lon) # just the fields we want
      # } else {
@@ -338,7 +346,7 @@ server <- function(input, output) {
      maxvaltoprint <- max(df2$val)
      minvaltoprint <- min(df2$val)
      
-     my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName, ValColNametoprint, maxvaltoprint, minvaltoprint, valChoices)
+     my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName, ValColNametoprint, maxvaltoprint, minvaltoprint, valChoicesList, valNameChoices)
      return(my_list)
    }
    
@@ -363,13 +371,15 @@ server <- function(input, output) {
      
    # output$maxdistforcutpoints <- dfparser(dataframefinder())[[2]]
    
-   
-   # output$ValNameChoicesFromServer <- reactive(selectInput("column", "Select Data Column",
-   #             multiple = FALSE,
-   #             choices = dfparser(dataframefinder())[[9]], 
-   #             selectize = TRUE,
-   #             width = "100%", size = NULL))
-   # 
+   output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
+     selectInput("column", "Select Data Column",
+               multiple = FALSE,
+               choices = dfparser(dataframefinder())[[9]],
+               selected = dfparser(dataframefinder())[[9]][1],
+               selectize = TRUE,
+               width = "100%", size = NULL)
+   })
+
    
    # output$ValNameChoicesFromServer <- reactive(as.list(levels(dfparser(dataframefinder())[[9]])))
    
