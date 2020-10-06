@@ -169,14 +169,18 @@ server <- function(input, output) {
        df <- read.csv(file = uploadFileData$datapath)
      }
 
-     par(bg = '#f5f5f5',
-         mgp=c(1.75,0.5,0))
+     par(bg = '#696969', #default color is #f5f5f5
+         mgp=c(1.75,0.5,0),
+         col.lab="#bfbfbf",
+         col.axis="#bfbfbf",
+         fg="#bfbfbf")
      plot(df$lon, df$lat, 
-          col = "#000000", 
+          col = "grey75", 
           xlab = "Longitude", 
           ylab = "Latitude",
           tck = -.04,
-          cex.axis = 0.7)
+          cex.axis = 0.7
+          )
      
    })
    

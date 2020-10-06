@@ -7,7 +7,7 @@
     
     .panel {
       font-weight: 100;
-      color: #404040;
+      color: #bfbfbf; /* light version was 404040 */
       background: transparent; /* interior of side panel */
     }
     
@@ -19,10 +19,17 @@
     background: transparent; /* area around side panel, but behind it */
   }
   
+  .well{
+    background: #696969;
+  }
+  
 /* .container-fluid{
     background: purple; /* whole background
   } */
 
+  .span3{
+    background: purple;
+  }
 
    body, label, input, button, select { 
       font-family: 'HelveticaNeue', 'helvetica', monospace;
