@@ -672,7 +672,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
             axis.text.x = element_blank(),
             axis.text.y = element_blank()),
       coord_fixed(),
-      geom_point(stroke = 1, shape = 21, size = df2$valTrans),
+      geom_point(stroke = 1, alpha = 0.78, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
       guides(colour = "colorbar", size = "legend"),
       expand_limits(y = 0.00025*(maxdist))
