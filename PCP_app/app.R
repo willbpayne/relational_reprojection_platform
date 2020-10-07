@@ -25,11 +25,8 @@ library(useful) # for cartesian conversions
 #
 library(RColorBrewer) # for graph colors
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
-#
-library(svglite) # for svg render/export
-#
 
-# dataFile <- "IND_remittances.csv"
+# dataFile <- "IND_remittances.csv" # for testing
 
 ########################################
 ##          UI PARTY TONIGHT!         ##
@@ -107,7 +104,7 @@ ui <- fluidPage(theme = "pscp_style.css",
                                     )
                                     ,
                                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-                                        downloadButton('downloadPlot', 'Download Plot') # button to click to download SVG
+                                        downloadButton('downloadPlot', 'Export SVG') # button to click to download SVG
                                     )
                   )), #end of sidebar panel, end of class panel div
                   
@@ -155,7 +152,7 @@ server <- function(input, output) {
       df <- read.csv(file = uploadFileData$datapath)
     }
     
-    par(bg = '#696969', #default color is #f5f5f5
+    par(bg = "#404040", #default color is #f5f5f5
         mgp=c(1.75,0.5,0),
         col.lab="#bfbfbf",
         col.axis="#bfbfbf",
@@ -200,7 +197,7 @@ server <- function(input, output) {
       "<b> Maximum distance: </b>", round((dfparser(dataframefinder())[[2]]),0), "km","<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
       "<b> Center point: </b>", dfparser(dataframefinder())[[5]], " ",
       " ( latitude: ", round(dfparser(dataframefinder())[[3]], 4), ", longitude: ", round(dfparser(dataframefinder())[[4]], 5), ")</br>",
-      "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", "),
+      # "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", "), # we said we didn't need this anymore, right?
       collapse = " ") 
     ## to be inserted into above paste statement
     # if(maxdist > 20000){
