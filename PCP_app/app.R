@@ -97,7 +97,7 @@ ui <- fluidPage(theme = "pscp_style.css",
            column(6,radioButtons("valTransMeth", "Value Interpolation", 
                                  choices = c("Scaled","Square Root","Exponential","Log Scale","Custom"), 
                                  inline = FALSE, width = "100%",
-                                 selected = "Scaled")),
+                                 selected = "Square Root")),
            column(6,radioButtons("interpMeth", "Distance Interpolation", 
                                  choices = c("Lat & Long","Great Circles","Square Root", "Logarithmic", "Custom"), 
                                  inline = FALSE, width = "100%",
@@ -106,7 +106,7 @@ ui <- fluidPage(theme = "pscp_style.css",
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
            fluidRow(
-             column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 50, c(1,15), ticks = TRUE)
+             column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 50, c(1,25), ticks = TRUE)
            )
            )
        ),
@@ -767,7 +767,7 @@ server <- function(input, output) {
        selectedPlotTheme <- lightPlot
        circleColor <- "ivory2"
        ctrPtColor <- "ivory3"
-       themeText = "gray75"
+       themeText = "gray60"
      } else if (input$plotTheme == "Dark Theme"){
        selectedPlotTheme <-darkPlot
        circleColor <- "gray50"
@@ -827,12 +827,18 @@ server <- function(input, output) {
      ### This works now, but nicer to shove into a list to change by theme
       if(input$labelsOn == TRUE){
         plot <- plot + geom_text(data = df2,
-                                 aes(plot_coordinates[,1],
-                                     plot_coordinates[,2],
-                                     label = df2$valName),
-                                 size = 3,
-                                 check_overlap = TRUE,
-                                 color = themeText)
+                    aes(plot_coordinates[,1],
+                        plot_coordinates[,2],
+                        label = df2$valName),
+                    size = 3,
+                    check_overlap = TRUE, # tried to do the text outline thing and failed. could we do a conditional or expression for text color, where depending where it is on the scale it gets a different text color?
+                    color = "white") + geom_text(data = df2,
+                     aes(plot_coordinates[,1],
+                         plot_coordinates[,2],
+                         label = df2$valName),
+                     size = 3,
+                     check_overlap = TRUE,
+                     color = themeText)
       }
      
      
