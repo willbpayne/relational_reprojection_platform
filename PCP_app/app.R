@@ -25,14 +25,9 @@ library(useful) # for cartesian conversions
 #
 library(RColorBrewer) # for graph colors
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
-library(metR)
-
-# NB: to check later as we re-visit new contours
-library(akima) # for irregular grid
-library(reshape2) # for contor/grid
-library(contoureR) # for contours w/o grid
-library(deldir) # CHECK: trying for TIN generation, see sec. 11
-library(lawn) # CHECK:  trying for TIN generation, see sec. 11
+#
+library(svglite) # for svg render/export
+#
 
 # dataFile <- "IND_remittances.csv"
 
@@ -79,7 +74,7 @@ ui <- fluidPage(theme = "pscp_style.css",
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
            fluidRow(
-             column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme", "Surface"), selected = "Light", multiple = FALSE,
+             column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme"), selected = "Light", multiple = FALSE,
                                   selectize = TRUE, width = "100%", size = NULL))
            )
        ),
@@ -120,16 +115,17 @@ ui <- fluidPage(theme = "pscp_style.css",
        condition = "input.valTransMeth == 'Custom'", 
           uiOutput("CustomValueSlider")
         )
-     # ,
-     # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-     #     downloadButton("downloadSVG", label = "Export SVG")
-     # )
+     ,
+     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+         downloadButton("downloadSVG", label = "Export SVG")
+     )
    )), #end of sidebar panel, end of class panel div
 
       # Show a plot of the generated distribution
       mainPanel( div(class = "mainP",
          htmlOutput("newdfparser"),
          plotOutput("geoPlot", height = "600px")
+        # imageOutput("") #for svg testing
       ))
    ) #end panel layout
 )
@@ -184,17 +180,17 @@ server <- function(input, output) {
      
    })
    
-   # output$downloadSVG <- downloadHandler(
-   #   filename = function() {
-   #     paste("test", ".svg", sep = "")
-   #   },
-   #   content = function(file) {
-   #     ggsave("test.svg", plot = p2, scale = 1, device = "svg", dpi = 150)
-   #     # png(file = file)
-   #     # p2()
-   #     #dev.off()
-   #   }
-   # )
+   output$downloadSVG <- downloadHandler(
+     filename = function() {
+       paste("test", ".svg", sep = "")
+     },
+     content = function(file) {
+       ggsave("test.svg", plot = p2, scale = 1, device = "svg")
+       # png(file = file)
+       # p2()
+       #dev.off()
+     }
+   )
    
    # I think what we want to do is chunk out all the earlier parts of the
    # code into their own little input-output sections here, including
@@ -747,19 +743,7 @@ server <- function(input, output) {
       # guides(colour = "colorbar",size = "legend")
       guides(size = guide_legend())
     ) 
-    
-    surfPlot <- list(
-      scale_color_viridis_c(option = "A"),
-      theme(panel.background = element_blank(),
-            axis.ticks = element_blank(),
-            axis.text.x = element_blank(),
-            axis.text.y = element_blank()),
-      coord_fixed(),
-      #geom_contour2(aes(z = df2$valTrans)),
-      #geom_point(stroke = 1, size = df2$valTrans),
-      labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
-      guides(colour = "colorbar",size = "legend")
-    )
+
       
      
      #this is where all the crazy themes go
@@ -778,10 +762,7 @@ server <- function(input, output) {
        circleColor <- "gray75"
        ctrPtColor <- "gray75"
        themeText = "black"
-     } else if (input$plotTheme == "Surface"){
-       selectedPlotTheme <-surfPlot
-       themeText = "black"
-     }
+     } 
      
      # Figure out which plot to show
      plot_circles <- circles # set default for great circle/logarithmic
@@ -845,27 +826,6 @@ server <- function(input, output) {
       if(input$centerOn == TRUE){
        plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
       }
-     
-     if(input$plotTheme == "Surface" && input$interpMeth == "Lat & Long"){
-       #for debug
-       #plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
-       #actual code
-       plot <- ggplot(df2, aes(lon, lat, z = df2$valTrans)) +
-                        geom_density2dc() #+
-        # selectectPlotTheme
-
-       ### SCRAP
-       #   plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0),
-       #                     colour = ctrPtColor, shape = 10, size = 3)
-       # geom_contour2(aes(z = df2$valTrans))
-       #
-       # ggplot(df2 %>% arrange(desc(val)), aes(
-       #   plot_coordinates[,1],
-       #   plot_coordinates[,2],
-       #   color = df2$val) ) +
-       #   selectedPlotTheme
-       ###
-     }
 
       plot
       
