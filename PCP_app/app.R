@@ -107,8 +107,7 @@ ui <- fluidPage(theme = "pscp_style.css",
         )
      ,
      div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-        downloadButton('downloadPlot', 'Download Plot')
-         # downloadButton("downloadSVG", label = "Export SVG")
+        downloadButton('downloadPlot', 'Download Plot') # button to click to download SVG
      )
    )), #end of sidebar panel, end of class panel div
 
