@@ -229,7 +229,7 @@ server <- function(input, output) {
        "<b> Maximum distance: </b>", round((dfparser(dataframefinder())[[2]]),0), "km","<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
            "<b> Center point: </b>", dfparser(dataframefinder())[[5]], " ",
            " ( latitude: ", round(dfparser(dataframefinder())[[3]], 4), ", longitude: ", round(dfparser(dataframefinder())[[4]], 5), ")</br>",
-           "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", ")
+           "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", "),
           collapse = " ") 
      ## to be inserted into above paste statement
      # if(maxdist > 20000){
