@@ -221,6 +221,13 @@ server <- function(input, output) {
        "<b> Min value: </b>", dfparser(dataframefinder())[[8]], " ", #italic just to remember which function which
        "<b> Max value: </b>", dfparser(dataframefinder())[[7]], "</i>", "</br>", #this is hard-coded--needs to find value column
           collapse = " ") 
+     ## to be inserted into above paste statement
+     # if(maxdist > 20000){
+     #   print("Your maximum distance is more than half of the Earth's circumference; things might get a little squirrely!")
+     # } else {
+     #   print("Your maximum distance is less than half of the Earth's circumference! Nice!")
+     # }
+     
    })
 
    dfparser <- function(selected_dataframe) { # First non-reactive function! We copied a bunch o code for this
@@ -482,18 +489,6 @@ server <- function(input, output) {
      }
      df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")*1000
      maxdist <- max(df2$distance) # max great circle distance in meters
-
-     # print( # print out both the longest axial and great circle distances
-     #   paste0("The great circle distance between your center point, ",
-     #          ctrPtName, ", and farthest point, ",
-     #          df2$valName[df2$distance == max(df2$distance)], ", is ",
-     #          round(maxdist, 0), " km.")
-     # )
-     # if(maxdist > 20000){
-     #   print("Your maximum distance is more than half of the Earth's circumference; things might get a little squirrely!")
-     # } else {
-     #   print("Your maximum distance is less than half of the Earth's circumference! Nice!")
-     # }
 
      df2 <- df2 %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center
      # 
