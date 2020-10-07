@@ -68,8 +68,9 @@ ui <- fluidPage(theme = "pscp_style.css",
        # ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
-           column(6,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
-           column(6,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL))
+           column(3,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
+           column(4,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL)),
+           column(5,checkboxInput("showZeroes", "Zero Values as NA?", value = TRUE, width = NULL))
            )
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
@@ -553,8 +554,9 @@ server <- function(input, output) {
      # hist(df2$val, breaks = 20) # just for giggles
      # hist(sqrt(df2$val), breaks = 20)
      # hist(log(df2$val), breaks = 20)
-     
-     #df2$val[df2$val == 0] <- NA # turn zeros to NAs for our purposes
+     if(input$showZeroes == TRUE){
+       df2$val[df2$val == 0] <- NA
+     }
      
      ###################################
      #        GREAT CIRCLE             #
@@ -690,7 +692,7 @@ server <- function(input, output) {
              ),
        coord_fixed(),
        labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
-       geom_point(stroke = 1, size = df2$valTrans),
+       geom_point(na.rm = TRUE, stroke = 1, size = df2$valTrans),
        guides(colour = "colorbar",size = "legend")
      )
      
