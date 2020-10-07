@@ -57,7 +57,7 @@ ui <- fluidPage(theme = "pscp_style.css",
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
        fluidRow(
-           column(4,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL)),
+           column(4,checkboxInput("centerOn", "Show Center", value = FALSE, width = NULL)),
            column(5,checkboxInput("showZeroes", "Zero Values as NA?", value = TRUE, width = NULL))
            )
        ),
@@ -238,7 +238,6 @@ server <- function(input, output) {
            && min(as.numeric(df[[col]]), na.rm = T) >= -90.0
            && names(df)[[col]] %in% latNames) # lat
        { 
-         # print(paste("Found a lat column: ", names(df)[[col]]))
          df2$lat <- df[[col]]
          latflag <- 1}
        else{
@@ -248,7 +247,6 @@ server <- function(input, output) {
              && min(as.numeric(df[[col]]), na.rm = T) >= -180.0
              && names(df)[col] %in% lonNames) # lon
          { 
-           # print(paste("Found a lon column: ", names(df)[[col]]))
            df2$lon <- df[[col]]
            lonflag <- 1}
          else{
@@ -258,7 +256,6 @@ server <- function(input, output) {
                && max(as.numeric(df[[col]]), na.rm = T) == 1
                && sum(as.numeric(df[[col]]), na.rm = T) == 1) # ctrBin
            { df2$ctrBin <- as.logical(df[[col]])
-           # print(paste("Found a ctrBin column: ", names(df)[[col]]))
            ctrBinflag <- 1}
            else{
              if (typeof(df[[col]]) == "character" # catches name and name_long
@@ -266,12 +263,9 @@ server <- function(input, output) {
              { if (valNameflag == 0)
              {df2$valName <- as.character(df[[col]])
              nameChoices <- c(nameChoices, names(df)[[col]])
-             # print(paste("Found a valName column: ", names(df)[[col]]))
              nameFlag <- 1}
                else{
-                 # print(paste("Found an alternate valName column: ", names(df)[[col]]))
                  nameChoices <- c(nameChoices, names(df)[[col]])}
-               # NOTE this isn't storing anywhere yet, might need to later for input
              }
              else{
                if (typeof(df[[col]]) == "integer" || typeof(df[[col]]) == "double" # val
@@ -282,12 +276,9 @@ server <- function(input, output) {
                {df2$val <- as.double(df[[col]])
                ValColNametoprint <- names(df)[[col]]
                valChoices <- c(valChoices, names(df)[[col]])
-               # print(paste("Found a val column: ", names(df)[[col]]))
                valflag <- 1}
                  else{
-                   # print(paste("Found an alternate val column: ", names(df)[[col]]))
                    valChoices <- c(valChoices, names(df)[[col]])}
-                 # NB: NOTE this isn't storing anywhere yet, might need to later for input
                }
              }
            }
@@ -337,7 +328,7 @@ server <- function(input, output) {
                  })
                                                          
    output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
-     selectInput("column", "Select Data Column",
+     selectInput("valSelection", "Select Data Column",
                multiple = FALSE,
                choices = dfparser(dataframefinder())[[9]],
                selected = dfparser(dataframefinder())[[9]][1],
@@ -346,7 +337,7 @@ server <- function(input, output) {
    })
 
    output$NameChoicesFromServer <- renderUI({ # serve up a list of value columns
-     selectInput("column", "Select Name Column",
+     selectInput("nameSelection", "Select Name Column",
                  multiple = FALSE,
                  choices = dfparser(dataframefinder())[[10]],
                  selected = dfparser(dataframefinder())[[10]][1],
@@ -387,7 +378,6 @@ server <- function(input, output) {
            && min(as.numeric(df[[col]]), na.rm = T) >= -90.0
            && names(df)[[col]] %in% latNames) # lat
        { 
-         # print(paste("Found a lat column: ", names(df)[[col]]))
          df2$lat <- df[[col]]
          latflag <- 1}
        else{
@@ -397,7 +387,6 @@ server <- function(input, output) {
              && min(as.numeric(df[[col]]), na.rm = T) >= -180.0
              && names(df)[col] %in% lonNames) # lon
          { 
-           # print(paste("Found a lon column: ", names(df)[[col]]))
            df2$lon <- df[[col]]
            lonflag <- 1}
          else{
@@ -407,19 +396,15 @@ server <- function(input, output) {
                && max(as.numeric(df[[col]]), na.rm = T) == 1
                && sum(as.numeric(df[[col]]), na.rm = T) == 1) # ctrBin
            { df2$ctrBin <- as.logical(df[[col]])
-           # print(paste("Found a ctrBin column: ", names(df)[[col]]))
            ctrBinflag <- 1}
            else{
              if (typeof(df[[col]]) == "character" # catches name and name_long
                  || is.factor(df[[col]]) == T) # valName
              { if (valNameflag == 0)
              {df2$valName <- as.character(df[[col]])
-             # print(paste("Found a valName column: ", names(df)[[col]]))
              valNameflag <- 1}
                else{
-                 # print(paste("Found an alternate valName column: ", names(df)[[col]]))
                  valNameChoices <- c(valNameChoices, names(df)[[col]])}
-               # NOTE this isn't storing anywhere yet, might need to later for input
              }
              else{
                if (typeof(df[[col]]) == "integer" || typeof(df[[col]]) == "double" # val
@@ -429,18 +414,21 @@ server <- function(input, output) {
                { if (valflag == 0)
                {df2$val <- as.double(df[[col]])
                LegendValName <- names(df)[[col]]
-               # print(paste("Found a val column: ", names(df)[[col]]))
                valflag <- 1}
                  else{
-                   # print(paste("Found an alternate val column: ", names(df)[[col]]))
                    valChoices <- c(valChoices, names(df)[[col]])}
-                 # NB: NOTE this isn't storing anywhere yet, might need to later for input
                }
              }
            }
          }
        }
      }
+     
+     valColumn <- input$valSelection # override with UI selection
+     df2$val <- df[[valColumn]]
+     
+     nameColumn <- input$nameSelection # override with UI selection
+     df2$valName <- df[[nameColumn]]
 
      ###################################
      #        SET CENTER POINT         #
