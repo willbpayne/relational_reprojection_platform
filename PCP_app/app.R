@@ -117,7 +117,8 @@ ui <- fluidPage(theme = "pscp_style.css",
         )
      ,
      div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-         downloadButton("downloadSVG", label = "Export SVG")
+        downloadButton('downloadPlot', 'Download Plot')
+         # downloadButton("downloadSVG", label = "Export SVG")
      )
    )), #end of sidebar panel, end of class panel div
 
@@ -180,17 +181,23 @@ server <- function(input, output) {
      
    })
    
-   output$downloadSVG <- downloadHandler(
-     filename = function() {
-       paste("test", ".svg", sep = "")
-     },
-     content = function(file) {
-       ggsave("test.svg", plot = p2, scale = 1, device = "svg")
-       # png(file = file)
-       # p2()
-       #dev.off()
-     }
-   )
+   output$downloadPlot <- downloadHandler(
+     filename = function(){paste("input$distPlot",'.png',sep='')},
+     content = function(file){
+       ggsave(file,plot= p2 ) #distPlot the right thing to call here or p2?
+     })
+   
+   # output$downloadSVG <- downloadHandler(
+   #   filename = function() {
+   #     paste("test", ".svg", sep = "")
+   #   },
+   #   content = function(file) {
+   #     ggsave("test.svg", plot = p2, scale = 1, device = "svg")
+   #     # png(file = file)
+   #     # p2()
+   #     #dev.off()
+   #   }
+   # )
    
    # I think what we want to do is chunk out all the earlier parts of the
    # code into their own little input-output sections here, including
@@ -217,6 +224,9 @@ server <- function(input, output) {
            "<b> Center point: </b>", dfparser(dataframefinder())[[5]], " ",
            " ( latitude: ", round(dfparser(dataframefinder())[[3]], 4), ", longitude: ", round(dfparser(dataframefinder())[[4]], 5), ")</br>",
            "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", "),
+       "<br><b> Value column name: </b>", dfparser(dataframefinder())[[6]], " ",
+       "<b> Min value: </b>", dfparser(dataframefinder())[[8]], " ", #italic just to remember which function which
+       "<b> Max value: </b>", dfparser(dataframefinder())[[7]], "</i>", "</br>", #this is hard-coded--needs to find value column
           collapse = " ") 
      ## to be inserted into above paste statement
      # if(maxdist > 20000){
