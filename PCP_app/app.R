@@ -344,6 +344,7 @@ server <- function(input, output) {
                 width = "100%", size = NULL)
   })
   
+
   output$geoPlot <- renderPlot({ 
     
     ###################################
@@ -352,7 +353,7 @@ server <- function(input, output) {
     #let's make this a function then make it an input selection, 
     #then df2 takes user input w a sensible default
     
-    
+
     df <- dataframefinder()
     df_ext <- ".csv"
     
