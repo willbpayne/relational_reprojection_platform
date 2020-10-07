@@ -237,9 +237,6 @@ server <- function(input, output) {
            "<b> Center point: </b>", dfparser(dataframefinder())[[5]], " ",
            " ( latitude: ", round(dfparser(dataframefinder())[[3]], 4), ", longitude: ", round(dfparser(dataframefinder())[[4]], 5), ")</br>",
            "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", "),
-       "<br><b> Value column name: </b>", dfparser(dataframefinder())[[6]], " ",
-       "<b> Min value: </b>", dfparser(dataframefinder())[[8]], " ", #italic just to remember which function which
-       "<b> Max value: </b>", dfparser(dataframefinder())[[7]], "</i>", "</br>", #this is hard-coded--needs to find value column
           collapse = " ") 
    })
 
