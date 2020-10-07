@@ -57,7 +57,7 @@ ui <- fluidPage(theme = "pscp_style.css",
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
        fluidRow(
-           column(4,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL)),
+           column(4,checkboxInput("centerOn", "Show Center", value = FALSE, width = NULL)),
            column(5,checkboxInput("showZeroes", "Zero Values as NA?", value = TRUE, width = NULL))
            )
        ),
@@ -337,7 +337,7 @@ server <- function(input, output) {
                  })
                                                          
    output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
-     selectInput("column", "Select Data Column",
+     selectInput("valSelection", "Select Data Column",
                multiple = FALSE,
                choices = dfparser(dataframefinder())[[9]],
                selected = dfparser(dataframefinder())[[9]][1],
@@ -346,7 +346,7 @@ server <- function(input, output) {
    })
 
    output$NameChoicesFromServer <- renderUI({ # serve up a list of value columns
-     selectInput("column", "Select Name Column",
+     selectInput("nameSelection", "Select Name Column",
                  multiple = FALSE,
                  choices = dfparser(dataframefinder())[[10]],
                  selected = dfparser(dataframefinder())[[10]][1],
@@ -441,6 +441,12 @@ server <- function(input, output) {
          }
        }
      }
+     
+     valColumn <- input$valSelection
+     df2$val <- df[[valColumn]]
+     
+     nameColumn <- input$nameSelection
+     df2$valName <- df[[nameColumn]]
 
      ###################################
      #        SET CENTER POINT         #

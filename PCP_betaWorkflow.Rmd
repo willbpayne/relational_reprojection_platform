@@ -81,6 +81,7 @@ latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y",
 lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
 valNameChoices <- c() # instead of list()
 valChoices <- c() # ditto
+valChoicesColumns <- c()
 
 df2 <- df # cloning df for non-destructive editing
 
@@ -137,10 +138,12 @@ for (col in 1:ncol(df)) {
           { if (valflag == 0)
             {df2$val <- as.double(df[[col]])
             print(paste("Found a val column: ", names(df)[[col]]))
+            valChoicesColumns <- c(valChoicesColumns, col(df[[col]]))
             valflag <- 1}
             else{
               print(paste("Found an alternate val column: ", names(df)[[col]]))
-              valChoices <- c(valChoices, names(df)[[col]][[1]])}
+              valChoices <- c(valChoices, names(df)[[col]][[1]])
+              valChoicesColumns <- c(valChoicesColumns, col(df[[col]]))}
               # NB: NOTE this isn't storing anywhere yet, might need to later for input
           }
         }
@@ -149,6 +152,8 @@ for (col in 1:ncol(df)) {
   }
 }
 
+print(valChoices)
+print(valChoicesColumns)
 valChoicesList <- as.list(valChoices)
 
 df2$val <- as.double(df[["NumCost"]]) # hardcoding for Zagat 1991 GeoJSON
