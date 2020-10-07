@@ -68,7 +68,12 @@ ui <- fluidPage(theme = "pscp_style.css",
        # ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
-           column(3,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
+             column(3,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
+             column(9,checkboxInput("HideOverlappingLabels", "Hide Overlapping Labels", value = FALSE, width = NULL))
+           )
+       ),
+       div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
+       fluidRow(
            column(4,checkboxInput("centerOn", "Show Center", value = TRUE, width = NULL)),
            column(5,checkboxInput("showZeroes", "Zero Values as NA?", value = TRUE, width = NULL))
            )
@@ -800,13 +805,13 @@ server <- function(input, output) {
                         plot_coordinates[,2],
                         label = df2$valName),
                     size = 3,
-                    check_overlap = TRUE, # tried to do the text outline thing and failed. could we do a conditional or expression for text color, where depending where it is on the scale it gets a different text color?
+                    check_overlap = input$showAllLabels, # tried to do the text outline thing and failed. could we do a conditional or expression for text color, where depending where it is on the scale it gets a different text color?
                     color = "white") + geom_text(data = df2,
                      aes(plot_coordinates[,1],
                          plot_coordinates[,2],
                          label = df2$valName),
                      size = 3,
-                     check_overlap = TRUE,
+                     check_overlap = input$HideOverlappingLabels,
                      color = themeText)
       }
      
