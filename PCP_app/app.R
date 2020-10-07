@@ -183,9 +183,9 @@ server <- function(input, output) {
    })
    
    output$downloadPlot <- downloadHandler(
-     filename = function(){paste("input$distPlot",'.png',sep='')},
+     filename = function(){paste("testPlot",'.svg',sep='')},
      content = function(file){
-       ggsave(file,plot= p2 ) #distPlot the right thing to call here or p2?
+       ggsave(file, plot = last_plot() ) #distPlot the right thing to call here or p2?
      })
    
    # output$downloadSVG <- downloadHandler(
