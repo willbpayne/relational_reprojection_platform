@@ -259,7 +259,7 @@ server <- function(input, output) {
           else{
             if (typeof(df[[col]]) == "character" # catches name and name_long
                 || is.factor(df[[col]]) == T) # valName
-            { if (valNameflag == 0)
+            { if (nameFlag == 0)
             {df2$valName <- as.character(df[[col]])
             nameChoices <- c(nameChoices, names(df)[[col]])
             nameFlag <- 1}
@@ -344,7 +344,6 @@ server <- function(input, output) {
                 width = "100%", size = NULL)
   })
   
-
   output$geoPlot <- renderPlot({ 
     
     ###################################
@@ -353,7 +352,7 @@ server <- function(input, output) {
     #let's make this a function then make it an input selection, 
     #then df2 takes user input w a sensible default
     
-
+    
     df <- dataframefinder()
     df_ext <- ".csv"
     
@@ -368,8 +367,8 @@ server <- function(input, output) {
     latflag <- 0 # need these here for the column detection
     lonflag <- 0
     ctrBinflag <- 0
-    valNameflag <- 0
-    valflag <- 0
+    nameFlag <- 0
+    valFlag <- 0
     
     for (col in 1:ncol(df)) {
       if (typeof(df[[col]]) == "double"
@@ -400,9 +399,9 @@ server <- function(input, output) {
           else{
             if (typeof(df[[col]]) == "character" # catches name and name_long
                 || is.factor(df[[col]]) == T) # valName
-            { if (valNameflag == 0)
+            { if (nameFlag == 0)
             {df2$valName <- as.character(df[[col]])
-            valNameflag <- 1}
+            nameFlag <- 1}
               else{
                 valNameChoices <- c(valNameChoices, names(df)[[col]])}
             }
@@ -411,10 +410,10 @@ server <- function(input, output) {
                   && !(names(df)[col] %in% lonNames)
                   && !(names(df)[col] %in% latNames)
                   && names(df[col]) != "geometry")
-              { if (valflag == 0)
+              { if (valFlag == 0)
               {df2$val <- as.double(df[[col]])
               LegendValName <- names(df)[[col]]
-              valflag <- 1}
+              valFlag <- 1}
                 else{
                   valChoices <- c(valChoices, names(df)[[col]])}
               }
@@ -663,20 +662,20 @@ server <- function(input, output) {
       ),
       coord_fixed(),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
-      geom_point(na.rm = TRUE, stroke = 1, size = df2$valTrans),
+      geom_point(na.rm = TRUE, stroke = 1, alpha = 0.7, size = df2$valTrans),
       guides(colour = "colorbar",size = "legend")
     )
-    
+    scale_fill_scico()
     lightPlot <- list(
-      scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
+scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       theme(panel.background = element_blank(),
             axis.ticks = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank()),
       coord_fixed(),
-      geom_point(stroke = 1, size = df2$valTrans),
+      geom_point(stroke = 1, shape = 21, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
-      guides(colour = "colorbar",size = "legend")
+      guides(colour = "colorbar", size = "legend")
     )
     
     monoPlot <- list(
@@ -686,7 +685,7 @@ server <- function(input, output) {
             axis.text.x = element_blank(),
             axis.text.y = element_blank()),
       coord_fixed(),
-      geom_point(stroke = 1, size = df2$valTrans),
+      geom_point(stroke = 1,  alpha = 0.7, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
       #labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
       # guides(colour = "colorbar",size = "legend")
