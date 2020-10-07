@@ -206,22 +206,6 @@ server <- function(input, output) {
      }
      return(found_df)
    }
-
-   # observe({
-   #   updateSelectInput(session, "column", choices = names(dataframefinder()))
-   # })
-   
-   # observe({
-   #   valu <- unique(unlist(filedata()[input$selectcol10]))
-   #   updateSelectInput(session, "level", choices = valu)
-   # })
-   # 
-   # observeEvent(input$column, {
-   #   column_levels <- as.character(sort(unique(
-   #     dataframefinder()[[input$column]]
-   #   )))
-   #   updateSelectInput(session, "level", choices = column_levels)
-   # })
    
    dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
    
@@ -846,7 +830,9 @@ server <- function(input, output) {
      # })
      
    })
+
    
+  ###
    valNameChoices <- reactive(
      c("Name1","Name2","Name3")
    )
