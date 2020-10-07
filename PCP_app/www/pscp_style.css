@@ -7,7 +7,7 @@
     
     .panel {
       font-weight: 100;
-      color: #bfbfbf; /* light version was 404040 */
+      color: #404040; /* light version was 404040 */
       background: transparent; /* interior of side panel */
     }
     
