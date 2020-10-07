@@ -49,23 +49,6 @@ ui <- fluidPage(theme = "pscp_style.css",
        div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
            fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
        ),
-       
-       # div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-       #     # fluidRow(
-       #     #   ###
-       #     #   ###
-           #   ###
-           #   ###
-           #   column(8, htmlOutput("ValNameChoicesFromServer"))
-           #          # selectInput("column", "Select Data Column",
-           #          #             multiple = FALSE,
-           #          #             choices = renderUI("ValNameChoicesFromServer"),
-           #          #             selectize = TRUE,
-           #          #             width = "100%", size = NULL))
-       #     # )
-       #     ###
-       #     ### I think a solid guide to this is here: https://stackoverflow.com/questions/47248534/dynamically-list-choices-for-selectinput-from-a-user-selected-column
-       # ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
          fluidRow(
              column(3,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
@@ -86,7 +69,8 @@ ui <- fluidPage(theme = "pscp_style.css",
        ),
        div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
            fluidRow(
-             column(8,  uiOutput("ValChoicesFromServer"))
+             column(6,  uiOutput("ValChoicesFromServer")),
+             column(6,  uiOutput("NameChoicesFromServer"))
            )
        ),
        div(style = "margin-top: -60px",
@@ -193,18 +177,6 @@ server <- function(input, output) {
        ggsave(file, plot = last_plot() ) #distPlot the right thing to call here or p2?
      })
    
-   # output$downloadSVG <- downloadHandler(
-   #   filename = function() {
-   #     paste("test", ".svg", sep = "")
-   #   },
-   #   content = function(file) {
-   #     ggsave("test.svg", plot = p2, scale = 1, device = "svg")
-   #     # png(file = file)
-   #     # p2()
-   #     #dev.off()
-   #   }
-   # )
-   
    # I think what we want to do is chunk out all the earlier parts of the
    # code into their own little input-output sections here, including
    # reactivity to the UI, so that the plot code is really only drawing
@@ -248,7 +220,7 @@ server <- function(input, output) {
      colListOrig <- colnames(df) # store column names for later
      latNames <- list("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
      lonNames <- list("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
-     valNameChoices <- c() # changed from a list to a vector
+     nameChoices <- c() # changed from a list to a vector
      valChoices <- c() # ditto
      
      df2 <- df # cloning df for non-destructive editing
@@ -256,7 +228,7 @@ server <- function(input, output) {
      latflag <- 0 # need these here for the column detection
      lonflag <- 0
      ctrBinflag <- 0
-     valNameflag <- 0
+     nameFlag <- 0
      valflag <- 0
      
      for (col in 1:ncol(df)) {
@@ -293,11 +265,12 @@ server <- function(input, output) {
                  || is.factor(df[[col]]) == T) # valName
              { if (valNameflag == 0)
              {df2$valName <- as.character(df[[col]])
+             nameChoices <- c(nameChoices, names(df)[[col]])
              # print(paste("Found a valName column: ", names(df)[[col]]))
-             valNameflag <- 1}
+             nameFlag <- 1}
                else{
                  # print(paste("Found an alternate valName column: ", names(df)[[col]]))
-                 valNameChoices <- c(valNameChoices, names(df)[[col]])}
+                 nameChoices <- c(nameChoices, names(df)[[col]])}
                # NOTE this isn't storing anywhere yet, might need to later for input
              }
              else{
@@ -331,7 +304,9 @@ server <- function(input, output) {
      }
      
      valChoicesList <- as.list(valChoices)
-      
+
+     nameChoicesList <- as.list(nameChoices)
+     
      # if(df_ext == "csv"){
      #   df2 <- dplyr::select(df2, valName, val, lat, lon) # just the fields we want
      # } else {
@@ -349,12 +324,10 @@ server <- function(input, output) {
      maxvaltoprint <- max(df2$val)
      minvaltoprint <- min(df2$val)
      
-     my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName, ValColNametoprint, maxvaltoprint, minvaltoprint, valChoicesList, valNameChoices)
+     my_list <- list(df2, maxdist, ctrPt[1], ctrPt[2], ctrPtName, ValColNametoprint, maxvaltoprint, minvaltoprint, valChoicesList, nameChoicesList)
      return(my_list)
    }
    
-   # output$maxdistforcutpoints <- dfparser(dataframefinder())[[2]]
-
    output$CustomValueSlider <-  renderUI({
      sliderInput("manualValueCutPoints", "Value Cut Points", min = round(dfparser(dataframefinder())[[8]]), max = round(dfparser(dataframefinder())[[7]]), value = c((dfparser(dataframefinder())[[7]]/3),dfparser(dataframefinder())[[7]]*.67), step = (round(dfparser(dataframefinder())[[7]])/100))
    })
@@ -363,17 +336,6 @@ server <- function(input, output) {
      sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(dfparser(dataframefinder())[[2]]), value = c((dfparser(dataframefinder())[[2]]/3),dfparser(dataframefinder())[[2]]*.67), step = (round(dfparser(dataframefinder())[[2]])/100))
                  })
                                                          
-                 # max(input$n, isolate(input$myslider)), 21)
-   
-     #          #  FOR TEST DATA! NOT DYNAMIC YET THOUGH 
-     #          c(1500,5000), step = NULL, 
-     #          round = FALSE, 
-     #          format = "#,##0.#####", 
-     #          locale = "us", 
-     #          ticks = TRUE, animate = FALSE)
-     
-   # output$maxdistforcutpoints <- dfparser(dataframefinder())[[2]]
-   
    output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
      selectInput("column", "Select Data Column",
                multiple = FALSE,
@@ -383,6 +345,15 @@ server <- function(input, output) {
                width = "100%", size = NULL)
    })
 
+   output$NameChoicesFromServer <- renderUI({ # serve up a list of value columns
+     selectInput("column", "Select Name Column",
+                 multiple = FALSE,
+                 choices = dfparser(dataframefinder())[[10]],
+                 selected = dfparser(dataframefinder())[[10]][1],
+                 selectize = TRUE,
+                 width = "100%", size = NULL)
+   })
+   
   output$geoPlot <- renderPlot({ 
 
      ###################################
@@ -812,37 +783,27 @@ server <- function(input, output) {
                      color = themeText)
       }
      
-     
       if(input$centerOn == TRUE){
        plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
       }
 
       plot
-      
+
       }
-     # Use simpler plot for Lat-Long (don't need circles, valTrans, etc.) 
-     else{ 
-       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$val)) + 
-         geom_point() + 
+     # Use simpler plot for Lat-Long
+     else{
+       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$val)) +
+         geom_point() +
          geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = ctrPtColor, shape = 10, size = 3) +
          scale_color_viridis_c(option = "plasma") +
          selectedPlotTheme
        plot_latLon
      }
-     
-     # ###
-     # geoPlot4svg <- reactive({
-     #   plot
-     # })
-     
-   })
 
+   })
    
   ###
-   valNameChoices <- reactive(
-     c("Name1","Name2","Name3")
-   )
-  
+
    output$centerpoint_selected <- renderText({ 
      paste("You have selected the following center point:",ctrPt[1],", ",ctrPt[2])
    })
