@@ -23,9 +23,8 @@
     background: #696969;
   }
   
-/* .container-fluid{
-    background: purple; /* whole background
-  } */
+  .toggle { display: none; /* currently not in use */
+  }
 
   .span3{
     background: purple;
