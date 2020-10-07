@@ -259,7 +259,7 @@ server <- function(input, output) {
            else{
              if (typeof(df[[col]]) == "character" # catches name and name_long
                  || is.factor(df[[col]]) == T) # valName
-             { if (valNameflag == 0)
+             { if (nameFlag == 0)
              {df2$valName <- as.character(df[[col]])
              nameChoices <- c(nameChoices, names(df)[[col]])
              nameFlag <- 1}
@@ -367,8 +367,8 @@ server <- function(input, output) {
      latflag <- 0 # need these here for the column detection
      lonflag <- 0
      ctrBinflag <- 0
-     valNameflag <- 0
-     valflag <- 0
+     nameFlag <- 0
+     valFlag <- 0
 
      for (col in 1:ncol(df)) {
        if (typeof(df[[col]]) == "double"
@@ -399,9 +399,9 @@ server <- function(input, output) {
            else{
              if (typeof(df[[col]]) == "character" # catches name and name_long
                  || is.factor(df[[col]]) == T) # valName
-             { if (valNameflag == 0)
+             { if (nameFlag == 0)
              {df2$valName <- as.character(df[[col]])
-             valNameflag <- 1}
+             nameFlag <- 1}
                else{
                  valNameChoices <- c(valNameChoices, names(df)[[col]])}
              }
@@ -410,10 +410,10 @@ server <- function(input, output) {
                    && !(names(df)[col] %in% lonNames)
                    && !(names(df)[col] %in% latNames)
                    && names(df[col]) != "geometry")
-               { if (valflag == 0)
+               { if (valFlag == 0)
                {df2$val <- as.double(df[[col]])
                LegendValName <- names(df)[[col]]
-               valflag <- 1}
+               valFlag <- 1}
                  else{
                    valChoices <- c(valChoices, names(df)[[col]])}
                }
