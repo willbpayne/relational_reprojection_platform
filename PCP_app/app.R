@@ -1,11 +1,5 @@
-#
 # This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# the 'Run App' button above. Find out more about Shiny here: http://shiny.rstudio.com/
 
 library(shiny)
 library(sf)
@@ -26,95 +20,63 @@ library(useful) # for cartesian conversions
 library(RColorBrewer) # for graph colors
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
 
-# dataFile <- "IND_remittances.csv" # for testing
+dataFile <- "IND_remittances.csv" # for testing
 
 ########################################
 ##          UI PARTY TONIGHT!         ##
 ########################################
 
 ui <- fluidPage(theme = "pscp_style.css",
-                
-                # Application title
-                div(style = "padding: 10px", 
-                    h1("Pseudo-Spatial Chart Program")
-                ),
-                ##### NB: WIDGET: Close/med/far text entry
-                
-                # Sidebar with a slider input for number of bins 
-                sidebarLayout(
-                  sidebarPanel( div(class="panel", 
-                                    div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
-                                        fileInput("uploadFile", "Upload Data File", multiple = FALSE, accept = NULL)
-                                    ),
-                                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
-                                        fluidRow(
-                                          column(3,checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
-                                          column(9,checkboxInput("HideOverlappingLabels", "Hide Overlapping Labels", value = FALSE, width = NULL))
-                                        )
-                                    ),
-                                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
-                                        fluidRow(
-                                          column(4,checkboxInput("centerOn", "Show Center", value = FALSE, width = NULL)),
-                                          column(5,checkboxInput("showZeroes", "Zero Values as NA?", value = TRUE, width = NULL))
-                                        )
-                                    ),
-                                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-                                        fluidRow(
-                                          column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme"), selected = "Light", multiple = FALSE,
-                                                               selectize = TRUE, width = "100%", size = NULL))
-                                        )
-                                    ),
-                                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-                                        fluidRow(
-                                          column(6,  uiOutput("ValChoicesFromServer")),
-                                          column(6,  uiOutput("NameChoicesFromServer"))
-                                        )
-                                    ),
-                                    div(style = "margin-top: -60px",
-                                        plotOutput("distPlot", height = "250px", width="100%")
-                                    ),
-                                    # Radio buttons for interpolation method
-                                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
-                                        fluidRow(
-                                          column(6,radioButtons("valTransMeth", "Value Interpolation", 
-                                                                choices = c("Scaled","Square Root","Exponential","Log Scale","Custom"), 
-                                                                inline = FALSE, width = "100%",
-                                                                selected = "Square Root")),
-                                          column(6,radioButtons("interpMeth", "Distance Interpolation", 
-                                                                choices = c("Lat & Long","Great Circles","Square Root", "Logarithmic", "Custom"), 
-                                                                inline = FALSE, width = "100%",
-                                                                selected = "Square Root"))
-                                        )
-                                    ),
-                                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
-                                        fluidRow(
-                                          column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 50, c(1,25), ticks = TRUE)
-                                          )
-                                        )
-                                    ),
-                                    ## If distance transformation radio button is on "Custom", show cut point slider
-                                    conditionalPanel(
-                                      condition = "input.interpMeth == 'Custom'", 
-                                      uiOutput("CustomDistanceSlider")
-                                    ),
-                                    ## If value transformation radio button is on "Custom", show cut point slider
-                                    conditionalPanel(
-                                      condition = "input.valTransMeth == 'Custom'", 
-                                      uiOutput("CustomValueSlider")
-                                    )
-                                    ,
-                                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-                                        downloadButton('downloadPlot', 'Export SVG') # button to click to download SVG
-                                    )
-                  )), #end of sidebar panel, end of class panel div
-                  
-                  # Show a plot of the generated distribution
-                  mainPanel( div(class = "mainP",
-                                 htmlOutput("newdfparser"),
-                                 plotOutput("geoPlot", height = "600px")
-                                 # imageOutput("") #for svg testing
-                  ))
-                ) #end panel layout
+                div(style = "padding: 10px", h1("Pseudo-Spatial Chart Program")), # Application title
+                sidebarLayout(sidebarPanel(
+                  div(class = "panel",
+                    div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
+                      fileInput("uploadFile","Upload Data File", multiple = FALSE, accept = NULL
+                      )
+                    ),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
+                        fluidRow(
+                          column(3, checkboxInput("labelsOn", "Labels", value = FALSE, width = NULL)),
+                          column(9, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels", value = FALSE, width = NULL))
+                        )),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
+                        fluidRow(
+                          column(4,checkboxInput("centerOn", "Show Center", value = FALSE, width = NULL)),
+                          column(5,checkboxInput("showZeroes","Zero Values as NA?", value = TRUE, width = NULL))
+                        )),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+                        fluidRow(
+                          column(8,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme"), selected = "Light", multiple = FALSE, selectize = TRUE, width = "100%", size = NULL)
+                        ))),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+                        fluidRow(
+                          column(6,  uiOutput("ValChoicesFromServer")),
+                          column(6,  uiOutput("NameChoicesFromServer"))
+                        )),
+                    div(style = "margin-top: -60px", plotOutput("distPlot", height = "250px", width = "100%")),
+                    # Radio buttons for interpolation method
+                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
+                        fluidRow(
+                          column(6,radioButtons("valTransMeth","Value Interpolation", choices = c("Scaled", "Square Root", "Exponential", "Log Scale", "Custom"), inline = FALSE, width = "100%", selected = "Square Root")),
+                          column(6,radioButtons("interpMeth", "Distance Interpolation", choices = c("Lat & Long","Great Circles","Square Root","Logarithmic","Custom"), inline = FALSE, width = "100%", selected = "Square Root"))
+                        )),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
+                        fluidRow(column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 50, c(1, 25), ticks = TRUE)
+                        ))),
+                    ## If distance transformation radio button is on "Custom", show cut point slider
+                    conditionalPanel(condition = "input.interpMeth == 'Custom'",
+                                     uiOutput("CustomDistanceSlider")),
+                    ## If value transformation radio button is on "Custom", show cut point slider
+                    conditionalPanel(condition = "input.valTransMeth == 'Custom'",
+                                     uiOutput("CustomValueSlider")),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+                        downloadButton('downloadPlot', 'Export SVG') # button to click to download SVG))
+                    )
+                    )
+                  ), #end of sidebar panel, end of class panel div
+                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "600px")
+                    ))
+                  ) #end panel layout))
 )
 
 ########################################
@@ -122,25 +84,6 @@ ui <- fluidPage(theme = "pscp_style.css",
 ########################################
 
 server <- function(input, output) {
-  
-  
-  p2 <- reactive ({
-    #uploadFileData <- input$uploadFile
-    #df <- read.csv(file = uploadFileData$datapath)
-    df <- read.csv(file = "IND_remittances.csv")
-    plot(df$lon, df$lat)
-  })
-  
-  output$selectedData <- renderTable(
-    # First reactive function!
-    if(is.null(input$uploadFile) == TRUE){
-      read.csv(file = "IND_remittances.csv")
-    } else {
-      n <- input$uploadFile
-      read.csv(file = n$datapath)
-    }
-    
-  )
   
   output$distPlot <- renderPlot({ # the basic dot plot for sidebar
     
@@ -173,14 +116,9 @@ server <- function(input, output) {
       ggsave(file, plot = last_plot() ) #distPlot the right thing to call here or p2?
     })
   
-  # I think what we want to do is chunk out all the earlier parts of the
-  # code into their own little input-output sections here, including
-  # reactivity to the UI, so that the plot code is really only drawing
-  # the plot. 
-  
   dataframefinder <- function() { # First reactive function!
     if(is.null(input$uploadFile) == TRUE){
-      found_df <- read.csv(file = "IND_remittances.csv")
+      found_df <- read.csv(file = dataFile)
     } else {
       n <- input$uploadFile
       found_df <- read.csv(file = n$datapath)
@@ -188,23 +126,17 @@ server <- function(input, output) {
     return(found_df)
   }
   
-  dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
-  
   output$newdfparser <- renderText({ # New place to store reactive output
     parserOutputs <- dfparser(dataframefinder()) # run it once!
-    paste(#paste("<b>Column names: </b>", as.list(colnames(dfvalues())),  "<br>"),
-      "<b> Maximum distance: </b>", round(parserOutputs[[2]],0), "km","<b> Circle spacing: </b>", round((parserOutputs[[2]] / 10),2), "km", "</br>",
+    if (parserOutputs[[2]] > 20037.5){
+      distanceWarning <- " (over half Earth's circumference; plot may be unreliable!)"
+    }
+    else {
+      distanceWarning <- ""
+    }
+    paste("<b> Maximum distance: </b>", round(parserOutputs[[2]],0), "km",distanceWarning,"<b> Circle spacing: </b>", round((parserOutputs[[2]] / 10),2), "km", "</br>",
       "<b> Center point: </b>", parserOutputs[[5]], " ",
       " (latitude: ", round(parserOutputs[[3]], 5), ", longitude: ", round(parserOutputs[[4]], 5), ")</br>", sep='',collapse = "") 
-    
-    #   collapse = " ") 
-    ## to be inserted into above paste statement
-    # if(maxdist > 20000){
-    #   print("Your maximum distance is more than half of the Earth's circumference; things might get a little squirrely!")
-    # } else {
-    #   print("Your maximum distance is less than half of the Earth's circumference! Nice!")
-    # }
-    
   })
   
   dfparser <- function(selected_dataframe) { # First non-reactive function! We copied a bunch o code for this
@@ -333,8 +265,6 @@ server <- function(input, output) {
   }
     })
   
-  # (round(dfparser(dataframefinder())[[2]])/1000),0 OLD STEP VALUE
-  
   output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
     choicesForDropdown <- dfparser(dataframefinder())[[9]]
     selectInput("valSelection", "Select Data Column",
@@ -360,9 +290,6 @@ server <- function(input, output) {
     ###################################
     #        PARSE COLUMNS            #   
     ###################################
-    #let's make this a function then make it an input selection, 
-    #then df2 takes user input w a sensible default
-    
     
     df <- dataframefinder()
     df_ext <- ".csv"
@@ -494,9 +421,6 @@ server <- function(input, output) {
     #    DATA VALUE TRANSLATION       #
     ###################################   
     
-    
-    # min(my_data_frame[my_data_frame$my_column_number>0,my_column_number])
-    
     valMin <- min(df2$val[df2$val != 0], na.rm = TRUE) # find lowest non-zero value (that will be radius 1)
     valMax <- max(df2$val, na.rm = T) # find highest non-zero value (that will be radius X)
     valMed <- median(df2$val, na.rm = T) # find median value (that could be radius 1 + X / 2)
@@ -527,8 +451,6 @@ server <- function(input, output) {
       # maxRadius   
       # input$manualValueCutPoints[1]
       # input$manualValueCutPoints[2]
-      
-      # raw right now. time for another slider? or is that too extra?
     }
     
     #df2$valTrans <- (df2$val / 400)^1.5 # manual one I did for NH data to see what we're looking for
@@ -558,7 +480,7 @@ server <- function(input, output) {
       y0 = 0,
       r = seq(0, maxdist,length.out = 11)
     )
-    circles <- circles[-1,] # remove zero-radius circle
+    circles <- circles[-1,] # Remove zero-radius circle
     
     ###################################
     #      LOGARITHMIC SCALE          #
@@ -570,15 +492,13 @@ server <- function(input, output) {
       logdistancey = (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[2]])
     )
     
-    df2$logdistancex[is.nan(df2$logdistancex)] <- 0
+    # Overrides infinite values
+    df2$logdistancex[is.nan(df2$logdistancex)] <- 0 
     df2$logdistancey[is.nan(df2$logdistancey)] <- 0
     
     # Combine x and y into a matrix, add as a column, remove x and y columns
     df2$logcoords <- cbind(df2$logdistancex,df2$logdistancey)
-    # THIS IS WHERE WE PUT HANDLER TO MAKE SURE CENTER POINT IS PLOTTED AT CENTER???
     df2 <- dplyr::select(df2,-starts_with("logdistance"))
-    
-    # NEED TO OVERRIDE CENTER POINT INFINITE VALUES WITH 0,0
     
     # Plot it
     df2 <- dplyr::arrange(df2, -val) # sorting for draw order below
@@ -702,15 +622,11 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       coord_fixed(),
       geom_point(stroke = 1,  alpha = 0.7, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " :: ", '\n',ctrPtName), x = NULL, y = NULL),
-      #labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
-      # guides(colour = "colorbar",size = "legend")
       guides(size = guide_legend())#,
       #expand_limits(y = 0.00025*(maxdist)) # breaks log dist
     ) 
     
-    
-    
-    #this is where all the crazy themes go
+    #this is where all the themes go
     if(input$plotTheme == "Light Theme"){
       selectedPlotTheme <- lightPlot
       circleColor <- "ivory2"
@@ -765,10 +681,6 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
                                      inherit.aes = FALSE), plot$layers)
       }
       
-      
-      # ggplot(df2, aes(df2$lon, df2$lat)),
-      ###
-      ###
       ### This works now, but nicer to shove into a list to change by theme
       if(input$labelsOn == TRUE){
         plot <- plot + geom_text(data = df2,
@@ -804,22 +716,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
     }
     
   })
-  
-  ###
-  
-  output$centerpoint_selected <- renderText({ 
-    paste("You have selected the following center point:",ctrPt[1],", ",ctrPt[2])
-  })
-  
-  output$namefield_selected <- renderText({ 
-    paste0("These are the potential name fields:", valNameChoices)
-  })
-  
-  output$valuefield_selected <- renderText({ 
-    paste("These are the potential value fields:", valChoices)
-  })
 }
 
-# "You have selected the following value field:") + 
-# Run the application 
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server) # Run the application 
+
