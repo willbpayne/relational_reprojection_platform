@@ -315,7 +315,10 @@ server <- function(input, output) {
   }
   
   output$CustomValueSlider <-  renderUI({
-    sliderInput("manualValueCutPoints", "Value Cut Points", min = round(dfparser(dataframefinder())[[8]]), max = round(dfparser(dataframefinder())[[7]]), value = c((dfparser(dataframefinder())[[7]]/3),dfparser(dataframefinder())[[7]]*.67), step = (round(dfparser(dataframefinder())[[7]])/100))
+    valuesfromparser <- dfparser(dataframefinder())
+    maxvalue_forslider <- valuesfromparser[[7]]
+    minvalue_forslider <- valuesfromparser[[8]]
+    sliderInput("manualValueCutPoints", "Value Cut Points", min = round(minvalue_forslider), max = round(maxvalue_forslider), value = c((maxvalue_forslider/3),(maxvalue_forslider*2)/3), step = NULL)
   })
   
   output$CustomDistanceSlider <-  renderUI({
@@ -333,19 +336,21 @@ server <- function(input, output) {
   # (round(dfparser(dataframefinder())[[2]])/1000),0 OLD STEP VALUE
   
   output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
+    choicesForDropdown <- dfparser(dataframefinder())[[9]]
     selectInput("valSelection", "Select Data Column",
                 multiple = FALSE,
-                choices = dfparser(dataframefinder())[[9]],
-                selected = dfparser(dataframefinder())[[9]][1],
+                choices = choicesForDropdown,
+                selected = choicesForDropdown[1],
                 selectize = TRUE,
                 width = "100%", size = NULL)
   })
   
   output$NameChoicesFromServer <- renderUI({ # serve up a list of value columns
+    namechoicesForDropdown <- dfparser(dataframefinder())[[10]]
     selectInput("nameSelection", "Select Name Column",
                 multiple = FALSE,
-                choices = dfparser(dataframefinder())[[10]],
-                selected = dfparser(dataframefinder())[[10]][1],
+                choices = namechoicesForDropdown,
+                selected = namechoicesForDropdown[1],
                 selectize = TRUE,
                 width = "100%", size = NULL)
   })
