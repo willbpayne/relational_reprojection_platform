@@ -191,14 +191,13 @@ server <- function(input, output) {
   dfvalues <- reactive(dataframefinder()) # Sets up the output of our function to be reactive
   
   output$newdfparser <- renderText({ # New place to store reactive output
-    #paste("test: ", colnames(dfvalues())),
-    
+    parserOutputs <- dfparser(dataframefinder()) # run it once!
     paste(#paste("<b>Column names: </b>", as.list(colnames(dfvalues())),  "<br>"),
-      "<b> Maximum distance: </b>", round((dfparser(dataframefinder())[[2]]),0), "km","<b> Circle spacing: </b>", round((dfparser(dataframefinder())[[2]] / 10),2), "km", "</br>",
-      "<b> Center point: </b>", dfparser(dataframefinder())[[5]], " ",
-      " ( latitude: ", round(dfparser(dataframefinder())[[3]], 4), ", longitude: ", round(dfparser(dataframefinder())[[4]], 5), ")</br>",
-      # "<b>Column names: </b>", paste(colnames(dfvalues()), collapse = ", "), # we said we didn't need this anymore, right?
-      collapse = " ") 
+      "<b> Maximum distance: </b>", round(parserOutputs[[2]],0), "km","<b> Circle spacing: </b>", round((parserOutputs[[2]] / 10),2), "km", "</br>",
+      "<b> Center point: </b>", parserOutputs[[5]], " ",
+      " (latitude: ", round(parserOutputs[[3]], 5), ", longitude: ", round(parserOutputs[[4]], 5), ")</br>", sep='',collapse = "") 
+    
+    #   collapse = " ") 
     ## to be inserted into above paste statement
     # if(maxdist > 20000){
     #   print("Your maximum distance is more than half of the Earth's circumference; things might get a little squirrely!")
