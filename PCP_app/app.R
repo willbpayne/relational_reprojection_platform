@@ -319,8 +319,18 @@ server <- function(input, output) {
   })
   
   output$CustomDistanceSlider <-  renderUI({
-    sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(dfparser(dataframefinder())[[2]]), value = c((dfparser(dataframefinder())[[2]]/3),dfparser(dataframefinder())[[2]]*.67), step = (round(dfparser(dataframefinder())[[2]])/100))
-  })
+    maxdist_forslider <- dfparser(dataframefinder())[[2]]
+    if (maxdist_forslider < 10) # keep round slider numbers only for big distances
+    {
+    sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(maxdist_forslider,2), value = c(round((maxdist_forslider/3),2),round((maxdist_forslider*2)/3),2), step = NULL, animate = FALSE, post = ' km', round = FALSE)
+    }
+    else
+    {
+    sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(maxdist_forslider,0), value = c(round((maxdist_forslider/3),0),round((maxdist_forslider*2)/3),0), step = NULL, animate = FALSE, post = ' km', round = TRUE)
+  }
+    })
+  
+  # (round(dfparser(dataframefinder())[[2]])/1000),0 OLD STEP VALUE
   
   output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
     selectInput("valSelection", "Select Data Column",
