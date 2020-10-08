@@ -660,9 +660,9 @@ server <- function(input, output) {
       coord_fixed(),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
       geom_point(na.rm = TRUE, stroke = 1, alpha = 0.7, size = df2$valTrans),
-      guides(colour = "colorbar",size = "legend"),
+      guides(colour = "colorbar",size = "legend")#,
       #expand_limits(y = 4000) #works for global data sets but bad for city scale
-      expand_limits(y = 0.00025*(maxdist))
+      #expand_limits(y = 0.00025*(maxdist)) # breaks log dist; maybe base on near/fardist rather than max
     )
     scale_fill_scico()
     lightPlot <- list(
@@ -674,8 +674,8 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       coord_fixed(),
       geom_point(stroke = 1, alpha = 0.78, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
-      guides(colour = "colorbar", size = "legend"),
-      expand_limits(y = 0.00025*(maxdist))
+      guides(colour = "colorbar", size = "legend")#,
+      #expand_limits(y = 0.00025*(maxdist)) # breaks log dist
     )
     
     monoPlot <- list(
@@ -689,8 +689,8 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
       #labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
       # guides(colour = "colorbar",size = "legend")
-      guides(size = guide_legend()),
-      expand_limits(y = 0.00025*(maxdist))
+      guides(size = guide_legend())#,
+      #expand_limits(y = 0.00025*(maxdist)) # breaks log dist
     ) 
     
     
