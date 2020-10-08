@@ -420,6 +420,7 @@ server <- function(input, output) {
     }
     
     valColumn <- input$valSelection # override with UI selection
+    LegendValName <- input$valSelection # update in the legend too
     df2$val <- df[[valColumn]]
     
     nameColumn <- input$nameSelection # override with UI selection
