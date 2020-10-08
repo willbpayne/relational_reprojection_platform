@@ -658,7 +658,7 @@ server <- function(input, output) {
             legend.title = element_text(color = "white")
       ),
       coord_fixed(),
-      labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
+      labs(color = paste0("Total ",tolower(LegendValName), " :: ", '\n',ctrPtName), x = NULL, y = NULL),
       geom_point(na.rm = TRUE, stroke = 1, alpha = 0.7, size = df2$valTrans),
       guides(colour = "colorbar",size = "legend")#,
       #expand_limits(y = 4000) #works for global data sets but bad for city scale
@@ -673,7 +673,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
             axis.text.y = element_blank()),
       coord_fixed(),
       geom_point(stroke = 1, alpha = 0.78, size = df2$valTrans),
-      labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
+      labs(color = paste0("Total ",tolower(LegendValName), " :: ", '\n',ctrPtName), x = NULL, y = NULL),
       guides(colour = "colorbar", size = "legend")#,
       #expand_limits(y = 0.00025*(maxdist)) # breaks log dist
     )
@@ -686,7 +686,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
             axis.text.y = element_blank()),
       coord_fixed(),
       geom_point(stroke = 1,  alpha = 0.7, size = df2$valTrans),
-      labs(color = paste0("Total ",tolower(LegendValName), " from ", '\n',ctrPtName), x = NULL, y = NULL),
+      labs(color = paste0("Total ",tolower(LegendValName), " :: ", '\n',ctrPtName), x = NULL, y = NULL),
       #labs(size = paste0("Distance from ", '\n',df2$valTrans," (km)"), x = NULL, y = NULL),
       # guides(colour = "colorbar",size = "legend")
       guides(size = guide_legend())#,
