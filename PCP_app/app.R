@@ -462,6 +462,9 @@ server <- function(input, output) {
       df2$val[df2$val == 0] <- NA
     }
     
+    df2$labelNames <- df2$valName # initialize empty strings for labels
+    df2$labelNames[df2$val == 0 | is.na(df2$val) == TRUE] <- " " # add label text for non-zero values
+    
     ###################################
     #        GREAT CIRCLE             #
     ###################################     
@@ -686,13 +689,13 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
         plot <- plot + geom_text(data = df2,
                                  aes(plot_coordinates[,1],
                                      plot_coordinates[,2],
-                                     label = df2$valName),
+                                     label = df2$labelName),
                                  size = 3,
                                  check_overlap = input$showAllLabels, # tried to do the text outline thing and failed. could we do a conditional or expression for text color, where depending where it is on the scale it gets a different text color?
                                  color = "white") + geom_text(data = df2,
                                                               aes(plot_coordinates[,1],
                                                                   plot_coordinates[,2],
-                                                                  label = df2$valName),
+                                                                  label = df2$labelName),
                                                               size = 3,
                                                               check_overlap = input$HideOverlappingLabels,
                                                               color = themeText)
