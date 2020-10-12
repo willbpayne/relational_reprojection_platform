@@ -463,8 +463,9 @@ server <- function(input, output) {
     }
     
     df2$labelNames <- df2$valName # initialize empty strings for labels
-    df2$labelNames[df2$val == 0 | is.na(df2$val) == TRUE] <- " " # add label text for non-zero values
-    
+    df2$labelNames[df2$val == 0] <- " " # add label text for non-zero values
+    df2$labelNames[df2$isCTR == FALSE & is.na(df2$val) == TRUE] <- " " # add label text for non-zero values
+        
     ###################################
     #        GREAT CIRCLE             #
     ###################################     
