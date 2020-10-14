@@ -635,7 +635,8 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       selectedPlotTheme <- lightPlot
       circleColor <- "ivory2"
       ctrPtColor <- "ivory3"
-      themeText = "gray60"
+      themeText = "black" #change for nacis
+  #    themeText = "gray60"
     } else if (input$plotTheme == "Dark Theme"){
       selectedPlotTheme <-darkPlot
       circleColor <- "gray50"
