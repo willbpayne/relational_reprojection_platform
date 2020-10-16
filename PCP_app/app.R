@@ -53,7 +53,7 @@ ui <- fluidPage(theme = "pscp_style.css",
                           column(6,  uiOutput("ValChoicesFromServer")),
                           column(6,  uiOutput("NameChoicesFromServer"))
                         )),
-                    div(style = "margin-top: -60px", plotOutput("distPlot", height = "250px", width = "100%")),
+                    div(style = "margin-top: -60px", plotOutput("distPlot", height = "100%", width = "100%")), #plot size
                     # Radio buttons for interpolation method
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
                         fluidRow(
