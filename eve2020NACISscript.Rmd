@@ -1,0 +1,85 @@
+---
+title: "Eve NACIS 2020 Script"
+author: "Will P."
+date: "10/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+
+"0:
+
+Hi, I'm Evangeline McGlynn and today I'm presenting a mapping tool Will Payne and I have been working on, the Pseudo-spatial chart program. We've actually presented an alpha version of the same project before, but today we hope to show off a more robust version by way of walking through some data sets to show what staying in relational space can do.
+
+1:
+
+For those that haven't seen this before, the project started as a kind of polemic to the GIS-logics that have steam rolled other kinds of geographic thought, in spite of our technical ability to reproduce it. With the Pseudo-spatial Chart Program, we hoped to make a proof of concept for an automated way to visualize space somewhere between geographic and networked relationships. That is to say, how do we visualise data where distance matters, but isn't the defining aspect of the dynamic. Eg, if I'm talking about LA,SF and NYC, it's important that NY is farther away, but not maybe not important to stress that it's 1000x of times farther. All of that sounds pretty fuzzy, but the result is a relatively robust tool for customizing distance decay.
+
+2:
+
+Given the internet situation, we're not pushing our luck with a live demo today (I promise it works!), but let's look at the program itself. We built it in R/Shiny (for now) and are relying heavily on ggplot to visualize. Let's take a look at the program's default dataset to orient. Here we're looking at a global dataset of remittances to India. I didn't put labels here because I think we can wrap our brains around it without. We've essentially produced a polar projection centered around India. Notice the light outline of Africa here, those big circles on the top are the US and Canada, and we see a whole bunch of remittance money coming from the Gulf state. Now that we're oriented, I'd like to point out the various options we have: toggles for labels, controls for data column selection, and different ways to choose the symbol size. All of these make it a designer-friendly tool without insisting on the output being the final product--hence the SVG output
+
+3:
+If India is a case of flows, here's another more material example with our Austin bike-share usage dataset. PsCP allows you to toggle between variables relative to the same center. This particular case isn't super exciting, there's a barely perceptible differece, but the SE corner, but it does give an idea of the reach of the network and some insight into intra-urban dynamics--and we like making small multiples. With a bigger dataset, we might do the same transformation for each station.
+
+
+
+4:
+
+For the next example, I'd like to use a dataset that necessitates a different kind of value interpretation. This is the customer log of a small biz in NH. In local businesses, the distance decay is rather precipitous, so it makes sense that we would visualize the data with a logorithmic interpolation, in order to capture all of those tiny New England towns without completely losing the few—but important—outliers. So even if most of the business comes from Nashua and Merrimack, I want to know about those multiple west coast visitors. [turn off labels for emphasis]
+
+
+5:
+
+But let's look at my new favorite. Some of you may know Taylor Shelton, who kindly lent us data on the ten largest landholders of residential property in Fulton County Georgia. We plugged all the data into the system and got some interesting insight on seats of power distant from the buildings themselves. Look at this first map where you see how yes, there are landlords out of the county, but at least a lot of per-parcel value is still controlled within the state, as opposed to total acreage, which shoots over to Texas and the USVirgin Islands (a tax haven). You'll also notice I made custom distance breaks here in order to emphasize local holdings that would otherwise pile on top of each other.
+different scales vs different types of investors
+GA: local slum lords & realtors
+classic place entrepreneurs
+we think
+
+6:
+
+In terms of data preparation, we've been trying to build something that is as not-fussy as possible with data. I currently live in Armenia, a country that's been at war for the last 3 weeks, so shortly before this conference as a kind of cathartic exercise, I made a data set of all the diplomatic multi-lateral organizations each of the stakeholder countries is in, in part because a big criticism is the failure of European diplomacy. I hand-entered the data on a spreadsheet, using all the same columns I would were I to make a choropleth map, the only difference being there is one extra column to add, 'isCTR' to tell the program where to center the map. Here, because Armenia, Azerbaijan, Russia, and Turkey are all close to all these fiddly little countries in Europe, I made custom distance cut points, basically deciding that anything less than 2k km is 'near' and anything more than 6k km is 'far.' You can see by comparison the relative influence of small/large economies, but also how yolked they all are to Euro-dominated organizations. I like this case because Armenia and Azerbaijan are SUCH small countries surrounded by SUCH big ones, that they could easily get overlooked in a choropleth, or even a cartogram—given the center country doesn't 'need' data—so the pseudo-spatial chart program acts as a way to assert their importance.
+
+7:
+
+Also, fun side note, because of the way I set up the data as a series of binaries, switching variables doesn't give more real charts but rather is a way to flip through organizational membership
+
+8:
+
+In summary, we just walked through bunch of datasets of wildly different scales and adjusted interpolation accordingly, but dependent not on size but on the dynamics of each individual data set. There is no out of the box solution
+
+9:
+
+We've covered a couple of fields in our examples, but there are a few more things we hope to try with different types of datasets,
+
+10:
+
+and of course we're still working on the code. The next steps are trying to automate some decisions based on the dataset, and build in capacity for geo-context/basemaps.
+
+11:
+
+I think that's it. We're up on github and would be super jazzed if anyone wants to help us hack through some of our harder technical obstacles!
+
+Thanks all and Will and I are ready for any of your questions.
+
+-- 
+Evangeline McGlynn
+University of California Berkeley
+PhD Candidate in Geography
+emcglynn@berkeley.edu"
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
