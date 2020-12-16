@@ -2,23 +2,21 @@
 # the 'Run App' button above. Find out more about Shiny here: http://shiny.rstudio.com/
 
 library(shiny)
-library(sf)
-library(sp) # might not need
-library(ggplot2)
 library(ggforce) # to plot circles
-library(dplyr)
 library(tidyverse)
-library(tools) #to learn file extension
-library(jsonlite) # for loading in json files
-library(geojson) # for loading geojson (need this for geojsonio to work)
-library(geojsonio) # for loading geojson
-# 
 library(geosphere) # where we get bearing
 library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
-#
-library(RColorBrewer) # for graph colors
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
+
+# libraries we thought we needed but don't use yet
+
+#library(sf)
+#library(sp) # might not need
+#library(tools) #to learn file extension
+#library(jsonlite) # for loading in json files
+#library(geojson) # for loading geojson (need this for geojsonio to work)
+#library(geojsonio) # for loading geojson
 
 dataFile <- "IND_remittances.csv" # for testing
 
