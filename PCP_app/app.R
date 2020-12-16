@@ -2,8 +2,8 @@
 # the 'Run App' button above. Find out more about Shiny here: http://shiny.rstudio.com/
 
 library(shiny)
-library(ggforce) # to plot circles
 library(tidyverse)
+library(ggforce) # to plot circles
 library(geosphere) # where we get bearing
 library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
@@ -51,7 +51,7 @@ ui <- fluidPage(theme = "pscp_style.css",
                           column(6,  uiOutput("ValChoicesFromServer")),
                           column(6,  uiOutput("NameChoicesFromServer"))
                         )),
-                    div(style = "margin-top: -60px", plotOutput("distPlot", height = "100%", width = "100%")), #plot size
+                    div(style = "margin-top: -60px", plotOutput("distPlot", height = "300px", width = "100%")), #plot size
                     # Radio buttons for interpolation method
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -15px",
                         fluidRow(
@@ -95,6 +95,7 @@ server <- function(input, output) {
     
     par(bg = "#404040", #default color is #f5f5f5
         mgp=c(1.75,0.5,0),
+        mar=c(4,4,4,4),
         col.lab="#bfbfbf",
         col.axis="#bfbfbf",
         fg="#bfbfbf")
