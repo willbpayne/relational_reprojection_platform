@@ -73,7 +73,7 @@ ui <- fluidPage(theme = "pscp_style.css",
                                      uiOutput("CustomDistanceSlider"))
                     )
                   ), #end of sidebar panel, end of class panel div
-                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "600px")
+                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "1000px")
                     ))
                   ) #end panel layout))
 )
