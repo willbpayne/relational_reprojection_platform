@@ -448,13 +448,6 @@ server <- function(input, output) {
     } else if(input$valTransMeth == "Custom"){
       df2$valTrans <- df2$val
       
-      # df2$valTrans <- 
-      # maxRadius   
-      # input$manualValueCutPoints[1]
-      # input$manualValueCutPoints[2]
-    }
-    #df2$valTrans <- (df2$val / 400)^1.5 # manual one I did for NH data to see what we're looking for
-
     if(input$showZeroes == TRUE){
       df2$val[df2$val == 0] <- NA
     }
@@ -524,13 +517,6 @@ server <- function(input, output) {
     #        LAGRANGE DIST            #
     ################################### 
     
-    # # Automated route (could also just have user specify neardist and fardist)
-    # distancemedian <-median(df2$distance)
-    # geogdist <- c(0, distancemedian, ((distancemedian + distancemedian + maxdist)/3), maxdist) # let's say under 500 km is close, over 2000km is far
-    # neardist <- geogdist[2] # these two are the output of geogdist above
-    # fardist <- geogdist[3]
-    # chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
-
     neardist <- input$manualCutPoints[1]*1000
     fardist <- input$manualCutPoints[2]*1000
     # 
