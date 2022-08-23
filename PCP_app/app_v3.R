@@ -447,7 +447,8 @@ server <- function(input, output) {
       # this is basically "raw square root" since it's not scaled at all (had plus minRadius before)
     } else if(input$valTransMeth == "Custom"){
       df2$valTrans <- df2$val
-      
+    } 
+    
     if(input$showZeroes == TRUE){
       df2$val[df2$val == 0] <- NA
     }
@@ -695,8 +696,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       plot_latLon
     }
     
-  })
+  }) 
 }
 
 shinyApp(ui = ui, server = server) # Run the application 
-
