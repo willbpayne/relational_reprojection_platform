@@ -527,52 +527,52 @@ server <- function(input, output) {
     #        LAGRANGE DIST            #
     ################################### 
     
-    # # Automated route (could also just have user specify neardist and fardist)
-    # # hist(df2$distance)
-    # distancemedian <-median(df2$distance)
-    # geogdist <- c(0, distancemedian, ((distancemedian + distancemedian + maxdist)/3), maxdist) # let's say under 500 km is close, over 2000km is far
-    # neardist <- geogdist[2] # these two are the output of geogdist above
-    # fardist <- geogdist[3]
-    # chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
-    # 
-    # # Simpler Automated route (just median)
+    # Automated route (could also just have user specify neardist and fardist)
+    # hist(df2$distance)
+    distancemedian <-median(df2$distance)
+    geogdist <- c(0, distancemedian, ((distancemedian + distancemedian + maxdist)/3), maxdist) # let's say under 500 km is close, over 2000km is far
+    neardist <- geogdist[2] # these two are the output of geogdist above
+    fardist <- geogdist[3]
+    chartdist <- c(0, 400, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+
+    # Simpler Automated route (just median)
     # hist(df2$distance)
     # distancemedian <-median(df2$distance)
     # geogdist <- c(0, distancemedian, maxdist) # let's say under 500 km is close, over 2000km is far
     # neardist <- geogdist[2] # these two are the output of geogdist above
     # fardist <- geogdist[3]
     # 
-    # neardist <- input$manualCutPoints[1]*1000
-    # fardist <- input$manualCutPoints[2]*1000
+    neardist <- input$manualCutPoints[1]*1000
+    fardist <- input$manualCutPoints[2]*1000
     # 
-    # chartdist <- c(0, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
+    chartdist <- c(0, 800, 1200) # this just gets us equal intervals on the graph for the different segments of the lines
     # 
-    # # plot(geogdist, chartdist)
+    #plot(geogdist, chartdist) # LEGACY OF PRE-SHINY CODE
     # 
-    # a <- function(x){ # here is some example code for the piecewise funciton
-    #   ifelse(( x >= 0 & x < neardist),(x * 400/neardist),ifelse((neardist <= x & x < fardist),((x * 400)/(fardist - neardist) + (400-((400)/(fardist - neardist)*neardist))), ifelse((fardist <= x & x <= maxdist),((x * 400)/(maxdist - fardist) + (800-((400)/(maxdist - fardist)*fardist))), NA)))
-    # }
+    a <- function(x){ # here is some example code for the piecewise funciton
+      ifelse(( x >= 0 & x < neardist),(x * 400/neardist),ifelse((neardist <= x & x < fardist),((x * 400)/(fardist - neardist) + (400-((400)/(fardist - neardist)*neardist))), ifelse((fardist <= x & x <= maxdist),((x * 400)/(maxdist - fardist) + (800-((400)/(maxdist - fardist)*fardist))), NA)))
+    }
     # plot(a,xlim=c(0,maxdist), ylim = c(0, 1200), col = "red")
     # 
     # df2$lagrangedistcircstep <- a(df2$distance) # set new lagrange great circle distances using new stepwise function
     # 
     # # function to make new circles with any stepwise function set above
-    # lagrange_predictstep <- function(circlesdataframe) { 
-    #   lagrangecirclesdataframe <- circlesdataframe
-    #   for (row in 1:nrow(circlesdataframe)){
-    #     lagrangecirclesdataframe[row,"r"]<- a(circlesdataframe[row,"r"])}
-    #   return(lagrangecirclesdataframe)
-    # }
+    lagrange_predictstep <- function(circlesdataframe) {
+      lagrangecirclesdataframe <- circlesdataframe
+      for (row in 1:nrow(circlesdataframe)){
+        lagrangecirclesdataframe[row,"r"]<- a(circlesdataframe[row,"r"])}
+      return(lagrangecirclesdataframe)
+    }
     # lagrangecircles <- lagrange_predictstep(circles) # this projects the circles
     # 
     # # Replot coordinates on custom distance scale using piecewise function
-    # df2 <- df2 %>% mutate(
-    #   customdistancex = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
-    #   customdistancey = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
-    # )
-    # df2$customcoords <- cbind(df2$customdistancex,df2$customdistancey)
-    # df2 <- select(df2,-starts_with("customdistance"))
-    
+    df2 <- df2 %>% mutate(
+      customdistancex = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[1]]),
+      customdistancey = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    df2$customcoords <- cbind(df2$customdistancex,df2$customdistancey)
+    df2 <- select(df2,-starts_with("customdistance"))
+    # 
     ###################################
     #            PLOT CALL            #
     ################################### 
