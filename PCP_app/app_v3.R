@@ -100,7 +100,30 @@ server <- function(input, output) {
         col.lab="#bfbfbf",
         col.axis="#bfbfbf",
         fg="#bfbfbf")
-    plot(df$lon, df$lat, 
+    
+    df3 <- df # cloning for non-destructive editing and with a different name than in dataframefinder() below
+    latNames2 <- c("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
+    lonNames2 <- c("lon","Lon","LON","long","Long","LONG","longitude", "Longitude", "LONGITUDE", "x","X", "coords.x1")
+
+    for (col in 1:ncol(df)) {
+      if (max(as.numeric(df[[col]]), na.rm = T) <= 90.0
+          && min(as.numeric(df[[col]]), na.rm = T) >= -90.0
+          && names(df)[[col]] %in% latNames2) # lat
+      { 
+        df3$latitude <- as.numeric(df[[col]])
+        print("I found latitude!")
+        }
+      else{
+        if (max(as.numeric(df[[col]]), na.rm = T) <= 180.0
+            && min(as.numeric(df[[col]]), na.rm = T) >= -180.0
+            && names(df)[col] %in% lonNames2) # lon
+        { 
+          df3$longitude <- as.numeric(df[[col]])
+          }
+      }
+      }
+        
+    plot(df3$longitude, df3$latitude, 
          col = "grey75", 
          xlab = "Longitude", 
          ylab = "Latitude",
@@ -432,7 +455,7 @@ server <- function(input, output) {
     
     if(input$valTransMeth == "N/A"){
       df2$valTrans <- (df2$val/valMax) * maxRadius + (minRadius - 1)
-      # only works if we have data at a specific scale, for comparison only
+      # proportion of maximum value without scaling
     } else if(input$valTransMeth == "Square Root"){
       df2$valTrans <- (sqrt(df2$val/valMax)) * maxRadius + (minRadius - 1)
       # not sure of the exact math here but realized that linear scale
@@ -442,9 +465,6 @@ server <- function(input, output) {
       # maxValue anyway. Right? it's weekend, will come back to this later
     } else if(input$valTransMeth == "Log"){
       df2$valTrans <- (log(df2$val)/log(valMax) * maxRadius) + (minRadius - 1)
-    } else if(input$valTransMeth == "Exponential"){
-      df2$valTrans <- sqrt(df2$val) + minRadius
-      # this is basically "raw square root" since it's not scaled at all (had plus minRadius before)
     } else if(input$valTransMeth == "Custom"){
       df2$valTrans <- df2$val
     } 
