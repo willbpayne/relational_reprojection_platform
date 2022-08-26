@@ -1,0 +1,28 @@
+User_Location,User_City,User_State,Review_Rating,reviewCount,Is_CTR,LONGITUDE,LATITUDE
+"Alexandria, VA",Alexandria,VA,1,1,0,-77.04341,38.8046
+"Arlington, VA",Arlington,VA,1,1,0,-77.08629,38.8905
+"Bethesda, MD",Bethesda,MD,1,1,0,-77.09692,38.98637
+"Catonsville, MD",Catonsville,MD,1,1,0,-76.73976,39.27023
+"Champaign, IL",Champaign,IL,1,1,0,-88.2435,40.1142
+"Chantilly, VA",Chantilly,VA,1,1,0,-77.43892,38.88675
+"Chicago, IL",Chicago,IL,1,1,0,-87.63245,41.88425
+"Columbia, MD",Columbia,MD,1,1,0,-76.86709,39.21106
+"Dallas, TX",Dallas,TX,1,1,0,-96.79512,32.77822
+"Fairfax, VA",Fairfax,VA,1,1,0,-77.23374,38.87365
+"Grand Prairie, TX",Grand Prairie,TX,1,1,0,-97.0072,32.7477
+"Longmont, CO",Longmont,CO,1,1,0,-105.10022,40.16394
+"Los Angeles, CA",Los Angeles,CA,1,1,0,-118.2455,34.05361
+"Manassas, VA",Manassas,VA,1,2,0,-77.47086,38.75125
+"Mill Valley, CA",Mill Valley,CA,1,1,0,-122.54822,37.90774
+"Mount Dora, FL",Mount Dora,FL,1,1,0,-81.64452,28.80249
+"Mount Rainier, MD",Mount Rainier,MD,1,1,0,-76.95891,38.93731
+"New Market, MD",New Market,MD,1,1,0,-77.27232,39.38279
+"Philadelphia, PA",Philadelphia,PA,1,2,0,-75.16218,39.95222
+"Potomac, MD",Potomac,MD,1,1,0,-77.20884,39.01796
+"Providence, RI",Providence,RI,1,1,0,-71.41199,41.82387
+"Rockville, MD",Rockville,MD,1,1,0,-77.15118,39.08196
+"Salt Lake City, UT",Salt Lake City,UT,1,1,0,-111.88822,40.76031
+"Seattle, WA",Seattle,WA,1,1,0,-122.32945,47.60357
+"Shippensburg, PA",Shippensburg,PA,1,1,0,-77.51692,40.05194
+"Silver Spring, MD",Silver Spring,MD,1,2,0,-77.02914,38.99693
+"Washington, DC",Washington,DC,1,21,1,-77.03196,38.89037
