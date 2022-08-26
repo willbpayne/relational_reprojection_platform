@@ -465,6 +465,7 @@ server <- function(input, output) {
       # maxValue anyway. Right? it's weekend, will come back to this later
     } else if(input$valTransMeth == "Log"){
       df2$valTrans <- (log(df2$val)/log(valMax) * maxRadius) + (minRadius - 1)
+      df2$valTrans[is.infinite(df2$valTrans)]<-0
     } else if(input$valTransMeth == "Custom"){
       df2$valTrans <- df2$val
     } 
