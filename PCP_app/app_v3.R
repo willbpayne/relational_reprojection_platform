@@ -25,7 +25,7 @@ dataFile <- "IND_remittances.csv" # for testing
 ########################################
 
 ui <- fluidPage(theme = "pscp_style.css",
-                div(style = "padding: 10px", h1("Pseudo-Spatial Chart Program")), # Application title
+                div(style = "padding: 10px", h1("Relational Reprojection Platform")), # Application title
                 sidebarLayout(sidebarPanel(
                   div(class = "panel",
                     div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
@@ -34,13 +34,13 @@ ui <- fluidPage(theme = "pscp_style.css",
                     ),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -50px",
                         fluidRow(
-                          column(5, checkboxInput("labelsOn", "Show Labels?", value = FALSE, width = NULL)),
-                          column(7, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels?", value = FALSE, width = NULL))
+                          column(5, checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
+                          column(7, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels?", value = TRUE, width = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -40px",
                         fluidRow(
                           column(5,checkboxInput("centerOn", "Show Center?", value = FALSE, width = NULL)),
-                          column(7,checkboxInput("showZeroes","Zero Values as NA?", value = TRUE, width = "100%"))
+                          column(7,checkboxInput("removeZeroes","Remove Zero Values?", value = FALSE, width = "100%"))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
@@ -58,14 +58,14 @@ ui <- fluidPage(theme = "pscp_style.css",
                     # Radio buttons for interpolation method
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -25px",
                         fluidRow(
-                          column(12,radioButtons("valTransMeth","Value (Symbol Size) Interpolation", choices = c("N/A", "Square Root", "Log"), inline = TRUE, width = "100%", selected = "Square Root"))
+                          column(12,radioButtons("valTransMeth","Value (Symbol Size) Interpolation", choices = c("None", "Square Root", "Log"), inline = TRUE, width = "100%", selected = "Square Root"))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -35px",
                         fluidRow(column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 50, c(1, 25), ticks = TRUE)
                         ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -40px",
                         fluidRow(
-                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("N/A","Square Root","Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
+                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
                         )),
                     
                     ## If distance transformation radio button is on "Custom", show cut point slider
@@ -453,7 +453,7 @@ server <- function(input, output) {
     minRadius <- input$SymbolSizeRange[1] # change this with the UI later?
     maxRadius <- input$SymbolSizeRange[2] # change this with the UI later?
     
-    if(input$valTransMeth == "N/A"){
+    if(input$valTransMeth == "None"){
       df2$valTrans <- (df2$val/valMax) * maxRadius + (minRadius - 1)
       # proportion of maximum value without scaling
     } else if(input$valTransMeth == "Square Root"){
@@ -470,7 +470,11 @@ server <- function(input, output) {
       df2$valTrans <- df2$val
     } 
     
-    if(input$showZeroes == TRUE){
+    if(input$removeZeroes == TRUE){
+      df2$val[df2$val == 0] <- NaN
+      df2<-subset(df2, val >= 0)
+    }
+    if(input$removeZeroes == FALSE){
       df2$val[df2$val == 0] <- NA
     }
     
@@ -648,7 +652,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
     
     # Figure out which plot to show
     plot_circles <- circles # set default for great circle/logarithmic
-    if(input$interpMeth == "N/A"){
+    if(input$interpMeth == "Great Circle"){
       plot_coordinates <- df2$circcoords
     } else if(input$interpMeth == "Square Root"){
       plot_coordinates <- df2$sqrtcoords
