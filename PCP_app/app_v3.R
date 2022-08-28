@@ -37,10 +37,10 @@ ui <- fluidPage(theme = "pscp_style.css",
                           column(5, checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
                           column(7, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels?", value = TRUE, width = NULL))
                         )),
-                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -40px",
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -35px",
                         fluidRow(
                           column(5,checkboxInput("centerOn", "Show Center?", value = FALSE, width = NULL)),
-                          column(7,checkboxInput("removeZeroes","Remove Zero Values?", value = FALSE, width = "100%"))
+                          column(7,checkboxInput("removeZeroes","Remove Zero Values?", value = FALSE, width = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
@@ -73,7 +73,7 @@ ui <- fluidPage(theme = "pscp_style.css",
                                      uiOutput("CustomDistanceSlider"))
                     )
                   ), #end of sidebar panel, end of class panel div
-                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "1000px")
+                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "800px")
                     ))
                   ) #end panel layout))
 )
