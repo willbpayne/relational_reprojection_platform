@@ -24,7 +24,7 @@ dataFile <- "IND_remittances.csv" # for testing
 ##          UI PARTY TONIGHT!         ##
 ########################################
 
-ui <- fluidPage(theme = "pscp_style.css",
+ui <- fluidPage(theme = "MRR_style.css",
                 div(style = "padding: 10px", h1("Relational Reprojection Platform")), # Application title
                 sidebarLayout(sidebarPanel(
                   div(class = "panel",
