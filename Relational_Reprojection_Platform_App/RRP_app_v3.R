@@ -257,8 +257,7 @@ server <- function(input, output) {
     #     # print(paste("What even is this?"))
     #   }
     # }
-    ### THIS OMISSION MIGHT BREAK MORE COMPLEX DATA, OR AT LEAST GET SLOW AND LEAKY
-    
+
     df2$distance <- geodist(ctrPt[1], ctrPt[2], df2$lat, df2$lon, units = "km")
     maxdist <- max(df2$distance) # max great circle distance in kilometers
     
@@ -423,9 +422,7 @@ server <- function(input, output) {
     maxdist <- max(df2$distance) # max great circle distance in meters
     
     df2 <- df2 %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(lon, lat), a=6378137, f=1/298.257223563)) # get bearing of all points to center
-    # 
-    # # THIS NEXT PART SHOULD BE A FUNCTION TOO
-    # 
+    
     for (row in 1:nrow(df2)) # convert from geographic bearings to polar coordinates
     {if(df2$ctrPtGeobearing[row] <= 0)
       # if geobearing is 0 or negative, mathbearing is 90 plus bearing
@@ -458,11 +455,6 @@ server <- function(input, output) {
       # proportion of maximum value without scaling
     } else if(input$valTransMeth == "Square Root"){
       df2$valTrans <- (sqrt(df2$val/valMax)) * maxRadius + (minRadius - 1)
-      # not sure of the exact math here but realized that linear scale
-      # doesn't work since we want the areas to be proportionate, not
-      # the radii. think the square root works because area is pi(r)2
-      # so the pi doesn't matter if we're rescaling to maxRadius at 
-      # maxValue anyway. Right? it's weekend, will come back to this later
     } else if(input$valTransMeth == "Log"){
       df2$valTrans <- (log(df2$val)/log(valMax) * maxRadius) + (minRadius - 1)
       df2$valTrans[is.infinite(df2$valTrans)]<-0
@@ -540,7 +532,7 @@ server <- function(input, output) {
     df2 <- select(df2,-starts_with("sqrtdistance"))
     
     ###################################
-    #        LAGRANGE DIST            #
+    #          CUSTOM DIST            #
     ################################### 
     # atm, more just a piecewise linear function
     neardist <- input$manualCutPoints[1]*1000
@@ -558,13 +550,13 @@ server <- function(input, output) {
     }
 
     # function to make new circles with any stepwise function set above
-    lagrange_predictstep <- function(dataframe) {
-      lagrangecirclesdataframe <- dataframe # duplicate dataframe
+    custom_predictstep <- function(dataframe) {
+      customcirclesdataframe <- dataframe # duplicate dataframe
       for (row in 1:nrow(dataframe)){
-        lagrangecirclesdataframe$r[row] <- a(dataframe$r[row])} # applying function a to every row in dataframe
-      return(lagrangecirclesdataframe)
+        customcirclesdataframe$r[row] <- a(dataframe$r[row])} # applying function a to every row in dataframe
+      return(customcirclesdataframe)
     }
-    lagrangecircles <- lagrange_predictstep(circles) # this projects the circles
+    customcircles <- custom_predictstep(circles) # this projects the circles
 
     # Replot coordinates on custom distance scale using piecewise function
     df2 <- df2 %>% mutate(
@@ -601,8 +593,6 @@ server <- function(input, output) {
       labs(color = paste0("Total ",tolower(LegendValName), " :: ", '\n',ctrPtName), x = NULL, y = NULL),
       geom_point(na.rm = TRUE, stroke = 1, alpha = 0.7, size = df2$valTrans),
       guides(colour = "colorbar",size = "legend")#,
-      #expand_limits(y = 4000) #works for global data sets but bad for city scale
-      #expand_limits(y = 0.00025*(maxdist)) # breaks log dist; maybe base on near/fardist rather than max
     )
     scale_fill_scico()
     lightPlot <- list(
@@ -615,7 +605,6 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       geom_point(stroke = 1, alpha = 0.78, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " :: ", '\n',ctrPtName), x = NULL, y = NULL),
       guides(colour = "colorbar", size = "legend")#,
-      #expand_limits(y = 0.00025*(maxdist)) # breaks log dist
     )
     
     monoPlot <- list(
@@ -628,7 +617,6 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       geom_point(stroke = 1,  alpha = 0.7, size = df2$valTrans),
       labs(color = paste0("Total ",tolower(LegendValName), " :: ", '\n',ctrPtName), x = NULL, y = NULL),
       guides(size = guide_legend())#,
-      #expand_limits(y = 0.00025*(maxdist)) # breaks log dist
     ) 
     
     #this is where all the themes go
@@ -661,7 +649,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       plot_coordinates <- df2$logcoords
     } else if(input$interpMeth == "Custom"){
       plot_coordinates <- df2$customcoords
-      plot_circles <- lagrangecircles
+      plot_circles <- customcircles
     }
     
     # For all the circular plots, plug in variables
@@ -687,7 +675,6 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
                                      inherit.aes = FALSE), plot$layers)
       }
 
-      ## This works now, but nicer to shove into a list to change by theme
       if(input$labelsOn == TRUE){
         plot <- plot + geom_text(data = df2,
                                  aes(plot_coordinates[,1],
