@@ -542,7 +542,7 @@ server <- function(input, output) {
     ###################################
     #        LAGRANGE DIST            #
     ################################### 
-    
+    # atm, more just a piecewise linear function
     neardist <- input$manualCutPoints[1]*1000
     fardist <- input$manualCutPoints[2]*1000
     # 
