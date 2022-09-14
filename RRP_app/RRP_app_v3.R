@@ -18,13 +18,13 @@ library(scico) # for newer graph colors (colorblind friendly, better for continu
 #library(geojson) # for loading geojson (need this for geojsonio to work)
 #library(geojsonio) # for loading geojson
 
-dataFile <- "IND_remittances.csv" # for testing
+dataFile <- "data/IND_remittances.csv" # for testing
 
 ########################################
 ##          UI PARTY TONIGHT!         ##
 ########################################
 
-ui <- fluidPage(theme = "MRR_style.css",
+ui <- fluidPage(theme = "RRP_style.css",
                 div(style = "padding: 10px", h1("Relational Reprojection Platform")), # Application title
                 sidebarLayout(sidebarPanel(
                   div(class = "panel",
@@ -87,7 +87,7 @@ server <- function(input, output) {
   output$distPlot <- renderPlot({ # the basic dot plot for sidebar
     
     if (is.null(input$uploadFile) == TRUE){
-      df <- read.csv(file = "IND_remittances.csv")
+      df <- read.csv(file = "data/IND_remittances.csv")
     }
     else{
       uploadFileData <- input$uploadFile
