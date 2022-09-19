@@ -73,7 +73,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                                      uiOutput("CustomDistanceSlider"))
                     )
                   ), #end of sidebar panel, end of class panel div
-                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "800px")
+                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "700px")
                     ))
                   ) #end panel layout))
 )
@@ -159,7 +159,7 @@ server <- function(input, output) {
     }
     paste("<b> Maximum distance: </b>", round(parserOutputs[[2]],0), "km",distanceWarning,"<b> Circle spacing: </b>", round((parserOutputs[[2]] / 10),2), "km", "</br>",
       "<b> Center point: </b>", parserOutputs[[5]], " ",
-      " (latitude: ", round(parserOutputs[[3]], 5), ", longitude: ", round(parserOutputs[[4]], 5), ")</br>", sep='',collapse = "") 
+      " (Latitude: ", round(parserOutputs[[3]], 5), ", Longitude: ", round(parserOutputs[[4]], 5), ")</br>", sep='',collapse = "") 
   })
   
   dfparser <- function(selected_dataframe) { # First non-reactive function! We copied a bunch o code for this
