@@ -8,6 +8,7 @@ library(geosphere) # where we get bearing
 library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
+library(ggrepel)
 
 # libraries we thought we needed but don't use yet
 
@@ -40,7 +41,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -35px",
                         fluidRow(
                           column(5,checkboxInput("centerOn", "Show Center?", value = FALSE, width = NULL)),
-                          column(7,checkboxInput("removeZeroes","Remove Zero Values?", value = FALSE, width = NULL))
+                          column(7,checkboxInput("removeZeroes","Remove Zero Values?", value = TRUE, width = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
@@ -49,6 +50,9 @@ ui <- fluidPage(theme = "RRP_style.css",
                            # button to click to download SVG))
                                  )
                         )),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -35px",
+                        fluidRow(column(12,sliderInput("label_size", "Label Size Range", 1, 10, 4, ticks = TRUE)
+                        ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
                           column(6,  uiOutput("ValChoicesFromServer")),
@@ -65,7 +69,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                         ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -40px",
                         fluidRow(
-                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
+                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Log","Decimal Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
                         )),
                     
                     ## If distance transformation radio button is on "Custom", show cut point slider
@@ -73,7 +77,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                                      uiOutput("CustomDistanceSlider"))
                     )
                   ), #end of sidebar panel, end of class panel div
-                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "700px")
+                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "800px")
                     ))
                   ) #end panel layout))
 )
@@ -516,6 +520,28 @@ server <- function(input, output) {
     df2 <- dplyr::arrange(df2, -val) # sorting for draw order below
     df2$num <- ave(df2$val, FUN = seq_along) # also sorting?
     
+    ###################################
+    #      DECIMAL LOGARITHMIC SCALE          #
+    ###################################      
+    
+    # Replot coordinates on log distance scale
+    df2 <- df2 %>% mutate(
+      declogdistancex =  (useful::pol2cart(log10(distance + 1),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      declogdistancey = (useful::pol2cart(log10(distance + 1),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    
+    # Overrides infinite values
+    df2$declogdistancex[is.nan(df2$declogdistancex)] <- 0 
+    df2$declogdistancey[is.nan(df2$declogdistancey)] <- 0
+    
+    # Combine x and y into a matrix, add as a column, remove x and y columns
+    df2$declogcoords <- cbind(df2$declogdistancex,df2$declogdistancey)
+    df2 <- dplyr::select(df2,-starts_with("declogdistance"))
+    
+    # Plot it
+    #df2 <- dplyr::arrange(df2, -val) # sorting for draw order below
+    #df2$num <- ave(df2$val, FUN = seq_along) # also sorting?
+    
     
     ###################################
     #        SQUARE ROUTE             #
@@ -647,6 +673,8 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       plot_circles <- sqrt(circles)
     } else if(input$interpMeth == "Log"){
       plot_coordinates <- df2$logcoords
+    } else if(input$interpMeth == "Decimal Log"){
+      plot_coordinates <- df2$declogcoords
     } else if(input$interpMeth == "Custom"){
       plot_coordinates <- df2$customcoords
       plot_circles <- customcircles
@@ -662,6 +690,13 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       
       if(input$interpMeth == "Log"){ # sneaky way to add circles below
         plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
+                                     colour = "red",
+                                     data = plot_circles,
+                                     show.legend = NA,
+                                     inherit.aes = FALSE), plot$layers)
+      }
+      else if(input$interpMeth == "Decimal Log"){ # sneaky way to add circles below
+        plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log10(r)),
                                      colour = circleColor,
                                      data = plot_circles,
                                      show.legend = NA,
@@ -680,15 +715,24 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
                                  aes(plot_coordinates[,1],
                                      plot_coordinates[,2],
                                      label = df2$labelName),
-                                 size = 3,
+                                 size = 0,
                                  check_overlap = input$showAllLabels, # tried to do the text outline thing and failed. could we do a conditional or expression for text color, where depending where it is on the scale it gets a different text color?
-                                 color = "white") + geom_text(data = df2,
+                                 color = "white",  fontface = "bold") + geom_label_repel(data = df2,
                                                               aes(plot_coordinates[,1],
                                                                   plot_coordinates[,2],
                                                                   label = df2$labelName),
-                                                              size = 3,
+                                                              size = input$label_size,
                                                               check_overlap = input$HideOverlappingLabels,
-                                                              color = themeText)
+                                                              color = themeText,
+                                                              alpha = 0.2, seed = 1234) + geom_label_repel(data = df2,
+                                                                                              aes(plot_coordinates[,1],
+                                                                                                  plot_coordinates[,2],
+                                                                                                  label = df2$labelName),
+                                                                                              size = input$label_size,
+                                                                                              check_overlap = input$HideOverlappingLabels,
+                                                                                              color = themeText,
+                                                                                              fill = NA,
+                                                                                              alpha = 1, seed = 1234)
       }
       
       if(input$centerOn == TRUE){
