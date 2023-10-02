@@ -9,6 +9,7 @@ library(gmt) # actually for geodist
 library(useful) # for cartesian conversions
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
 library(ggrepel)
+library(pracma)
 
 # libraries we thought we needed but don't use yet
 
@@ -69,7 +70,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                         ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -40px",
                         fluidRow(
-                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Log","Decimal Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
+                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Cube Root","Log","Decimal Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
                         )),
                     
                     ## If distance transformation radio button is on "Custom", show cut point slider
@@ -558,6 +559,21 @@ server <- function(input, output) {
     df2 <- select(df2,-starts_with("sqrtdistance"))
     
     ###################################
+    #          CUBE ROUTE             #
+    ################################### 
+    
+    # Replot coordinates on square root distance scale
+    df2 <- df2 %>% mutate(
+      cuberootdistancex = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      cuberootdistancey = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    
+    # Combine x and y into a matrix, add as a column, remove x and y columns
+    df2$cuberootcoords <- cbind(df2$cuberootdistancex,df2$cuberootdistancey)
+    df2 <- select(df2,-starts_with("cuberootdistance"))
+    
+    
+    ###################################
     #          CUSTOM DIST            #
     ################################### 
     # atm, more just a piecewise linear function
@@ -671,6 +687,8 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
     } else if(input$interpMeth == "Square Root"){
       plot_coordinates <- df2$sqrtcoords
       plot_circles <- sqrt(circles)
+    } else if(input$interpMeth == "Cube Root"){
+      plot_coordinates <- df2$cuberootcoords
     } else if(input$interpMeth == "Log"){
       plot_coordinates <- df2$logcoords
     } else if(input$interpMeth == "Decimal Log"){
@@ -691,6 +709,13 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
       if(input$interpMeth == "Log"){ # sneaky way to add circles below
         plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
                                      colour = "red",
+                                     data = plot_circles,
+                                     show.legend = NA,
+                                     inherit.aes = FALSE), plot$layers)
+      }
+      else if(input$interpMeth == "Cube Root"){ # sneaky way to add circles below
+        plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = pracma::nthroot(r, 3)),
+                                     colour = circleColor,
                                      data = plot_circles,
                                      show.legend = NA,
                                      inherit.aes = FALSE), plot$layers)
