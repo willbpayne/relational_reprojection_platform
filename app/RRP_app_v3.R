@@ -11,6 +11,8 @@ library(scico) # for newer graph colors (colorblind friendly, better for continu
 library(ggrepel)
 library(pracma)
 
+options(ggrepel.max.overlaps = Inf) 
+
 # libraries we thought we needed but don't use yet
 
 #library(sf)
@@ -20,7 +22,7 @@ library(pracma)
 #library(geojson) # for loading geojson (need this for geojsonio to work)
 #library(geojsonio) # for loading geojson
 
-dataFile <- "data/IND_remittances.csv" # for testing
+dataFile <- "data/Katrina_Migration.csv" # for testing
 
 ########################################
 ##          UI PARTY TONIGHT!         ##
@@ -31,9 +33,10 @@ ui <- fluidPage(theme = "RRP_style.css",
                 sidebarLayout(sidebarPanel(
                   div(class = "panel",
                     div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
-                      fileInput("uploadFile","Upload Data File", multiple = FALSE, accept = NULL
-                      )
-                    ),
+                        fluidRow(
+                          column(6,fileInput("uploadFile","Upload Data File", multiple = FALSE, accept = NULL)),
+                          column(6,fileInput("uploadPolygon","(OPTIONAL) GeoJSON Background", multiple = FALSE, accept = NULL)),
+                        )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -50px",
                         fluidRow(
                           column(5, checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
@@ -52,7 +55,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                                  )
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -35px",
-                        fluidRow(column(12,sliderInput("label_size", "Label Size Range", 1, 10, 4, ticks = TRUE)
+                        fluidRow(column(12,sliderInput("label_size", "Label Size Range", 1, 10, 3, ticks = TRUE)
                         ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
@@ -92,11 +95,19 @@ server <- function(input, output) {
   output$distPlot <- renderPlot({ # the basic dot plot for sidebar
     
     if (is.null(input$uploadFile) == TRUE){
-      df <- read.csv(file = "data/IND_remittances.csv")
+      df <- read.csv(file = "data/Katrina_Migration.csv")
     }
     else{
       uploadFileData <- input$uploadFile
       df <- read.csv(file = uploadFileData$datapath)
+    }
+    
+    if (is.null(input$uploadPolygon) == TRUE){
+      polygon <- NULL
+    }
+    else{
+      uploadFileData <- input$uploadFile
+      polygon <- read.csv(file = uploadFileData$datapath)
     }
     
     par(bg = "#404040", #default color is #f5f5f5
@@ -141,7 +152,10 @@ server <- function(input, output) {
   output$downloadPlot <- downloadHandler(
     filename = function(){paste("testPlot",'.svg',sep='')},
     content = function(file){
-      ggsave(file, plot = last_plot() ) #distPlot the right thing to call here or p2?
+      ggsave(file, plot = last_plot(),
+             height = 4000,
+             width = 4000,
+             units = "px") #distPlot the right thing to call here or p2?
     })
   
   dataframefinder <- function() { # First reactive function!
@@ -562,7 +576,7 @@ server <- function(input, output) {
     #          CUBE ROUTE             #
     ################################### 
     
-    # Replot coordinates on square root distance scale
+    # Replot coordinates on cube root distance scale
     df2 <- df2 %>% mutate(
       cuberootdistancex = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[1]]), 
       cuberootdistancey = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[2]])
@@ -747,6 +761,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
                                                                   plot_coordinates[,2],
                                                                   label = df2$labelName),
                                                               size = input$label_size,
+                                                              min.segment.length = 0.75,
                                                               check_overlap = input$HideOverlappingLabels,
                                                               color = themeText,
                                                               alpha = 0.2, seed = 1234) + geom_label_repel(data = df2,
@@ -754,6 +769,7 @@ scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
                                                                                                   plot_coordinates[,2],
                                                                                                   label = df2$labelName),
                                                                                               size = input$label_size,
+                                                                                              min.segment.length = 0.75,
                                                                                               check_overlap = input$HideOverlappingLabels,
                                                                                               color = themeText,
                                                                                               fill = NA,
