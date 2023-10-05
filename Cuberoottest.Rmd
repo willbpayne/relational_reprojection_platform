@@ -31,7 +31,7 @@ TXdataframe$L1_Chr <- as.character(TXdataframe$L1)
 
 
 # this sets a center point (louisiana for our test case)
-ctrPt <- c(31.244823, -92.145024)
+ctrPt <- c(40.058324, -74.405661)
 
 TXdataframe$distance <- geodist(ctrPt[1], ctrPt[2], TXdataframe$Y, TXdataframe$X, units = "km")
 TXdataframe <- TXdataframe %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(X, Y), a=6378137, f=1/298.257223563)) # get bearing of all points to center
@@ -85,7 +85,7 @@ p <- ggplot(X[[3]], aes(x=cuberootdistancex, y=cuberootdistancey)) + geom_polygo
 
 p = ggplot() + xlim(-20, 20) + ylim(-20,20)
 for (i in 1:length(Polygon_List))
-  p = p + geom_polygon(aes(x=cuberootdistancex, y=cuberootdistancey), Polygon_List[[i]], rule = 'winding', fill = 'NA', colour = "black", size = .2)
+  p = p + geom_polygon(aes(x=cuberootdistancex, y=cuberootdistancey, fill=L1_Chr), Polygon_List[[i]], rule = 'winding', colour = "black", size = .2)
 p
 
 install.packages("patchwork")
