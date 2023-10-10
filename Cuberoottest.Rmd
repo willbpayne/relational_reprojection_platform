@@ -22,16 +22,21 @@ install.packages("geojsonsf")
 library(geojsonsf)
 
 # this reads in a geojson
-dataFile <- geojson_sf("app/data/admin1-us_v2.geojson")
+dataFile <- geojson_sf("app/data/us-states.geojson")
+
+# data source: https://github.com/PublicaMundi/MappingAPI/blob/master/data/geojson/us-states.json
+
+dataFile <- dataFile %>% filter(!(name=='Puerto Rico'))
+
+df_union_cast <- dataFile %>% st_cast("MULTIPOLYGON")  %>% st_cast("POLYGON")
 
 # this converts it to a dataframe of just points
-TXdataframe = data.frame(st_coordinates(st_cast(dataFile$geometry,"MULTIPOINT")))
+TXdataframe = data.frame(st_coordinates(st_cast(df_union_cast$geometry,"MULTIPOINT")))
 
 TXdataframe$L1_Chr <- as.character(TXdataframe$L1)
 
-
 # this sets a center point (louisiana for our test case)
-ctrPt <- c(40.058324, -74.405661)
+ctrPt <- c(31.244823, -92.145024)
 
 TXdataframe$distance <- geodist(ctrPt[1], ctrPt[2], TXdataframe$Y, TXdataframe$X, units = "km")
 TXdataframe <- TXdataframe %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(X, Y), a=6378137, f=1/298.257223563)) # get bearing of all points to center
@@ -75,7 +80,7 @@ p
 
 p <- ggplot(TXdataframe, aes(x=cuberootdistancex, y=cuberootdistancey)) + geom_polygon(aes(), rule = 'winding', fill = 'gray', colour = "black", size = .2) + xlim(-20, 20) + ylim(-20,20)
 
-Polygon_List<-split(TXdataframe, TXdataframe$L1_Chr)
+Polygon_List<-split(TXdataframe, TXdataframe$L1_Chr) # this splits into list of polygons, but some are still multipolygons (and would need to be split previously)
 
 p <- ggplot(X[[3]], aes(x=cuberootdistancex, y=cuberootdistancey)) + geom_polygon(aes(), rule = 'winding', fill = 'gray', colour = "black", size = .2) + xlim(-20, 20) + ylim(-20,20)
 
@@ -88,8 +93,15 @@ for (i in 1:length(Polygon_List))
   p = p + geom_polygon(aes(x=cuberootdistancex, y=cuberootdistancey, fill=L1_Chr), Polygon_List[[i]], rule = 'winding', colour = "black", size = .2)
 p
 
-install.packages("patchwork")
-library(patchwork)
+p = ggplot() + xlim(-20, 20) + ylim(-20,20)
+for (i in 1:length(Polygon_List))
+  p = p + geom_polygon(aes(x=cuberootdistancex, y=cuberootdistancey), Polygon_List[[i]], rule = 'winding', colour = "black",  fill='gray', size = .2)
+p
+
+ggsave("testPlot.svg", plot = p,
+             height = 4000,
+             width = 4000,
+             units = "px") 
 
 p + q    
 ```
