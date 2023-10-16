@@ -7,7 +7,7 @@
     
     .panel {
       font-weight: 100;
-      color: #B0B0B0; /* light version was 404040 */
+      color: #404040; /* light version was 404040 */
       background: transparent; /* interior of side panel */
     }
     
@@ -20,7 +20,7 @@
   }
   
   .well{
-    background: #404040;
+    background: #F0F0F0;
   }
   
   .toggle { display: none; /* currently not in use */

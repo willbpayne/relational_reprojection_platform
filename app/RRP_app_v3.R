@@ -35,17 +35,17 @@ ui <- fluidPage(theme = "RRP_style.css",
                     div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
                         fluidRow(
                           column(6,fileInput("uploadFile","Upload Data File", multiple = FALSE, accept = NULL)),
-                          column(6,fileInput("uploadPolygon","(OPTIONAL) GeoJSON Background", multiple = FALSE, accept = NULL)),
+                          column(6,fileInput("uploadPolygon","(OPTIONAL) Background", multiple = FALSE, accept = NULL)),
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -50px",
                         fluidRow(
-                          column(5, checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
-                          column(7, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels?", value = TRUE, width = NULL))
+                          column(6, checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
+                          column(6, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels?", value = TRUE, width = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -35px",
                         fluidRow(
-                          column(5,checkboxInput("centerOn", "Show Center?", value = FALSE, width = NULL)),
-                          column(7,checkboxInput("removeZeroes","Remove Zero Values?", value = TRUE, width = NULL))
+                          column(6,checkboxInput("centerOn", "Show Center?", value = FALSE, width = NULL)),
+                          column(6,checkboxInput("removeZeroes","Remove Zero Values?", value = TRUE, width = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
@@ -73,7 +73,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                         ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -40px",
                         fluidRow(
-                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Cube Root","Log","Decimal Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
+                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Cube Root","Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
                         )),
                     
                     ## If distance transformation radio button is on "Custom", show cut point slider
@@ -110,12 +110,12 @@ server <- function(input, output) {
       polygon <- read.csv(file = uploadFileData$datapath)
     }
     
-    par(bg = "#404040", #default color is #f5f5f5
+    par(bg = "#F0F0F0", #default color is #f5f5f5
         mgp=c(1.75,0.5,0),
         mar=c(4,4,4,4),
-        col.lab="#bfbfbf",
-        col.axis="#bfbfbf",
-        fg="#bfbfbf")
+        col.lab="#404040",
+        col.axis="#404040",
+        fg="#404040")
     
     df3 <- df # cloning for non-destructive editing and with a different name than in dataframefinder() below
     latNames2 <- c("lat","Lat","LAT", "latitude", "Latitude", "LATITUDE", "y","Y", "coords.x2") # add as they come up
@@ -140,7 +140,7 @@ server <- function(input, output) {
       }
         
     plot(df3$longitude, df3$latitude, 
-         col = "grey75", 
+         col = "#404040", 
          xlab = "Longitude", 
          ylab = "Latitude",
          tck = -.04,
@@ -635,13 +635,13 @@ server <- function(input, output) {
     darkPlot <- list(
       scale_color_scico(palette = "tokyo", begin = 0.1, end = 0.95),
       #scale_color_viridis_c(option = "plasma"),
-      theme(panel.background = element_rect(fill = "grey30", linetype = "blank"),
-            plot.background = element_rect(fill= "grey30"),
+      theme(panel.background = element_rect(fill = "grey80", linetype = "blank"),
+            plot.background = element_rect(fill= "grey80"),
             axis.ticks = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
             panel.grid = element_blank(),
-            legend.background = element_rect(fill = "grey30"),
+            legend.background = element_rect(fill = "grey80"),
             legend.text = element_text(color = "white"),
             legend.title = element_text(color = "white")
       ),
@@ -652,7 +652,7 @@ server <- function(input, output) {
     )
     scale_fill_scico()
     lightPlot <- list(
-scale_color_scico(palette = "lajolla", begin = 0.2, end = 0.95),
+scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
       theme(panel.background = element_blank(),
             axis.ticks = element_blank(),
             axis.text.x = element_blank(),
