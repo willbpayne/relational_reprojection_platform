@@ -10,6 +10,8 @@ library(useful) # for cartesian conversions
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
 library(ggrepel)
 library(pracma)
+library(shinylive) # to host this on GitHub Pages
+library(httpuv) # ditto
 
 options(ggrepel.max.overlaps = Inf) 
 
