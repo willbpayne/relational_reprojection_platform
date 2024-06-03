@@ -12,6 +12,8 @@ library(ggrepel)
 library(pracma)
 library(shinylive) # to host this on GitHub Pages
 library(httpuv) # ditto
+library(geojsonsf) # read in GeoJSON for background
+library(sf) # for geometry transformations
 
 options(ggrepel.max.overlaps = Inf) 
 
@@ -105,11 +107,11 @@ server <- function(input, output) {
     }
     
     if (is.null(input$uploadPolygon) == TRUE){
-      polygon <- NULL
+      polygon <- geojson_sf("data/us-states.geojson")
     }
     else{
-      uploadFileData <- input$uploadFile
-      polygon <- read.csv(file = uploadFileData$datapath)
+      uploadPolygonData <- input$uploadPolygon
+      polygon <- geojson_sf(file = uploadPolygonData$datapath)
     }
     
     par(bg = "#F0F0F0", #default color is #f5f5f5
@@ -168,6 +170,16 @@ server <- function(input, output) {
       found_df <- read.csv(file = n$datapath)
     }
     return(found_df)
+  }
+  
+  polygonfinder <- function() { # Second reactive function!
+    if(is.null(input$uploadPolygon) == TRUE){
+      polygon <- geojson_sf("data/us-states.geojson")
+    } else {
+      n <- input$uploadPolygon
+      polygon <- geojson_sf(geojson = n$datapath)
+    }
+    return(polygon)
   }
   
   output$newdfparser <- renderText({ # New place to store reactive output
@@ -514,6 +526,69 @@ server <- function(input, output) {
       r = seq(0, maxdist,length.out = 11)
     )
     circles <- circles[-1,] # Remove zero-radius circle
+ 
+    ###################################
+    #       POLYGON BACKGROUND        #
+    ###################################     
+    
+    polygon <- polygonfinder()
+    
+    # fix multipolygon issue
+    polygon_cast <- st_cast(st_cast(polygon,"MULTIPOLYGON"),"POLYGON")
+    print("CAST THE BACKGROUND TO POLYGONS!")
+    
+    # this converts it to a dataframe of just points
+    polygon_dataframe = data.frame(st_coordinates(st_cast(polygon_cast$geometry,"MULTIPOINT")))
+    print("CAST THE POLYGON TO POINTS!")
+    
+    # fix data type issue
+    polygon_dataframe$L1_Chr <- as.character(polygon_dataframe$L1)
+    print("FIXED THE DATA TYPE ISSUE!")
+    
+    # add geographic distance to center point
+    polygon_dataframe$distance <- geodist(ctrPt[1], ctrPt[2], polygon_dataframe$Y, polygon_dataframe$X, units = "km")*1000
+    print("CALCULATED BASEMAP DISTANCE!")
+    
+    # add bearing
+    polygon_dataframe_bearing <- polygon_dataframe %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(X, Y), a=6378137, f=1/298.257223563)) # get bearing of all points to center
+    print("CALCULATED BASEMAP BEARING!")
+    
+    # convert to polar coordinates
+    for (row in 1:nrow(polygon_dataframe_bearing)) # convert from geographic bearings to polar coordinates
+    {if(polygon_dataframe_bearing$ctrPtGeobearing[row] <= 0)
+      # if geobearing is 0 or negative, mathbearing is 90 plus bearing
+      polygon_dataframe_bearing$ctrPtMathbearing[row] <- abs(polygon_dataframe_bearing$ctrPtGeobearing[row]) + 90
+    if(polygon_dataframe_bearing$ctrPtGeobearing[row] > 0 & polygon_dataframe_bearing$ctrPtGeobearing[row] < 90)
+      # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
+      polygon_dataframe_bearing$ctrPtMathbearing[row] <- (90 - polygon_dataframe_bearing$ctrPtGeobearing[row])
+    if(polygon_dataframe_bearing$ctrPtGeobearing[row] >= 90 & polygon_dataframe_bearing$ctrPtGeobearing[row] <= 180)
+      # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+      polygon_dataframe_bearing$ctrPtMathbearing[row] <- 360 - (polygon_dataframe_bearing$ctrPtGeobearing[row] - 90)}
+    rm(row) # remove counter
+    polygon_dataframe_polar <- dplyr::select(polygon_dataframe_bearing,-starts_with("ctrPtGeo"))
+     
+    # create great circle, square root, and cube root distances
+    polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
+      circdistancex = (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[1]]),
+      circdistancey = (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[2]]),
+      sqrtdistancex = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      sqrtdistancey = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[2]]),
+      cuberootdistancex = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      cuberootdistancey = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    
+    # set up great circle coords
+    polygon_dataframe_polar$circcoords <- cbind(polygon_dataframe_polar$circdistancex,polygon_dataframe_polar$circdistancey)
+    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("circdistancex"))
+    
+    # set up square root coords
+    polygon_dataframe_polar$sqrtcoords <- cbind(polygon_dataframe_polar$sqrtdistancex,polygon_dataframe_polar$sqrtdistancey)
+    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("sqrtdistance"))
+    
+    # set up cube root coords
+    polygon_dataframe_polar$cuberootcoords <- cbind(polygon_dataframe_polar$cuberootdistancex,polygon_dataframe_polar$cuberootdistancey)
+    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("cuberootdistancex"))
+    
     
     ###################################
     #      LOGARITHMIC SCALE          #
@@ -700,11 +775,14 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
     plot_circles <- circles # set default for great circle/logarithmic
     if(input$interpMeth == "Great Circle"){
       plot_coordinates <- df2$circcoords
+      basemapcoords <- polygon_dataframe_polar$circcoords
     } else if(input$interpMeth == "Square Root"){
       plot_coordinates <- df2$sqrtcoords
       plot_circles <- sqrt(circles)
+      basemapcoords <- polygon_dataframe_polar$sqrtcoords
     } else if(input$interpMeth == "Cube Root"){
       plot_coordinates <- df2$cuberootcoords
+      basemapcoords <- polygon_dataframe_polar$cuberootcoords
     } else if(input$interpMeth == "Log"){
       plot_coordinates <- df2$logcoords
     } else if(input$interpMeth == "Decimal Log"){
@@ -714,6 +792,8 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
       plot_circles <- customcircles
     }
     
+    polygon_dataframe_polar_list<-split(polygon_dataframe_polar, polygon_dataframe_polar$L1_Chr) # this splits into list of polygons, but some are still multipolygons (and would need to be split previously)
+    
     # For all the circular plots, plug in variables
     if(input$interpMeth != "Lat & Long"){
       plot <- ggplot(df2 %>% arrange(desc(val)), aes(
@@ -721,6 +801,11 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
         plot_coordinates[,2],
         color = df2$val) ) +
         selectedPlotTheme
+      
+      #for (i in 1:length(polygon_dataframe_polar_list))
+       # plot = plot + geom_polygon(aes(x=basemapcoords[,1], y=basemapcoords[,2]), polygon_dataframe_polar_list[[i]], rule = 'winding', colour = "black", size = .2)
+      plot$layers <- c(geom_polygon(colour = 'black', data = polygon_dataframe_polar, 
+                                    aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'gray', colour = "black", size = .2))
       
       if(input$interpMeth == "Log"){ # sneaky way to add circles below
         plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),

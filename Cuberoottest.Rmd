@@ -28,7 +28,12 @@ dataFile <- geojson_sf("app/data/us-states.geojson")
 
 dataFile <- dataFile %>% filter(!(name=='Puerto Rico'))
 
+st_cast(st_cast(dataFile,"MULTIPOLYGON"),"POLYGON")
+
+
 df_union_cast <- dataFile %>% st_cast("MULTIPOLYGON")  %>% st_cast("POLYGON")
+
+df_union_cast
 
 # this converts it to a dataframe of just points
 TXdataframe = data.frame(st_coordinates(st_cast(df_union_cast$geometry,"MULTIPOINT")))
