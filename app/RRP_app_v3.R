@@ -59,7 +59,7 @@ ui <- fluidPage(theme = "RRP_style.css",
                                  )
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -35px",
-                        fluidRow(column(12,sliderInput("label_size", "Label Size Range", 1, 10, 3, ticks = TRUE)
+                        fluidRow(column(12,sliderInput("label_size", "Label Size", 1, 10, 3, ticks = TRUE)
                         ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
@@ -589,6 +589,19 @@ server <- function(input, output) {
     polygon_dataframe_polar$cuberootcoords <- cbind(polygon_dataframe_polar$cuberootdistancex,polygon_dataframe_polar$cuberootdistancey)
     polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("cuberootdistancex"))
     
+    # set up logarithmic values
+    polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
+      logdistancex =  (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      logdistancey = (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    
+    # Overrides infinite values
+    polygon_dataframe_polar$logdistancex[is.nan(polygon_dataframe_polar$logdistancex)] <- 0 
+    polygon_dataframe_polar$logdistancey[is.nan(polygon_dataframe_polar$logdistancey)] <- 0
+    
+    # Combine x and y into a matrix, add as a column, remove x and y columns
+    polygon_dataframe_polar$logcoords <- cbind(polygon_dataframe_polar$logdistancex,polygon_dataframe_polar$logdistancey)
+    polygon_dataframe_polar <- dplyr::select(polygon_dataframe_polar,-starts_with("logdistance"))
     
     ###################################
     #      LOGARITHMIC SCALE          #
@@ -698,6 +711,15 @@ server <- function(input, output) {
     )
     df2$customcoords <- cbind(df2$customdistancex,df2$customdistancey)
     df2 <- select(df2,-starts_with("customdistance"))
+    
+    # custom distance coordinates
+    polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
+      customdistancex = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[1]]),
+      customdistancey = (useful::pol2cart(a(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    polygon_dataframe_polar$customcoords <- cbind(polygon_dataframe_polar$customdistancex,polygon_dataframe_polar$customdistancey)
+    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("customdistance"))
+    
 
     ###################################
     #            PLOT CALL            #
@@ -785,10 +807,12 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
       basemapcoords <- polygon_dataframe_polar$cuberootcoords
     } else if(input$interpMeth == "Log"){
       plot_coordinates <- df2$logcoords
+      basemapcoords <- polygon_dataframe_polar$logcoords
     } else if(input$interpMeth == "Decimal Log"){
       plot_coordinates <- df2$declogcoords
     } else if(input$interpMeth == "Custom"){
       plot_coordinates <- df2$customcoords
+      basemapcoords <- polygon_dataframe_polar$customcoords
       plot_circles <- customcircles
     }
     
@@ -809,7 +833,7 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
       
       if(input$interpMeth == "Log"){ # sneaky way to add circles below
         plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
-                                     colour = "red",
+                                     colour = "black",
                                      data = plot_circles,
                                      show.legend = NA,
                                      inherit.aes = FALSE), plot$layers)
