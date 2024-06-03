@@ -22,8 +22,8 @@ library(readr)
 library(rsconnect) # for web hosting
 library(scico) # for newer graph colors (colorblind friendly, better for continuous)
 library(sf) # for geometry transformations
-library(shiny)
-library(shinylive) # to host this on GitHub Pages
+#library(shiny)
+#library(shinylive) # to host this on GitHub Pages
 library(stats)
 library(stringr)
 library(tibble)
@@ -34,13 +34,8 @@ library(utils)
 
 options(ggrepel.max.overlaps = Inf) 
 
-rsconnect::setAccountInfo(name='willbpayne',
-                          token='7EDA30EE0ED315E3576C605833503D44',
-                          secret='bNXaU3Ui9rExSBwcBpiwzEgAgX1b1g0DpDRzdsew')
-
 # libraries we thought we needed but don't use yet
 
-#library(sf)
 #library(sp) # might not need
 #library(tools) #to learn file extension
 #library(jsonlite) # for loading in json files
@@ -935,4 +930,4 @@ shinyApp(ui = ui, server = server) # Run the application
 #httpuv::runStaticServer("docs")
 #install.packages('rsconnect')
 
-rsconnect::deployApp()
+#rsconnect::deployApp("app",appName="relational_reprojection_platform")

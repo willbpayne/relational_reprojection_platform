@@ -1,0 +1,10 @@
+name: relational_reprojection_platform
+title:
+username: willbpayne
+account: willbpayne
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 12118591
+bundleId: 8696533
+url: https://willbpayne.shinyapps.io/relational_reprojection_platform/
+version: 1
