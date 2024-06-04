@@ -145,13 +145,13 @@ server <- function(input, output) {
       df <- read.csv(file = uploadFileData$datapath)
     }
     
-    if (is.null(input$uploadPolygon) == TRUE){
-      polygon <- geojson_sf("data/us-states.geojson")
-    }
-    else{
-      uploadPolygonData <- input$uploadPolygon
-      polygon <- geojson_sf(file = uploadPolygonData$datapath)
-    }
+    # if (is.null(input$uploadPolygon) == TRUE){
+    #   polygon <- geojson_sf("data/us-states.geojson")
+    # }
+    # else{
+    #   uploadPolygonData <- input$uploadPolygon
+    #   polygon <- geojson_sf(file = uploadPolygonData$datapath)
+    # }
     
     par(bg = "#F0F0F0", #default color is #f5f5f5
         mgp=c(1.75,0.5,0),
@@ -216,7 +216,7 @@ server <- function(input, output) {
       polygon <- geojson_sf("data/us-states.geojson")
     } else {
       n <- input$uploadPolygon
-      polygon <- geojson_sf(geojson = n)
+      polygon <- geojson_sf(n$datapath)
     }
     return(polygon)
   }
