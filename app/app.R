@@ -900,18 +900,19 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
                                                               color = themeText,
                                                               segment.color = 'gray20',
                                                               segment.size = 0.25,
-                                                              alpha = 0.75, seed = 1234) + geom_label_repel(data = df2,
-                                                                                              aes(plot_coordinates[,1],
-                                                                                                  plot_coordinates[,2],
-                                                                                                  label = df2$labelName),
-                                                                                              size = input$label_size,
-                                                                                              min.segment.length = 0.75,
-                                                                                              check_overlap = input$HideOverlappingLabels,
-                                                                                              color = themeText,
-                                                                                              segment.color = 'gray20',
-                                                                                              segment.size = 0.25,
-                                                                                              fill = NA,
-                                                                                              alpha = 1, seed = 1234)
+                                                              alpha = 0.85, seed = 1234) 
+                                                                                              # + geom_label_repel(data = df2,
+                                                                                              # aes(plot_coordinates[,1],
+                                                                                              #     plot_coordinates[,2],
+                                                                                              #     label = df2$labelName),
+                                                                                              # size = input$label_size,
+                                                                                              # min.segment.length = 0.75,
+                                                                                              # check_overlap = input$HideOverlappingLabels,
+                                                                                              # color = themeText,
+                                                                                              # segment.color = 'gray20',
+                                                                                              # segment.size = 0.25,
+                                                                                              # fill = NA,
+                                                                                              # alpha = 1, seed = 1234)
       }
       
       #if(input$centerOn == TRUE){
