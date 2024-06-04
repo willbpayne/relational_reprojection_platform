@@ -55,8 +55,9 @@ ui <- fluidPage(theme = "RRP_style.css",
                   div(class = "panel",
                     div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
                         fluidRow(
-                          column(6,fileInput("uploadFile"," 1. Select Data File (CSV)", multiple = FALSE, accept = NULL)),
-                          column(6,fileInput("uploadPolygon"," 2. Select Polygons (GeoJSON)", multiple = FALSE, accept = NULL))
+                          column(5,fileInput("uploadFile"," 1. Select Data File (CSV)", multiple = FALSE, accept = NULL)),
+                          column(2,checkboxInput("basemap","Show Polygons?", value = TRUE, width = NULL)),
+                          column(5,fileInput("uploadPolygon"," 2. Select Polygons (GeoJSON)", multiple = FALSE, accept = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -35px",
                         fluidRow(
@@ -74,10 +75,9 @@ ui <- fluidPage(theme = "RRP_style.css",
                           ))),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -40px",
                         fluidRow(
-                          column(3,checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
-                          column(3,checkboxInput("removeZeroes","Remove Zero Values?", value = TRUE, width = NULL)),
-                          column(3,checkboxInput("basemap","Show Polygons?", value = TRUE, width = NULL)),
-                          column(3,checkboxInput("latlon","Show Lat/Lon Plot", value = FALSE, width = NULL))
+                          column(4,checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
+                          column(4,checkboxInput("removeZeroes","Remove Zero Values?", value = TRUE, width = NULL)),
+                          column(4,checkboxInput("latlon","Show Lat/Lon Plot", value = FALSE, width = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
                         fluidRow(
@@ -216,7 +216,7 @@ server <- function(input, output) {
       polygon <- geojson_sf("data/us-states.geojson")
     } else {
       n <- input$uploadPolygon
-      polygon <- geojson_sf(geojson = n$datapath)
+      polygon <- geojson_sf(geojson = n)
     }
     return(polygon)
   }
@@ -850,7 +850,7 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
                                       aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'white', colour = "black", size = .2), plot$layers)
       } else if (input$plotTheme == "Mono Theme"){
         plot$layers <- c(geom_polygon(colour = 'black', data = polygon_dataframe_polar, 
-                                      aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'gray', colour = "black", size = .2), plot$layers)
+                                      aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'gray95', colour = "black", size = .2), plot$layers)
       } 
       }
 

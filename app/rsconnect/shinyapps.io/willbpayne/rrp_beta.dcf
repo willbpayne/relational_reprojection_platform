@@ -5,6 +5,6 @@ account: willbpayne
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 12123420
-bundleId: 8699865
+bundleId: 8700755
 url: https://willbpayne.shinyapps.io/rrp_beta/
 version: 1
