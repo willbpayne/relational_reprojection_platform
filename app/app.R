@@ -26,6 +26,7 @@ library(sf) # for geometry transformations
 #library(shinylive) # to host this on GitHub Pages
 library(stats)
 library(stringr)
+library(svglite)
 library(tibble)
 library(tidyr)
 library(tidyverse)
@@ -49,62 +50,84 @@ dataFile <- "data/Katrina_Migration.csv" # for testing
 ########################################
 
 ui <- fluidPage(theme = "RRP_style.css",
-                div(style = "padding: 10px", h1("Relational Reprojection Platform")), # Application title
-                sidebarLayout(sidebarPanel(
+                div(style = "padding: 10px", h1("Relational Reprojection Platform (BETA)")), # Application title
+                sidebarLayout(sidebarPanel(width=5,
                   div(class = "panel",
                     div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
                         fluidRow(
-                          column(6,fileInput("uploadFile","Upload Data File", multiple = FALSE, accept = NULL)),
-                          column(6,fileInput("uploadPolygon","(OPTIONAL) Background", multiple = FALSE, accept = NULL)),
-                        )),
-                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -50px",
-                        fluidRow(
-                          column(6, checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
-                          column(6, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels?", value = TRUE, width = NULL))
+                          column(6,fileInput("uploadFile"," 1. Select Data File (CSV)", multiple = FALSE, accept = NULL)),
+                          column(6,fileInput("uploadPolygon"," 2. Select Polygons (GeoJSON)", multiple = FALSE, accept = NULL))
                         )),
                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -35px",
                         fluidRow(
-                          column(6,checkboxInput("centerOn", "Show Center?", value = FALSE, width = NULL)),
-                          column(6,checkboxInput("removeZeroes","Remove Zero Values?", value = TRUE, width = NULL))
+                          column(12,radioButtons("interpMeth", "3. Choose Distance Interpolation Method", choices = c("Great Circle","Square Root","Cube Root","Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
                         )),
-                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
-                        fluidRow(
-                          column(6,div(style="display:inline-block",downloadButton('downloadPlot', 'Export SVG'), style="float:right")),
-                          column(6,selectInput("plotTheme", label = NULL, c("Light Theme", "Dark Theme", "Mono Theme"), selected = "Light", multiple = FALSE, selectize = TRUE, width = "100%", size = NULL)
-                           # button to click to download SVG))
-                                 )
-                        )),
-                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -35px",
-                        fluidRow(column(12,sliderInput("label_size", "Label Size", 1, 10, 3, ticks = TRUE)
-                        ))),
-                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -20px",
                         fluidRow(
                           column(6,  uiOutput("ValChoicesFromServer")),
-                          column(6,  uiOutput("NameChoicesFromServer"))
+                          column(6,sliderInput("SymbolSizeRange", "Point Size Range", 0, 50, c(1, 25), ticks = TRUE)
+                          ))),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -30px",
+                        fluidRow(
+                          column(6,  uiOutput("NameChoicesFromServer")),
+                          column(6,  sliderInput("label_size", "Label Size", 1, 10, 3, ticks = TRUE)
+                          ))),
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -40px",
+                        fluidRow(
+                          column(3,checkboxInput("labelsOn", "Show Labels?", value = TRUE, width = NULL)),
+                          column(3,checkboxInput("removeZeroes","Remove Zero Values?", value = TRUE, width = NULL)),
+                          column(3,checkboxInput("basemap","Show Polygons?", value = TRUE, width = NULL)),
+                          column(3,checkboxInput("latlon","Show Lat/Lon Plot", value = FALSE, width = NULL))
                         )),
-                    div(style = "margin-top: -65px", plotOutput("distPlot", height = "250px", width = "100%")), #plot size
+                    div(style = "font-size: 14px; padding: 10px 0px; margin-top: -25px",
+                        fluidRow(
+                          column(6,selectInput("plotTheme", 
+                                               label = NULL, c("Light Theme", "Dark Theme", "Mono Theme"), 
+                                               selected = "Light", multiple = FALSE, selectize = TRUE, width = "100%", size = NULL)),
+                          column(6,
+                                 div(style = "margin-bottom:15px",
+                                     downloadButton('downloadPlot','Export SVG'))), 
+                        )),
+                    conditionalPanel(condition = "input.interpMeth == 'Custom'",
+                                     uiOutput("CustomDistanceSlider")),
+                    conditionalPanel(condition = "input.latlon == 1",
+                                     div(style = "font-size: 14px; padding: 10px 0px; margin-top: -35p", 
+                                         fluidRow(
+                                           column(12, plotOutput("distPlot", height = "250px")), #plot size
+                                         )))
+                    )),
+                #end of sidebar panel, end of class panel div
+                mainPanel(width=7,div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "800px")
+                ))
+                )
+                )            
+                    
+                    #div(style = "font-size: 14px; padding: 10px 0px; margin-top: -50px",
+                    #    fluidRow(
+                    #      column(6,checkboxInput("centerOn", "Show Center?", value = FALSE, width = NULL)),
+                    #      column(6, checkboxInput("HideOverlappingLabels","Hide Overlapping Labels?", value = TRUE, width = NULL))
+                    #    )),
+                    
+                    
+                    #div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -35px",
+                     #   fluidRow(
+                      #    column(6,sliderInput("SymbolSizeRange", "Point Size Range", 0, 50, c(1, 25), ticks = TRUE)
+                      #  ))),
                     # Radio buttons for interpolation method
-                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -25px",
-                        fluidRow(
-                          column(12,radioButtons("valTransMeth","Value (Symbol Size) Interpolation", choices = c("None", "Square Root", "Log"), inline = TRUE, width = "100%", selected = "Square Root"))
-                        )),
-                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -35px",
-                        fluidRow(column(12,sliderInput("SymbolSizeRange", "Symbol Size Range", 0, 50, c(1, 25), ticks = TRUE)
-                        ))),
-                    div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -40px",
-                        fluidRow(
-                          column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Cube Root","Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
-                        )),
+                    #div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -25px",
+                    #    fluidRow(
+                    #      column(12,radioButtons("valTransMeth","Value (Symbol Size) Interpolation", choices = c("None", "Square Root", "Log"), inline = TRUE, width = "100%", selected = "Square Root"))
+                    #    )),
+
+                    #div(style = "font-size: 14px; padding: 10px 0px; margin:3%; margin-top: -40px",
+                    #    fluidRow(
+                    #      column(12,radioButtons("interpMeth", "Distance Interpolation", choices = c("Great Circle","Square Root","Cube Root","Log","Custom"), inline = TRUE, width = "100%", selected = "Square Root"))
+                    #    )),
                     
                     ## If distance transformation radio button is on "Custom", show cut point slider
-                    conditionalPanel(condition = "input.interpMeth == 'Custom'",
-                                     uiOutput("CustomDistanceSlider"))
-                    )
-                  ), #end of sidebar panel, end of class panel div
-                mainPanel(div(class = "mainP", htmlOutput("newdfparser"), plotOutput("geoPlot", height = "800px")
-                    ))
-                  ) #end panel layout))
-)
+                    
+                    
+
 
 ########################################
 ##        STOP, SERVER TIME!          ##
@@ -206,7 +229,7 @@ server <- function(input, output) {
     else {
       distanceWarning <- ""
     }
-    paste("<b> Maximum distance: </b>", round(parserOutputs[[2]],0), "km",distanceWarning,"<b> Circle spacing: </b>", round((parserOutputs[[2]] / 10),2), "km", "</br>",
+    paste("<b> Maximum distance in dataset: </b>", round(parserOutputs[[2]],0), "km",distanceWarning,"<br><b> Concentric circle spacing: </b>", round((parserOutputs[[2]] / 10),2), "km", "</br>",
       "<b> Center point: </b>", parserOutputs[[5]], " ",
       " (Latitude: ", round(parserOutputs[[3]], 5), ", Longitude: ", round(parserOutputs[[4]], 5), ")</br>", sep='',collapse = "") 
   })
@@ -330,17 +353,17 @@ server <- function(input, output) {
     default_dist_high <- (maxdist_forslider*2)/3
     if (maxdist_forslider < 10) # keep round slider numbers only for big distances
     {
-    sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(maxdist_forslider,2), value = c(round(default_dist_low,2),round(default_dist_high,2)), step = NULL, animate = FALSE, post = ' km', round = FALSE)
+    sliderInput("manualCutPoints", "Custom Distance Cut Points", min = 0, max = round(maxdist_forslider,2), value = c(round(default_dist_low,2),round(default_dist_high,2)), step = NULL, animate = FALSE, post = ' km', round = FALSE)
     }
     else
     {
-    sliderInput("manualCutPoints", "Distance Cut Points", min = 0, max = round(maxdist_forslider,-1), value = c(round(default_dist_low,-1),round(default_dist_high,0)), step = NULL, animate = FALSE, post = ' km', round = TRUE)
+    sliderInput("manualCutPoints", "Custom Distance Cut Points", min = 0, max = round(maxdist_forslider,-1), value = c(round(default_dist_low,-1),round(default_dist_high,0)), step = NULL, animate = FALSE, post = ' km', round = TRUE)
   }
     })
   
   output$ValChoicesFromServer <- renderUI({ # serve up a list of value columns
     choicesForDropdown <- dfparser(dataframefinder())[[9]]
-    selectInput("valSelection", "Select Data Column",
+    selectInput("valSelection", "4. Select Point Size Column",
                 multiple = FALSE,
                 choices = choicesForDropdown,
                 selected = choicesForDropdown[[1]],
@@ -350,7 +373,7 @@ server <- function(input, output) {
   
   output$NameChoicesFromServer <- renderUI({ # serve up a list of value columns
     namechoicesForDropdown <- dfparser(dataframefinder())[[10]]
-    selectInput("nameSelection", "Select Name Column",
+    selectInput("nameSelection", "5. Select Label Column",
                 multiple = FALSE,
                 choices = namechoicesForDropdown,
                 selected = namechoicesForDropdown[1],
@@ -489,6 +512,42 @@ server <- function(input, output) {
     maxdist <- max(df2$distance) # max great circle distance
     
     ###################################
+    #       POLYGON BACKGROUND        #
+    ###################################     
+    
+    polygon <- polygonfinder()
+    
+    # fix multipolygon issue
+    polygon_cast <- st_cast(st_cast(polygon,"MULTIPOLYGON"),"POLYGON")
+    print("CAST THE BACKGROUND TO POLYGONS!")
+    
+    # this converts it to a dataframe of just points
+    polygon_dataframe = data.frame(st_coordinates(st_cast(polygon_cast$geometry,"MULTIPOINT")))
+    
+    # fix data type issue
+    polygon_dataframe$L1_Chr <- as.character(polygon_dataframe$L1)
+    
+    # add geographic distance to center point
+    polygon_dataframe$distance <- geodist(ctrPt[1], ctrPt[2], polygon_dataframe$Y, polygon_dataframe$X, units = "km")*1000
+    
+    # add bearing
+    polygon_dataframe_bearing <- polygon_dataframe %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(X, Y), a=6378137, f=1/298.257223563)) # get bearing of all points to center
+    
+    # convert to polar coordinates
+    for (row in 1:nrow(polygon_dataframe_bearing)) # convert from geographic bearings to polar coordinates
+    {if(polygon_dataframe_bearing$ctrPtGeobearing[row] <= 0)
+      # if geobearing is 0 or negative, mathbearing is 90 plus bearing
+      polygon_dataframe_bearing$ctrPtMathbearing[row] <- abs(polygon_dataframe_bearing$ctrPtGeobearing[row]) + 90
+    if(polygon_dataframe_bearing$ctrPtGeobearing[row] > 0 & polygon_dataframe_bearing$ctrPtGeobearing[row] < 90)
+      # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
+      polygon_dataframe_bearing$ctrPtMathbearing[row] <- (90 - polygon_dataframe_bearing$ctrPtGeobearing[row])
+    if(polygon_dataframe_bearing$ctrPtGeobearing[row] >= 90 & polygon_dataframe_bearing$ctrPtGeobearing[row] <= 180)
+      # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
+      polygon_dataframe_bearing$ctrPtMathbearing[row] <- 360 - (polygon_dataframe_bearing$ctrPtGeobearing[row] - 90)}
+    rm(row) # remove counter
+    polygon_dataframe_polar <- dplyr::select(polygon_dataframe_bearing,-starts_with("ctrPtGeo"))
+    
+    ###################################
     #    DATA VALUE TRANSLATION       #
     ###################################   
     
@@ -499,17 +558,19 @@ server <- function(input, output) {
     minRadius <- input$SymbolSizeRange[1] # change this with the UI later?
     maxRadius <- input$SymbolSizeRange[2] # change this with the UI later?
     
-    if(input$valTransMeth == "None"){
-      df2$valTrans <- (df2$val/valMax) * maxRadius + (minRadius - 1)
-      # proportion of maximum value without scaling
-    } else if(input$valTransMeth == "Square Root"){
-      df2$valTrans <- (sqrt(df2$val/valMax)) * maxRadius + (minRadius - 1)
-    } else if(input$valTransMeth == "Log"){
-      df2$valTrans <- (log(df2$val)/log(valMax) * maxRadius) + (minRadius - 1)
-      df2$valTrans[is.infinite(df2$valTrans)]<-0
-    } else if(input$valTransMeth == "Custom"){
-      df2$valTrans <- df2$val
-    } 
+    # if(input$valTransMeth == "None"){
+    #   df2$valTrans <- (df2$val/valMax) * maxRadius + (minRadius - 1)
+    #   # proportion of maximum value without scaling
+    # } else if(input$valTransMeth == "Square Root"){
+    #   df2$valTrans <- (sqrt(df2$val/valMax)) * maxRadius + (minRadius - 1)
+    # } else if(input$valTransMeth == "Log"){
+    #   df2$valTrans <- (log(df2$val)/log(valMax) * maxRadius) + (minRadius - 1)
+    #   df2$valTrans[is.infinite(df2$valTrans)]<-0
+    # } else if(input$valTransMeth == "Custom"){
+    #   df2$valTrans <- df2$val
+    # }
+
+    df2$valTrans <- (sqrt(df2$val/valMax)) * maxRadius + (minRadius - 1)
     
     if(input$removeZeroes == TRUE){
       df2$val[df2$val == 0] <- NaN
@@ -543,81 +604,13 @@ server <- function(input, output) {
     )
     circles <- circles[-1,] # Remove zero-radius circle
  
-    ###################################
-    #       POLYGON BACKGROUND        #
-    ###################################     
-    
-    polygon <- polygonfinder()
-    
-    # fix multipolygon issue
-    polygon_cast <- st_cast(st_cast(polygon,"MULTIPOLYGON"),"POLYGON")
-    print("CAST THE BACKGROUND TO POLYGONS!")
-    
-    # this converts it to a dataframe of just points
-    polygon_dataframe = data.frame(st_coordinates(st_cast(polygon_cast$geometry,"MULTIPOINT")))
-    print("CAST THE POLYGON TO POINTS!")
-    
-    # fix data type issue
-    polygon_dataframe$L1_Chr <- as.character(polygon_dataframe$L1)
-    print("FIXED THE DATA TYPE ISSUE!")
-    
-    # add geographic distance to center point
-    polygon_dataframe$distance <- geodist(ctrPt[1], ctrPt[2], polygon_dataframe$Y, polygon_dataframe$X, units = "km")*1000
-    print("CALCULATED BASEMAP DISTANCE!")
-    
-    # add bearing
-    polygon_dataframe_bearing <- polygon_dataframe %>% mutate(ctrPtGeobearing = geosphere::bearing(c(ctrPt[2],ctrPt[1]), cbind(X, Y), a=6378137, f=1/298.257223563)) # get bearing of all points to center
-    print("CALCULATED BASEMAP BEARING!")
-    
-    # convert to polar coordinates
-    for (row in 1:nrow(polygon_dataframe_bearing)) # convert from geographic bearings to polar coordinates
-    {if(polygon_dataframe_bearing$ctrPtGeobearing[row] <= 0)
-      # if geobearing is 0 or negative, mathbearing is 90 plus bearing
-      polygon_dataframe_bearing$ctrPtMathbearing[row] <- abs(polygon_dataframe_bearing$ctrPtGeobearing[row]) + 90
-    if(polygon_dataframe_bearing$ctrPtGeobearing[row] > 0 & polygon_dataframe_bearing$ctrPtGeobearing[row] < 90)
-      # if geobearing is positive and equal to or under 90, mathbearing is 90 - bearing
-      polygon_dataframe_bearing$ctrPtMathbearing[row] <- (90 - polygon_dataframe_bearing$ctrPtGeobearing[row])
-    if(polygon_dataframe_bearing$ctrPtGeobearing[row] >= 90 & polygon_dataframe_bearing$ctrPtGeobearing[row] <= 180)
-      # if geobearing is positive and between 90 and 180 (inclusive), mathbearing is 360 - (geobearing - 90)
-      polygon_dataframe_bearing$ctrPtMathbearing[row] <- 360 - (polygon_dataframe_bearing$ctrPtGeobearing[row] - 90)}
-    rm(row) # remove counter
-    polygon_dataframe_polar <- dplyr::select(polygon_dataframe_bearing,-starts_with("ctrPtGeo"))
-     
-    # create great circle, square root, and cube root distances
+    # set up great circle basemap coords
     polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
       circdistancex = (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[1]]),
-      circdistancey = (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[2]]),
-      sqrtdistancex = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
-      sqrtdistancey = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[2]]),
-      cuberootdistancex = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[1]]), 
-      cuberootdistancey = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[2]])
+      circdistancey = (useful::pol2cart(distance,ctrPtMathbearing,degrees = TRUE)[[2]])
     )
-    
-    # set up great circle coords
     polygon_dataframe_polar$circcoords <- cbind(polygon_dataframe_polar$circdistancex,polygon_dataframe_polar$circdistancey)
     polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("circdistancex"))
-    
-    # set up square root coords
-    polygon_dataframe_polar$sqrtcoords <- cbind(polygon_dataframe_polar$sqrtdistancex,polygon_dataframe_polar$sqrtdistancey)
-    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("sqrtdistance"))
-    
-    # set up cube root coords
-    polygon_dataframe_polar$cuberootcoords <- cbind(polygon_dataframe_polar$cuberootdistancex,polygon_dataframe_polar$cuberootdistancey)
-    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("cuberootdistancex"))
-    
-    # set up logarithmic values
-    polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
-      logdistancex =  (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[1]]), 
-      logdistancey = (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[2]])
-    )
-    
-    # Overrides infinite values
-    polygon_dataframe_polar$logdistancex[is.nan(polygon_dataframe_polar$logdistancex)] <- 0 
-    polygon_dataframe_polar$logdistancey[is.nan(polygon_dataframe_polar$logdistancey)] <- 0
-    
-    # Combine x and y into a matrix, add as a column, remove x and y columns
-    polygon_dataframe_polar$logcoords <- cbind(polygon_dataframe_polar$logdistancex,polygon_dataframe_polar$logdistancey)
-    polygon_dataframe_polar <- dplyr::select(polygon_dataframe_polar,-starts_with("logdistance"))
     
     ###################################
     #      LOGARITHMIC SCALE          #
@@ -641,57 +634,61 @@ server <- function(input, output) {
     df2 <- dplyr::arrange(df2, -val) # sorting for draw order below
     df2$num <- ave(df2$val, FUN = seq_along) # also sorting?
     
-    ###################################
-    #      DECIMAL LOGARITHMIC SCALE          #
-    ###################################      
-    
-    # Replot coordinates on log distance scale
-    df2 <- df2 %>% mutate(
-      declogdistancex =  (useful::pol2cart(log10(distance + 1),ctrPtMathbearing,degrees = TRUE)[[1]]), 
-      declogdistancey = (useful::pol2cart(log10(distance + 1),ctrPtMathbearing,degrees = TRUE)[[2]])
+    # set up logarithmic basemap values
+    polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
+      logdistancex =  (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      logdistancey = (useful::pol2cart(log(distance + 1),ctrPtMathbearing,degrees = TRUE)[[2]])
     )
     
     # Overrides infinite values
-    df2$declogdistancex[is.nan(df2$declogdistancex)] <- 0 
-    df2$declogdistancey[is.nan(df2$declogdistancey)] <- 0
+    polygon_dataframe_polar$logdistancex[is.nan(polygon_dataframe_polar$logdistancex)] <- 0 
+    polygon_dataframe_polar$logdistancey[is.nan(polygon_dataframe_polar$logdistancey)] <- 0
     
     # Combine x and y into a matrix, add as a column, remove x and y columns
-    df2$declogcoords <- cbind(df2$declogdistancex,df2$declogdistancey)
-    df2 <- dplyr::select(df2,-starts_with("declogdistance"))
-    
-    # Plot it
-    #df2 <- dplyr::arrange(df2, -val) # sorting for draw order below
-    #df2$num <- ave(df2$val, FUN = seq_along) # also sorting?
-    
+    polygon_dataframe_polar$logcoords <- cbind(polygon_dataframe_polar$logdistancex,polygon_dataframe_polar$logdistancey)
+    polygon_dataframe_polar <- dplyr::select(polygon_dataframe_polar,-starts_with("logdistance"))
     
     ###################################
     #        SQUARE ROUTE             #
     ################################### 
     
-    # Replot coordinates on square root distance scale
+    # Replot coordinates on square root scale, combine x and y into a matrix,
+    # add as a column, remove x and y columns
     df2 <- df2 %>% mutate(
       sqrtdistancex =  (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
       sqrtdistancey = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
     )
-    
-    # Combine x and y into a matrix, add as a column, remove x and y columns
     df2$sqrtcoords <- cbind(df2$sqrtdistancex,df2$sqrtdistancey)
     df2 <- select(df2,-starts_with("sqrtdistance"))
     
+    # Set up square root basemap coords
+    polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
+      sqrtdistancex = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      sqrtdistancey = (useful::pol2cart(sqrt(distance),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    polygon_dataframe_polar$sqrtcoords <- cbind(polygon_dataframe_polar$sqrtdistancex,polygon_dataframe_polar$sqrtdistancey)
+    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("sqrtdistance"))
+    
     ###################################
-    #          CUBE ROUTE             #
+    #           CUBE ROOT             #
     ################################### 
     
     # Replot coordinates on cube root distance scale
+    # Combine x and y into a matrix, add as a column, remove x and y columns
     df2 <- df2 %>% mutate(
       cuberootdistancex = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[1]]), 
       cuberootdistancey = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[2]])
     )
-    
-    # Combine x and y into a matrix, add as a column, remove x and y columns
     df2$cuberootcoords <- cbind(df2$cuberootdistancex,df2$cuberootdistancey)
     df2 <- select(df2,-starts_with("cuberootdistance"))
     
+    # Set up cube root basemap coords
+    polygon_dataframe_polar <- polygon_dataframe_polar %>% mutate(
+      cuberootdistancex = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[1]]), 
+      cuberootdistancey = (useful::pol2cart(pracma::nthroot(distance, 3),ctrPtMathbearing,degrees = TRUE)[[2]])
+    )
+    polygon_dataframe_polar$cuberootcoords <- cbind(polygon_dataframe_polar$cuberootdistancex,polygon_dataframe_polar$cuberootdistancey)
+    polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("cuberootdistancex"))
     
     ###################################
     #          CUSTOM DIST            #
@@ -736,7 +733,6 @@ server <- function(input, output) {
     polygon_dataframe_polar$customcoords <- cbind(polygon_dataframe_polar$customdistancex,polygon_dataframe_polar$customdistancey)
     polygon_dataframe_polar <- select(polygon_dataframe_polar,-starts_with("customdistance"))
     
-
     ###################################
     #            PLOT CALL            #
     ################################### 
@@ -793,19 +789,19 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
     #this is where all the themes go
     if(input$plotTheme == "Light Theme"){
       selectedPlotTheme <- lightPlot
-      circleColor <- "ivory2"
-      ctrPtColor <- "ivory3"
+      circleColor <- "ivory3"
+      ctrPtColor <- "red"
       themeText = "black" #change for nacis
   #    themeText = "gray60"
     } else if (input$plotTheme == "Dark Theme"){
       selectedPlotTheme <-darkPlot
       circleColor <- "gray50"
-      ctrPtColor <- "gray75"
-      themeText = "white"
+      ctrPtColor <- "red"
+      themeText = "black"
     } else if (input$plotTheme == "Mono Theme"){
       selectedPlotTheme <-monoPlot
       circleColor <- "gray75"
-      ctrPtColor <- "gray75"
+      ctrPtColor <- "red"
       themeText = "black"
     } 
     
@@ -839,14 +835,25 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
       plot <- ggplot(df2 %>% arrange(desc(val)), aes(
         plot_coordinates[,1], 
         plot_coordinates[,2],
-        color = df2$val) ) +
+        color = df2$val,
+        stroke = 'black')) +
         selectedPlotTheme
       
-      #for (i in 1:length(polygon_dataframe_polar_list))
-       # plot = plot + geom_polygon(aes(x=basemapcoords[,1], y=basemapcoords[,2]), polygon_dataframe_polar_list[[i]], rule = 'winding', colour = "black", size = .2)
-      plot$layers <- c(geom_polygon(colour = 'black', data = polygon_dataframe_polar, 
-                                    aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'gray', colour = "black", size = .2))
+      if(input$basemap == TRUE){
       
+      if(input$plotTheme == "Light Theme"){
+        plot$layers <- c(geom_polygon(colour = 'black', data = polygon_dataframe_polar, 
+                                      aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'gray', colour = "black", size = .2), plot$layers)
+        #    themeText = "gray60"
+      } else if (input$plotTheme == "Dark Theme"){
+        plot$layers <- c(geom_polygon(colour = 'black', data = polygon_dataframe_polar, 
+                                      aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'white', colour = "black", size = .2), plot$layers)
+      } else if (input$plotTheme == "Mono Theme"){
+        plot$layers <- c(geom_polygon(colour = 'black', data = polygon_dataframe_polar, 
+                                      aes(x=basemapcoords[,1], y=basemapcoords[,2], group = L1_Chr), rule = 'winding', fill = 'gray', colour = "black", size = .2), plot$layers)
+      } 
+      }
+
       if(input$interpMeth == "Log"){ # sneaky way to add circles below
         plot$layers <- c(geom_circle(aes(x0 = x0, y0 = y0, r = log(r)),
                                      colour = "black",
@@ -891,7 +898,9 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
                                                               min.segment.length = 0.75,
                                                               check_overlap = input$HideOverlappingLabels,
                                                               color = themeText,
-                                                              alpha = 0.2, seed = 1234) + geom_label_repel(data = df2,
+                                                              segment.color = 'gray20',
+                                                              segment.size = 0.25,
+                                                              alpha = 0.75, seed = 1234) + geom_label_repel(data = df2,
                                                                                               aes(plot_coordinates[,1],
                                                                                                   plot_coordinates[,2],
                                                                                                   label = df2$labelName),
@@ -899,13 +908,15 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
                                                                                               min.segment.length = 0.75,
                                                                                               check_overlap = input$HideOverlappingLabels,
                                                                                               color = themeText,
+                                                                                              segment.color = 'gray20',
+                                                                                              segment.size = 0.25,
                                                                                               fill = NA,
                                                                                               alpha = 1, seed = 1234)
       }
       
-      if(input$centerOn == TRUE){
-        plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
-      }
+      #if(input$centerOn == TRUE){
+      #  plot <- plot + geom_point(data = (as.data.frame(ctrPt)), aes(0, 0), colour = ctrPtColor, shape = 10, size = 3)
+      #}
       
       plot
       
@@ -914,9 +925,9 @@ scale_color_scico(palette = "imola", begin = 0.2, end = 0.95),
     else{
       plot_latLon <- ggplot(df2, aes(df2$lon, df2$lat, color = df2$val)) +
         geom_point() +
+        selectedPlotTheme +
         geom_point(data = (as.data.frame(ctrPt)), aes(ctrPt[2], ctrPt[1]), color = ctrPtColor, shape = 10, size = 3) +
-        scale_color_viridis_c(option = "plasma") +
-        selectedPlotTheme
+        scale_color_viridis_c(option = "plasma")
       plot_latLon
     }
     
@@ -930,4 +941,4 @@ shinyApp(ui = ui, server = server) # Run the application
 #httpuv::runStaticServer("docs")
 #install.packages('rsconnect')
 
-#rsconnect::deployApp("app",appName="relational_reprojection_platform")
+#rsconnect::deployApp("app",appName="rrp_beta")
