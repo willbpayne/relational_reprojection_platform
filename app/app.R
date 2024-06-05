@@ -50,7 +50,15 @@ dataFile <- "data/Katrina_Migration.csv" # for testing
 ########################################
 
 ui <- fluidPage(theme = "RRP_style.css",
-                div(style = "padding: 10px", h1("Relational Reprojection Platform (BETA)")), # Application title
+                div(style = "padding: 10px", h1("Relational Reprojection Platform (BETA)"), 
+                    "Created by ", tags$a(href="https://willbpayne.com", "Dr. Will B. Payne, ", target="blank"), 
+                    "Rutgers University ", tags$a(href="mailto:will.b.payne@rutgers.edu", "(Contact)"), 
+                    "and ", tags$a(href="https://cmes.fas.harvard.edu/people/eve-mcglynn", "Dr. Evangeline McGlynn, ", target="blank"), 
+                    "Harvard University ", tags$a(href="mailto:emcglynn@fas.harvard.edu", "(Contact)."),
+                    h5("RRP reprojects geographic point datasets to focus on a central point (azimuth) with a variety of non-linear distance transformations for visualization (including via the 'Export SVG' button below)."),
+                    h5("Upload a CSV with latitude and longitude columns (and an 'isCTR' column with a single value of 1 for the center) and at least one numeric variable to assign to point area, as well as a GeoJSON polygon background layer."),
+                    h5("Sample dataset shows ACS 2006 1-year estimates of people who moved from Louisiana to other U.S. states (the year after Hurricane Katrina). Polygon data from", 
+                    tags$a(href="https://www.naturalearthdata.com", "Natural Earth.", target="blank"))), # Application title and credit
                 sidebarLayout(sidebarPanel(width=5,
                   div(class = "panel",
                     div(style = "font-size: 14px; padding: 0px; margin-top: -5px;",
